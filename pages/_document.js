@@ -12,10 +12,9 @@ export default class extends Document {
     return (
       <Html lang='en' dir='ltr'>
         <Head>
-          <meta charset='utf-8' />
+          <meta charSet='utf-8' />
           <meta name='application-name' content={APP_NAME} />
           <meta name='description' content={APP_DESCRIPTION} />
-          <meta name='viewport' content='width=device-width, initial-scale=1' />
           <meta name='theme-color' content='#000000' />
 
           <link rel='manifest' href='/manifest.json' />
@@ -23,8 +22,6 @@ export default class extends Document {
           <link href='/icons/favicon-32x32.png' rel='icon' type='image/png' sizes='32x32' />
           <link rel='apple-touch-icon' sizes='180x180' href='/icons/apple-touch-icon.png' />
           <link rel='shortcut icon' href='favicon.ico' type='image/x-icon' />
-
-          <title>Jornada Solar</title>
         </Head>
         <body>
           <Main />
