@@ -7,6 +7,7 @@ import Document, {
   DocumentContext,
   DocumentInitialProps
 } from 'next/document'
+import { ServerStyleSheets } from '@material-ui/core/styles'
 
 const APP_NAME = 'Jornada Solar'
 const APP_DESCRIPTION = 'Uma jornada para homens mais inteiros'
@@ -15,7 +16,22 @@ export default class extends Document {
   static getInitialProps = async (
     ctx: DocumentContext
   ): Promise<DocumentInitialProps> => {
-    return await Document.getInitialProps(ctx)
+    const materialSheets = new ServerStyleSheets()
+    const originalRenderPage = ctx.renderPage
+
+    ctx.renderPage = () =>
+      originalRenderPage({
+        enhanceApp: App => props => ({
+          ...materialSheets.collect(<App {...props} />)
+        })
+      })
+
+    const initialProps = await Document.getInitialProps(ctx)
+
+    return {
+      ...initialProps,
+      styles: <>{materialSheets.getStyleElement()}</>
+    }
   }
 
   render(): JSX.Element {
