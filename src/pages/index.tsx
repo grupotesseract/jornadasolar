@@ -1,7 +1,5 @@
-import React from 'react'
+import React, { FC } from 'react'
 
-const Index = () => (
-  <h1>Jornada Solar</h1>
-)
+const Home: FC = () => <h1>Jornada Solar</h1>
 
-export default Index
+export default Home
