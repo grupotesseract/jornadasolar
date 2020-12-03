@@ -1,14 +1,15 @@
+import React from 'react'
 import Document, { Html, Head, Main, NextScript } from 'next/document'
 
 const APP_NAME = 'Jornada Solar'
 const APP_DESCRIPTION = 'Uma jornada para homens mais inteiros'
 
 export default class extends Document {
-  static async getInitialProps(ctx) {
+  static async getInitialProps (ctx) {
     return await Document.getInitialProps(ctx)
   }
 
-  render() {
+  render () {
     return (
       <Html lang='en' dir='ltr'>
         <Head>
