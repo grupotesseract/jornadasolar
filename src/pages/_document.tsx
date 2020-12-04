@@ -62,6 +62,11 @@ export default class extends Document {
             href="/icons/apple-touch-icon.png"
           />
           <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800;900&display=swap"
+            rel="stylesheet"
+          />
         </Head>
         <body>
           <Main />
