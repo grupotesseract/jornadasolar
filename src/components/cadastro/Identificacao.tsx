@@ -1,7 +1,6 @@
 import React, { FC } from 'react'
 import {
   Box,
-  Radio,
   Container,
   Typography,
   RadioGroup,
@@ -11,6 +10,7 @@ import { makeStyles, createStyles } from '@material-ui/core/styles'
 import Button from '../Button'
 import Emoji from '../Emoji'
 import TextField from '../TextField'
+import Radio from '../Radio'
 
 const useStyles = makeStyles(() =>
   createStyles({
