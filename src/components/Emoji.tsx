@@ -6,7 +6,8 @@ interface IEmojiProps {
 
 const Emoji: FC<IEmojiProps> = ({ nome }) => {
   const emojis = {
-    feliz: '😃'
+    feliz: '😃',
+    piscando: '😉'
   }
 
   return (
