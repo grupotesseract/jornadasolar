@@ -11,6 +11,8 @@ const StyledRadio = withStyles({
   checked: {}
 })(MuiRadio)
 
-const Radio: FC<RadioProps> = (props: RadioProps) => <StyledRadio {...props} />
+const Radio: FC<RadioProps> = (props: RadioProps) => (
+  <StyledRadio {...props} color="primary" />
+)
 
 export default Radio
