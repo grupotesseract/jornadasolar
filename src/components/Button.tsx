@@ -6,12 +6,13 @@ type Props = ButtonProps
 
 const StyledButton = withStyles({
   root: {
-    borderRadius: 30,
     width: 300,
     height: 60,
+    borderRadius: 30,
+    border: '2px solid #F7C92A',
     fontSize: 20,
-    textTransform: 'none',
-    fontWeight: 700
+    fontWeight: 700,
+    textTransform: 'none'
   }
 })(MuiButton)
 
