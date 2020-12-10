@@ -6,7 +6,7 @@ interface ILayoutProps {
   children: ReactNode
   textoBotao: ReactNode
   exibirBotao?: boolean
-  onClickButton: () => void
+  onClickButton?: () => void
 }
 
 const Layout: FC<ILayoutProps> = ({
