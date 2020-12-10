@@ -6,14 +6,14 @@ interface ILayoutProps {
   children: ReactNode
   textoBotao: ReactNode
   exibirBotao?: boolean
-  onClickButton?: () => void
+  onButtonClick?: () => void
 }
 
 const Layout: FC<ILayoutProps> = ({
   children,
   textoBotao,
   exibirBotao,
-  onClickButton
+  onButtonClick
 }) => (
   <Container maxWidth="xs">
     <Box display="flex" flexDirection="column" minHeight="100vh">
@@ -23,7 +23,7 @@ const Layout: FC<ILayoutProps> = ({
 
       <Box alignSelf="center" position="fixed" top="calc(100vh - 80px)">
         {exibirBotao && (
-          <Button variant="contained" color="primary" onClick={onClickButton}>
+          <Button variant="contained" color="primary" onClick={onButtonClick}>
             {textoBotao}
           </Button>
         )}
