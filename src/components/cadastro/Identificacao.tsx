@@ -6,14 +6,22 @@ import Titulo from '../Titulo'
 import Subtitulo from '../Subtitulo'
 import RadioGroup from '../RadioGroup'
 
-const Identificacao: FC = () => {
+interface IIdentificacaoProps {
+  setEtapaAtual: (number) => void
+}
+
+const Identificacao: FC<IIdentificacaoProps> = ({ setEtapaAtual }) => {
   const radioOptions = [
     { value: 'ele', label: 'Ele' },
     { value: 'ela', label: 'Ela' }
   ]
 
+  const handleOnclickButton = () => {
+    setEtapaAtual(2)
+  }
+
   return (
-    <Layout textoBotao="Continuar">
+    <Layout textoBotao="Continuar" onClickButton={handleOnclickButton}>
       <Titulo>
         Olá! Parabéns por começar sua jornada <Emoji nome="feliz" />
       </Titulo>
