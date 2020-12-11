@@ -6,8 +6,9 @@ const useStyles = makeStyles(() =>
   createStyles({
     subtitulo: {
       width: 300,
-      marginTop: 20,
-      marginBottom: 15,
+      marginBottom: 16,
+      marginLeft: 'auto',
+      marginRight: 'auto',
       fontSize: 20,
       fontWeight: 300,
       lineHeight: '27px'
