@@ -6,10 +6,10 @@ import { Box, FormGroup } from '@material-ui/core'
 import TextCheckbox from '../TextCheckbox'
 
 interface IObjetivosProps {
-  setEtapaAtual: (number) => void
+  onAvancarButtonClick: (number) => void
 }
 
-const Objetivos: FC<IObjetivosProps> = ({ setEtapaAtual }) => {
+const Objetivos: FC<IObjetivosProps> = ({ onAvancarButtonClick }) => {
   const [objetivos, setObjetivos] = useState([])
   // TODO: Substituir nome por dado dinâmico
   const nome = 'Rafael'
@@ -34,14 +34,14 @@ const Objetivos: FC<IObjetivosProps> = ({ setEtapaAtual }) => {
   }
 
   const handleOnClickButton = () => {
-    setEtapaAtual(3)
+    onAvancarButtonClick(3)
   }
 
   return (
     <Layout
       textoBotao="Continuar"
       exibirBotao={objetivos.length > 0}
-      onClickButton={handleOnClickButton}
+      onButtonClick={handleOnClickButton}
     >
       <Titulo>É um prazer te conhecer, {nome}!</Titulo>
 
