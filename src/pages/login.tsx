@@ -6,7 +6,7 @@ import PasswordTextField from '../components/PasswordTextField'
 import Layout from '../components/Layout'
 import Titulo from '../components/Titulo'
 import InputLabel from '../components/InputLabel'
-import EsqueciMInhaSenha from '../components/login/EsqueciMinhaSenha'
+import EsqueciMinhaSenha from '../components/login/EsqueciMinhaSenha'
 
 const Login: FC = () => {
   return (
@@ -24,7 +24,7 @@ const Login: FC = () => {
           <PasswordTextField />
         </Box>
 
-        <EsqueciMInhaSenha />
+        <EsqueciMinhaSenha />
       </Box>
     </Layout>
   )

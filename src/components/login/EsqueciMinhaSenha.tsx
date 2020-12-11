@@ -22,7 +22,7 @@ const useStyles = makeStyles(() =>
   })
 )
 
-const EsqueciMInhaSenha: FC = () => {
+const EsqueciMinhaSenha: FC = () => {
   const [botaoClicado, setBotaoClicado] = useState(false)
   const classes = useStyles()
 
@@ -44,4 +44,4 @@ const EsqueciMInhaSenha: FC = () => {
   )
 }
 
-export default EsqueciMInhaSenha
+export default EsqueciMinhaSenha
