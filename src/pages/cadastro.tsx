@@ -5,6 +5,7 @@ import Identificacao from '../components/cadastro/Identificacao'
 import DadosAutenticacao from '../components/cadastro/DadosAutenticacao'
 import Objetivos from '../components/cadastro/Objetivos'
 import { avancoDeEtapaSolicitado as avancoDeEtapaSolicitadoAction } from '../redux/cadastro'
+import EtapaSentimentos from '../components/cadastro/EtapaSentimentos'
 
 const Cadastro: FC = () => {
   const dispatch = useDispatch()
@@ -22,6 +23,10 @@ const Cadastro: FC = () => {
       case 2:
         return <Objetivos onAvancarButtonClick={avancoDeEtapaSolicitado} />
       case 3:
+        return (
+          <EtapaSentimentos onAvancarButtonClick={avancoDeEtapaSolicitado} />
+        )
+      case 4:
         return <DadosAutenticacao />
       default:
         return null
