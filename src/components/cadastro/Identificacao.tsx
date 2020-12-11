@@ -23,7 +23,7 @@ const Identificacao: FC<IIdentificacaoProps> = ({ onAvancarButtonClick }) => {
   return (
     <Layout textoBotao="Continuar" onButtonClick={handleOnButtonClick}>
       <Titulo>
-        Olá! Parabéns por começar sua jornada <Emoji nome="feliz" />
+        Olá! Parabéns por começar sua jornada <Emoji nome="alegre" />
       </Titulo>
 
       <Subtitulo>Para começar, como gostaria de ser chamado?</Subtitulo>

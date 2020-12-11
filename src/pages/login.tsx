@@ -12,7 +12,7 @@ const Login: FC = () => {
   return (
     <Layout textoBotao="Entrar">
       <Titulo>
-        Oi! Que bom te ver por aqui <Emoji nome="feliz" />
+        Oi! Que bom te ver por aqui <Emoji nome="alegre" />
       </Titulo>
 
       <Box mt={5}>
