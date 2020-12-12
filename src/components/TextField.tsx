@@ -9,7 +9,7 @@ export const StyledTextField = withStyles({
   }
 })(MuiTextField)
 
-const TextField: FC = (props: TextFieldProps) => (
+const TextField: FC<TextFieldProps> = props => (
   <StyledTextField variant="outlined" fullWidth {...props} />
 )
 
