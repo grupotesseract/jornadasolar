@@ -18,7 +18,7 @@ const DadosAutenticacao: FC = () => {
   return (
     <Layout textoBotao="Pronto!">
       <Titulo>
-        Crie um cadastro e salve seus dados <Emoji nome="piscando" />
+        Crie um cadastro e salve seus dados <Emoji nome="seguro" />
       </Titulo>
 
       <Box mt={5}>

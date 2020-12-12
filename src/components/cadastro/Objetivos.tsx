@@ -45,7 +45,7 @@ const Objetivos: FC<IObjetivosProps> = ({ onAvancarButtonClick }) => {
     >
       <Titulo>É um prazer te conhecer, {nome}!</Titulo>
 
-      <Box mt={5}>
+      <Box mt="58px">
         <Subtitulo>Quais são seus principais objetivos?</Subtitulo>
 
         <FormGroup>
