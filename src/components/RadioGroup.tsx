@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, ChangeEvent } from 'react'
 import {
   FormControlLabel,
   Typography,
@@ -15,6 +15,7 @@ type options = {
 interface IRadioGroupProps {
   titulo: string
   options: Array<options>
+  onChange: (e: ChangeEvent) => void
 }
 
 const useStyles = makeStyles(() =>
@@ -32,7 +33,7 @@ const useStyles = makeStyles(() =>
   })
 )
 
-const RadioGroup: FC<IRadioGroupProps> = ({ titulo, options }) => {
+const RadioGroup: FC<IRadioGroupProps> = ({ titulo, options, onChange }) => {
   const classes = useStyles()
 
   return (
@@ -41,7 +42,7 @@ const RadioGroup: FC<IRadioGroupProps> = ({ titulo, options }) => {
         {titulo}
       </Typography>
 
-      <MuiRadioGroup>
+      <MuiRadioGroup onChange={onChange}>
         {options.map(option => (
           <FormControlLabel
             key={option.value}
