@@ -15,7 +15,7 @@ type options = {
 interface IRadioGroupProps {
   titulo: string
   options: Array<options>
-  onChange: (e: ChangeEvent) => void
+  onChange?: (e: ChangeEvent) => void
 }
 
 const useStyles = makeStyles(() =>
