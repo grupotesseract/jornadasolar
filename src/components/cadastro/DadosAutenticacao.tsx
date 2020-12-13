@@ -1,4 +1,4 @@
-import React, { FC, useState, ChangeEvent } from 'react'
+import React, { FC, useState } from 'react'
 import { Box, CircularProgress } from '@material-ui/core/'
 import Emoji from '../Emoji'
 import TextField from '../TextField'
@@ -32,8 +32,7 @@ const DadosAutenticacao: FC = () => {
 
   const onChangeEmail = ({ target: { value } }) => setEmail(value)
   const onChangePassword = ({ target: { value } }) => setPassword(value)
-  const onChangeOptions = ({ target: { value } }: ChangeEvent) =>
-    setTemLivro(value)
+  const onChangeOptions = e => setTemLivro(e.target.value)
 
   const radioOptions = [
     { value: 'Sim, tenho!', label: 'Sim, tenho!' },
