@@ -1,4 +1,5 @@
 import React, { FC } from 'react'
+import { Box } from '@material-ui/core'
 import Emoji from '../Emoji'
 import TextField from '../TextField'
 import Layout from '../Layout'
@@ -26,9 +27,10 @@ const Identificacao: FC<IIdentificacaoProps> = ({ onAvancarButtonClick }) => {
         Olá! Parabéns por começar sua jornada <Emoji nome="alegre" />
       </Titulo>
 
-      <Subtitulo>Para começar, como gostaria de ser chamado?</Subtitulo>
-
-      <TextField />
+      <Box mt="21px">
+        <Subtitulo>Para começar, como gostaria de ser chamado?</Subtitulo>
+        <TextField />
+      </Box>
 
       <RadioGroup
         titulo="E com qual pronome você se identifica?"
