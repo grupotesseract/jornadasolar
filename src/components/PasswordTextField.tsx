@@ -3,7 +3,7 @@ import { InputAdornment, IconButton, TextFieldProps } from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons'
 import TextField from './TextField'
 
-const PasswordTextField: FC = (props: TextFieldProps) => {
+const PasswordTextField: FC<TextFieldProps> = props => {
   const [showPassword, setShowPassword] = useState(false)
   const Icone = showPassword ? Visibility : VisibilityOff
 

@@ -6,6 +6,8 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import theme from '../../theme'
 import { AppProps } from 'next/app'
 import store from '../redux/store'
+import AuthProvider from '../components/firebase/AuthProvider'
+import StoreProvider from '../components/firebase/FirestoreProvider'
 
 const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
   useEffect(() => {
@@ -24,9 +26,13 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Provider store={store}>
-          <Component {...pageProps} />
-        </Provider>
+        <AuthProvider>
+          <StoreProvider>
+            <Provider store={store}>
+              <Component {...pageProps} />
+            </Provider>
+          </StoreProvider>
+        </AuthProvider>
       </ThemeProvider>
     </>
   )
