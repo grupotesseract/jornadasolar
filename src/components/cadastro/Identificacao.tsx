@@ -5,18 +5,12 @@ import TextField from '../TextField'
 import Layout from '../Layout'
 import Titulo from '../Titulo'
 import Subtitulo from '../Subtitulo'
-import RadioGroup from '../RadioGroup'
 
 interface IIdentificacaoProps {
   onAvancarButtonClick: (number) => void
 }
 
 const Identificacao: FC<IIdentificacaoProps> = ({ onAvancarButtonClick }) => {
-  const radioOptions = [
-    { value: 'ele', label: 'Ele' },
-    { value: 'ela', label: 'Ela' }
-  ]
-
   const handleOnButtonClick = () => {
     onAvancarButtonClick(2)
   }
@@ -31,11 +25,6 @@ const Identificacao: FC<IIdentificacaoProps> = ({ onAvancarButtonClick }) => {
         <Subtitulo>Para começar, como gostaria de ser chamado?</Subtitulo>
         <TextField />
       </Box>
-
-      <RadioGroup
-        titulo="E com qual pronome você se identifica?"
-        options={radioOptions}
-      />
     </Layout>
   )
 }
