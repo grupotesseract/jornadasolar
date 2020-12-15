@@ -1,14 +1,19 @@
 import React, { FC, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { bindActionCreators } from '@reduxjs/toolkit'
 import { Box } from '@material-ui/core'
 import Layout from '../Layout'
 import Titulo from '../Titulo'
 import Habitos from '../diario/Habitos'
+import { avancoParaEtapa5Solicitado as avancoParaEtapa5SolicitadoAction } from '../../redux/cadastro'
 
-interface IEtapaHabitosProps {
-  onAvancarButtonClick: (number) => void
-}
+const EtapaHabitos: FC = () => {
+  const dispatch = useDispatch()
+  const { avancoParaEtapa5Solicitado } = bindActionCreators(
+    { avancoParaEtapa5Solicitado: avancoParaEtapa5SolicitadoAction },
+    dispatch
+  )
 
-const EtapaHabitos: FC<IEtapaHabitosProps> = ({ onAvancarButtonClick }) => {
   const [gruposDeHabitos, setGruposDeHabitos] = useState([
     {
       nome: 'social',
@@ -49,7 +54,7 @@ const EtapaHabitos: FC<IEtapaHabitosProps> = ({ onAvancarButtonClick }) => {
   ])
 
   const handleOnClickButton = () => {
-    onAvancarButtonClick(5)
+    avancoParaEtapa5Solicitado({ gruposDeHabitos })
   }
 
   return (

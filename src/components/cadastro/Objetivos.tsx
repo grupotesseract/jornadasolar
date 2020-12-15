@@ -1,18 +1,23 @@
 import React, { FC, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { bindActionCreators } from '@reduxjs/toolkit'
 import Layout from '../Layout'
 import Titulo from '../Titulo'
 import Subtitulo from '../Subtitulo'
 import { Box, FormGroup } from '@material-ui/core'
 import TextCheckbox from '../TextCheckbox'
+import { avancoParaEtapa3Solicitado as avancoParaEtapa3SolicitadoAction } from '../../redux/cadastro'
 
-interface IObjetivosProps {
-  onAvancarButtonClick: (number) => void
-}
+const Objetivos: FC = () => {
+  const dispatch = useDispatch()
+  const { avancoParaEtapa3Solicitado } = bindActionCreators(
+    { avancoParaEtapa3Solicitado: avancoParaEtapa3SolicitadoAction },
+    dispatch
+  )
 
-const Objetivos: FC<IObjetivosProps> = ({ onAvancarButtonClick }) => {
   const [objetivos, setObjetivos] = useState([])
-  // TODO: Substituir nome por dado dinâmico
-  const nome = 'Rafael'
+
+  const nome = useSelector(state => state.cadastro.nome)
 
   const options = [
     'Autoconhecimento',
@@ -34,7 +39,7 @@ const Objetivos: FC<IObjetivosProps> = ({ onAvancarButtonClick }) => {
   }
 
   const handleOnClickButton = () => {
-    onAvancarButtonClick(3)
+    avancoParaEtapa3Solicitado({ objetivos })
   }
 
   return (

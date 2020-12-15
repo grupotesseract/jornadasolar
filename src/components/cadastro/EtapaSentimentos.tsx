@@ -1,21 +1,24 @@
 import React, { FC, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { bindActionCreators } from '@reduxjs/toolkit'
 import Layout from '../Layout'
 import Titulo from '../Titulo'
 import Subtitulo from '../Subtitulo'
 import { Box } from '@material-ui/core'
 import Sentimentos from '../diario/Sentimentos'
+import { avancoParaEtapa4Solicitado as avancoParaEtapa4SolicitadoAction } from '../../redux/cadastro'
 
-interface IEtapaSentimentosProps {
-  onAvancarButtonClick: (number) => void
-}
+const EtapaSentimentos: FC = () => {
+  const dispatch = useDispatch()
+  const { avancoParaEtapa4Solicitado } = bindActionCreators(
+    { avancoParaEtapa4Solicitado: avancoParaEtapa4SolicitadoAction },
+    dispatch
+  )
 
-const EtapaSentimentos: FC<IEtapaSentimentosProps> = ({
-  onAvancarButtonClick
-}) => {
   const [sentimentos, setSentimentos] = useState([])
 
   const handleOnClickButton = () => {
-    onAvancarButtonClick(4)
+    avancoParaEtapa4Solicitado({ sentimentos })
   }
 
   return (
