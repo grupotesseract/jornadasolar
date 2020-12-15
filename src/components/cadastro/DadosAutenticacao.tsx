@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Box, CircularProgress } from '@material-ui/core/'
 import Emoji from '../Emoji'
 import TextField from '../TextField'
@@ -40,6 +41,10 @@ const DadosAutenticacao: FC = () => {
     { value: 'Não, mas quero saber mais', label: 'Não, mas quero saber mais' }
   ]
 
+  const { nome, objetivos, sentimentos, gruposDeHabitos } = useSelector(
+    state => state.cadastro
+  )
+
   const handleOnClickButton = async () => {
     setLoading(true)
     try {
@@ -48,19 +53,19 @@ const DadosAutenticacao: FC = () => {
       } = await auth.createUserWithEmailAndPassword(email, password)
       const now = firebase.firestore.FieldValue.serverTimestamp()
       firestore.collection('user').doc(uid).set({
-        nome: 'Nome que virá do redux',
+        nome,
         email,
-        objetivos: [],
+        objetivos,
         temLivro,
         created_at: now,
         updated_at: now
       })
-      const dadosDiario = `{
-            "${new Date().toISOString().split('T')[0]}": {
-              "sentimentos": [] 
-            }
-          }`
-      firestore.collection('diario').doc(uid).set(JSON.parse(dadosDiario))
+      firestore.collection('diario').add({
+        date: now,
+        userId: uid,
+        sentimentos,
+        gruposDeHabitos
+      })
       router.push('/login')
     } catch (e) {
       console.log('erro', e)
