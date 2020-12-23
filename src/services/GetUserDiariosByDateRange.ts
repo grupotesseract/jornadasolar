@@ -35,10 +35,10 @@ const GetUserDiariosByDateRange = async ({
       .where('date', '>=', dataInicial)
       .where('date', '<=', dataFinal)
       .get()
-    querySnapshot.forEach(userSnapshot => {
-      const diariosData = userSnapshot.data()
+    querySnapshot.forEach(diarioSnapshot => {
+      const diariosData = diarioSnapshot.data()
       const diario = {
-        id: userSnapshot.id,
+        id: diarioSnapshot.id,
         date: diariosData.date.toDate(),
         sentimentos: diariosData.sentimentos,
         gruposDeHabitos: diariosData.gruposDeHabitos,

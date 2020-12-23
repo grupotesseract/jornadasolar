@@ -5,7 +5,7 @@ import Layout from '../Layout'
 import Titulo from '../Titulo'
 import Subtitulo from '../Subtitulo'
 import { Box } from '@material-ui/core'
-import Sentimentos from '../diario/Sentimentos'
+import SentimentosCheckboxGroup from '../diario/SentimentosCheckboxGroup'
 import { avancoParaEtapa4Solicitado as avancoParaEtapa4SolicitadoAction } from '../../redux/cadastro'
 
 const EtapaSentimentos: FC = () => {
@@ -32,7 +32,10 @@ const EtapaSentimentos: FC = () => {
       <Box mt="58px">
         <Subtitulo>Como você está se sentindo nesse momento?</Subtitulo>
 
-        <Sentimentos onCheckboxClick={setSentimentos} values={sentimentos} />
+        <SentimentosCheckboxGroup
+          onChange={setSentimentos}
+          values={sentimentos}
+        />
       </Box>
     </Layout>
   )

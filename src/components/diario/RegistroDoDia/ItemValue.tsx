@@ -39,7 +39,7 @@ const ItemValue: FC<IProps> = ({ value, label }) => {
   return (
     <>
       <Emoji nome="lapis" />
-      <Link href="/" passHref>
+      <Link href="/">
         <Typography color="primary" className={classes.textoLink}>
           {textoLink}
         </Typography>

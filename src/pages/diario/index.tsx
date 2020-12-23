@@ -2,7 +2,7 @@ import { Box, Container } from '@material-ui/core'
 import React, { FC, useEffect, useState } from 'react'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { FirebaseAuthConsumer } from '@react-firebase/auth'
-import GetUserDiariosByDateRange from '../services/GetUserDiariosByDateRange'
+import GetUserDiariosByDateRange from '../../services/GetUserDiariosByDateRange'
 import {
   format,
   addMonths,
@@ -16,9 +16,9 @@ import {
   compareDesc
 } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import RegistroDoDia from '../components/diario/RegistroDoDia'
-import Saudacao from '../components/Saudacao'
-import PageNavigator from '../components/PageNavigator'
+import RegistroDoDia from '../../components/diario/RegistroDoDia'
+import Saudacao from '../../components/Saudacao'
+import PageNavigator from '../../components/PageNavigator'
 
 const useStyles = makeStyles(() =>
   createStyles({
