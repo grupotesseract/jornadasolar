@@ -2,12 +2,11 @@ import { Grid, Typography } from '@material-ui/core'
 import React, { FC } from 'react'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import Link from 'next/link'
-import Emoji from '../../Emoji'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import Item from './Item'
-import { sentimentos } from '../Sentimentos'
 import { IDiario } from '../../../services/GetUserDiariosByDateRange'
+import Sentimento from '../Sentimento'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -31,7 +30,8 @@ const useStyles = makeStyles(() =>
     textoLink: {
       marginLeft: 8,
       fontWeight: 700,
-      fontSize: 14
+      fontSize: 14,
+      cursor: 'pointer'
     }
   })
 )
@@ -60,7 +60,7 @@ const RegistroDoDia: FC<IProps> = ({ diario }) => {
             locale: ptBR
           })}
         </Typography>
-        <Link href="" passHref>
+        <Link href={`/diario/${format(diario.date, 'd-M-yyyy')}`}>
           <Typography color="primary" className={classes.textoLink}>
             Ver mais
           </Typography>
@@ -68,24 +68,29 @@ const RegistroDoDia: FC<IProps> = ({ diario }) => {
       </Grid>
 
       <Item
+        key="registro-do-dia-sentimentos"
         label="sentimentos"
         value={diario.sentimentos?.map((nomeSentimento, index) => {
-          const sentimento = sentimentos.find(s => s.nome === nomeSentimento)
           return (
             <>
-              <Emoji nome={sentimento.emoji} /> {nomeSentimento}
+              <Sentimento nome={nomeSentimento} key={`sentimento-${index}`} />
               {index === diario.sentimentos.length - 1 ? null : ', '}
             </>
           )
         })}
       />
       <Item
+        key="registro-do-dia-habitos"
         label="hábitos"
         value={diario.gruposDeHabitos?.map(grupo =>
           habitos.concat(grupo.habitos).join(', ')
         )}
       />
-      <Item label="anotações" value={diario.anotacoes} />
+      <Item
+        key="registro-do-dia-anotacoes"
+        label="anotações"
+        value={diario.anotacoes}
+      />
     </Grid>
   )
 }
