@@ -21,7 +21,8 @@ const Emoji: FC<IEmojiProps> = ({ nome }) => {
     inseguro: '\u{1F629}',
     amoroso: '\u{1F970}',
     ansioso: '\u{1F92F}',
-    calmo: '\u{1F60C}'
+    calmo: '\u{1F60C}',
+    lapis: '\u{270F}'
   }
 
   return (

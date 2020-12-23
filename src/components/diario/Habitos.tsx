@@ -2,6 +2,7 @@ import React, { FC } from 'react'
 import { Box, Checkbox, Grid, Typography, withStyles } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import { IGruposDeHabitos } from '../../services/GetUserDiariosByDateRange'
 
 const StyledCheckbox = withStyles({
   root: {
@@ -78,14 +79,9 @@ const useStyles = makeStyles(() =>
   })
 )
 
-type GruposDeHabitos = {
-  nome: string
-  habitos: Array<string>
-}
-
 interface IHabitosProps {
   onChange: (event) => void
-  values: Array<GruposDeHabitos>
+  values: Array<IGruposDeHabitos>
 }
 
 const Habitos: FC<IHabitosProps> = ({ onChange, values }) => {

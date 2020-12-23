@@ -46,26 +46,27 @@ interface ISentimentosProps {
   values: Array<unknown>
 }
 
+export const sentimentos = [
+  { emoji: 'triste', nome: 'triste' },
+  { emoji: 'alegre', nome: 'alegre' },
+  { emoji: 'amedrontado', nome: 'amedrontado' },
+  { emoji: 'seguro', nome: 'seguro' },
+  { emoji: 'irritado', nome: 'irritado' },
+  { emoji: 'pacifico', nome: 'pacífico' },
+  { emoji: 'cansado', nome: 'cansado' },
+  { emoji: 'motivado', nome: 'motivado' },
+  { emoji: 'culpado', nome: 'culpado' },
+  { emoji: 'grato', nome: 'grato' },
+  { emoji: 'desanimado', nome: 'desanimado' },
+  { emoji: 'confiante', nome: 'confiante' },
+  { emoji: 'inseguro', nome: 'inseguro' },
+  { emoji: 'amoroso', nome: 'amoroso' },
+  { emoji: 'ansioso', nome: 'ansioso' },
+  { emoji: 'calmo', nome: 'calmo' }
+]
+
 const Sentimentos: FC<ISentimentosProps> = ({ onCheckboxClick, values }) => {
   const classes = useStyles()
-  const sentimentos = [
-    { emoji: 'triste', nome: 'triste' },
-    { emoji: 'alegre', nome: 'alegre' },
-    { emoji: 'amedrontado', nome: 'amedrontado' },
-    { emoji: 'seguro', nome: 'seguro' },
-    { emoji: 'irritado', nome: 'irritado' },
-    { emoji: 'pacifico', nome: 'pacífico' },
-    { emoji: 'cansado', nome: 'cansado' },
-    { emoji: 'motivado', nome: 'motivado' },
-    { emoji: 'culpado', nome: 'culpado' },
-    { emoji: 'grato', nome: 'grato' },
-    { emoji: 'desanimado', nome: 'desanimado' },
-    { emoji: 'confiante', nome: 'confiante' },
-    { emoji: 'inseguro', nome: 'inseguro' },
-    { emoji: 'amoroso', nome: 'amoroso' },
-    { emoji: 'ansioso', nome: 'ansioso' },
-    { emoji: 'calmo', nome: 'calmo' }
-  ]
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {

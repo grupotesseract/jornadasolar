@@ -48,11 +48,15 @@ const DadosAutenticacao: FC = () => {
   const handleOnClickButton = async () => {
     setLoading(true)
     try {
-      const {
-        user: { uid }
-      } = await auth.createUserWithEmailAndPassword(email, password)
+      const { user } = await auth.createUserWithEmailAndPassword(
+        email,
+        password
+      )
+      user.updateProfile({
+        displayName: nome
+      })
       const now = firebase.firestore.FieldValue.serverTimestamp()
-      firestore.collection('user').doc(uid).set({
+      firestore.collection('user').doc(user.uid).set({
         nome,
         email,
         objetivos,
@@ -62,7 +66,7 @@ const DadosAutenticacao: FC = () => {
       })
       firestore.collection('diario').add({
         date: now,
-        userId: uid,
+        userId: user.uid,
         sentimentos,
         gruposDeHabitos
       })
