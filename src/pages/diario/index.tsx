@@ -1,7 +1,9 @@
-import { Box, Container } from '@material-ui/core'
 import React, { FC, useEffect, useState } from 'react'
+import { ptBR } from 'date-fns/locale'
+import { Box, Container } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { FirebaseAuthConsumer } from '@react-firebase/auth'
+import { useRouter } from 'next/dist/client/router'
 import GetUserDiariosByDateRange from '../../services/GetUserDiariosByDateRange'
 import {
   format,
@@ -15,7 +17,6 @@ import {
   eachDayOfInterval,
   compareDesc
 } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
 import RegistroDoDia from '../../components/diario/RegistroDoDia'
 import Saudacao from '../../components/Saudacao'
 import PageNavigator from '../../components/PageNavigator'
@@ -57,14 +58,16 @@ type User = {
 
 interface IDiarioProps {
   user: User
+  isSignedIn: boolean
 }
 
-const Diario: FC<IDiarioProps> = ({ user }) => {
+const Diario: FC<IDiarioProps> = ({ user, isSignedIn }) => {
   const [diarios, setDiarios] = useState([])
   const [mes, setMes] = useState(new Date())
   const [dataInicial, setDataInicial] = useState(startOfMonth(mes))
   const [dataFinal, setDataFinal] = useState(endOfDay(lastDayOfMonth(mes)))
   const classes = useStyles()
+  const router = useRouter()
   const dias = eachDayOfInterval({
     start: dataInicial,
     end: isThisMonth(mes) ? new Date() : dataFinal
@@ -95,6 +98,12 @@ const Diario: FC<IDiarioProps> = ({ user }) => {
     }
     buscarDiarios()
   }, [user?.uid, dataInicial, dataFinal])
+
+  useEffect(() => {
+    if (!isSignedIn) {
+      router.replace('/login')
+    }
+  }, [isSignedIn])
 
   return (
     <>
@@ -138,8 +147,8 @@ const Diario: FC<IDiarioProps> = ({ user }) => {
 const DiarioWithAuth: FC = () => {
   return (
     <FirebaseAuthConsumer>
-      {({ user }) => {
-        return <Diario user={user} />
+      {({ user, isSignedIn }) => {
+        return <Diario user={user} isSignedIn={isSignedIn} />
       }}
     </FirebaseAuthConsumer>
   )

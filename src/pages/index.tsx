@@ -12,6 +12,7 @@ const useStyles = makeStyles(() =>
     },
     texto: {
       maxWidth: 300,
+      marginTop: 30,
       fontSize: 20,
       lineHeight: '27px',
       textAlign: 'center'
