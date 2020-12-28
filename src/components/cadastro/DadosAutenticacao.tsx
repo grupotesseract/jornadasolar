@@ -52,11 +52,11 @@ const DadosAutenticacao: FC = () => {
         email,
         password
       )
-      user.updateProfile({
+      await user.updateProfile({
         displayName: nome
       })
       const now = firebase.firestore.FieldValue.serverTimestamp()
-      firestore.collection('user').doc(user.uid).set({
+      await firestore.collection('user').doc(user.uid).set({
         nome,
         email,
         objetivos,
@@ -64,7 +64,7 @@ const DadosAutenticacao: FC = () => {
         created_at: now,
         updated_at: now
       })
-      firestore.collection('diario').add({
+      await firestore.collection('diario').add({
         date: now,
         userId: user.uid,
         sentimentos,
