@@ -15,7 +15,7 @@ const Emoji: FC<IEmojiProps> = ({ nome }) => {
     cansado: '\u{1F971}',
     motivado: '\u{1F929}',
     culpado: '\u{1F613}',
-    grato: '\u{263A}',
+    grato: '😊',
     desanimado: '\u{1F614}',
     confiante: '\u{1F929}',
     inseguro: '\u{1F629}',
