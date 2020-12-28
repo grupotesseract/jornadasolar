@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import { Box, CircularProgress } from '@material-ui/core/'
 import Emoji from '../components/Emoji'
 import TextField from '../components/TextField'
@@ -8,9 +8,10 @@ import Titulo from '../components/Titulo'
 import InputLabel from '../components/InputLabel'
 import EsqueciMinhaSenha from '../components/login/EsqueciMinhaSenha'
 import { useRouter } from 'next/dist/client/router'
-import firebase from 'firebase/app'
+import { auth } from '../components/firebase/firebase.config'
+import { FirebaseAuthConsumer } from '@react-firebase/auth'
 
-const Login: FC = () => {
+const Login: FC = ({ isSignedIn }) => {
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -24,7 +25,7 @@ const Login: FC = () => {
     setLoading(true)
     setErro('')
     try {
-      await firebase.auth().signInWithEmailAndPassword(email, password)
+      await auth.signInWithEmailAndPassword(email, password)
       router.push('/diario')
     } catch (e) {
       const { message } = e
@@ -32,6 +33,12 @@ const Login: FC = () => {
     }
     setLoading(false)
   }
+
+  useEffect(() => {
+    if (isSignedIn) {
+      router.replace('/diario')
+    }
+  }, [isSignedIn])
 
   return (
     <Layout
@@ -57,4 +64,13 @@ const Login: FC = () => {
   )
 }
 
-export default Login
+const LoginWithAuth: FC = () => {
+  return (
+    <FirebaseAuthConsumer>
+      {({ isSignedIn }) => {
+        return <Login isSignedIn={isSignedIn} />
+      }}
+    </FirebaseAuthConsumer>
+  )
+}
+export default LoginWithAuth

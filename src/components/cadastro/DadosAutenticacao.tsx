@@ -70,7 +70,8 @@ const DadosAutenticacao: FC = () => {
         sentimentos,
         gruposDeHabitos
       })
-      router.push('/login')
+      await auth.signInWithEmailAndPassword(email, password)
+      router.push('/diario')
     } catch (e) {
       console.log('erro', e)
       setErro(getMessageFromCode(e.code))
