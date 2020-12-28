@@ -11,7 +11,10 @@ import { useRouter } from 'next/dist/client/router'
 import { auth } from '../components/firebase/firebase.config'
 import { FirebaseAuthConsumer } from '@react-firebase/auth'
 
-const Login: FC = ({ isSignedIn }) => {
+interface ILoginProps {
+  isSignedIn: boolean
+}
+const Login: FC<ILoginProps> = ({ isSignedIn }: ILoginProps) => {
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
