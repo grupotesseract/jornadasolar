@@ -1,34 +1,16 @@
 import React, { FC, Fragment, useEffect, useState } from 'react'
-import { FirebaseAuthConsumer } from '@react-firebase/auth'
-import { NextPage, NextPageContext } from 'next'
-import Link from 'next/link'
+import { NextPageContext } from 'next'
 import { Box, Container, Typography } from '@material-ui/core'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
-import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import { addDays, isToday, parse, format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import PageNavigator from '../../components/PageNavigator'
-import DetalheDoItem from '../../components/diario/RegistroDoDia/DetalheDoItem'
+import PageNavigator from '../../../components/PageNavigator'
+import DetalheDoItem from '../../../components/diario/RegistroDoDia/DetalheDoItem'
 import GetUserDiarioByDate, {
   IDiario
-} from '../../services/GetUserDiarioByDate'
-import Sentimento from '../../components/diario/Sentimento'
-
-const useStyles = makeStyles(() =>
-  createStyles({
-    linkVoltar: {
-      marginTop: 14,
-      marginLeft: 6,
-      display: 'flex',
-      alignItems: 'center',
-      fontSize: 14,
-      cursor: 'pointer'
-    },
-    icone: {
-      marginRight: 6
-    }
-  })
-)
+} from '../../../services/GetUserDiarioByDate'
+import Sentimento from '../../../components/diario/Sentimento'
+import LinkVoltar from '../../../components/LinkVoltar'
+import withAuth from '../../../components/hocs/withAuth'
 
 interface IProps {
   userId?: string
@@ -39,7 +21,6 @@ const Detalhe: FC<IProps> = ({ userId, date }) => {
   const [dia, setDia] = useState(parse(date, 'd-M-yyyy', new Date()))
 
   const [registroDoDia, setRegistroDoDia] = useState<IDiario>()
-  const classes = useStyles()
   const habitos = registroDoDia?.gruposDeHabitos
     ?.map(grupo => grupo.habitos)
     .flat()
@@ -67,12 +48,7 @@ const Detalhe: FC<IProps> = ({ userId, date }) => {
 
   return (
     <Container maxWidth="xs">
-      <Link href="/diario">
-        <Typography className={classes.linkVoltar}>
-          <ArrowBackIcon className={classes.icone} fontSize="small" />
-          Voltar
-        </Typography>
-      </Link>
+      <LinkVoltar href="/diario" />
 
       <Box mt={3} mr={1} ml={1}>
         <PageNavigator
@@ -95,6 +71,7 @@ const Detalhe: FC<IProps> = ({ userId, date }) => {
             </Fragment>
           )
         })}
+        linkHref={`/diario/${date}/anotacoes`}
       />
 
       <DetalheDoItem
@@ -111,11 +88,13 @@ const Detalhe: FC<IProps> = ({ userId, date }) => {
             ))}
           </Box>
         }
+        linkHref={`/diario/${date}/anotacoes`}
       />
 
       <DetalheDoItem
         label="Anotações"
         value={<Typography>{registroDoDia?.anotacoes}</Typography>}
+        linkHref={`/diario/${date}/anotacoes`}
       />
     </Container>
   )
@@ -125,13 +104,7 @@ interface IDetalheWithAuthProps {
   date: string
 }
 
-const DetalheWithAuth: NextPage<IDetalheWithAuthProps> = ({ date }) => (
-  <FirebaseAuthConsumer>
-    {({ user }) => {
-      return <Detalhe userId={user?.uid} date={date} />
-    }}
-  </FirebaseAuthConsumer>
-)
+const DetalheWithAuth = withAuth(Detalhe)
 
 DetalheWithAuth.getInitialProps = (
   context: NextPageContext
