@@ -79,12 +79,15 @@ const useStyles = makeStyles(() =>
   })
 )
 
-interface IHabitosProps {
+interface IHabitosCheckboxGroupProps {
   onChange: (event) => void
   values: Array<IGruposDeHabitos>
 }
 
-const Habitos: FC<IHabitosProps> = ({ onChange, values }) => {
+const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
+  onChange,
+  values
+}) => {
   const classes = useStyles()
 
   const gruposDeHabitos = [
@@ -224,6 +227,7 @@ const Habitos: FC<IHabitosProps> = ({ onChange, values }) => {
                           checked: event.target.checked
                         })
                       }
+                      checked={values[indexGrupo].habitos.includes(habito)}
                     />
                     <Typography
                       className={
@@ -250,4 +254,4 @@ const Habitos: FC<IHabitosProps> = ({ onChange, values }) => {
   )
 }
 
-export default Habitos
+export default HabitosCheckboxGroup
