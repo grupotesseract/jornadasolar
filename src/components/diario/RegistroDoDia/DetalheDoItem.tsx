@@ -32,10 +32,10 @@ const useStyles = makeStyles(() =>
 interface IProps {
   label: string
   value: ReactFragment
+  linkHref: string
 }
 
-
-const DetalheDoItem: FC<IProps> = ({ label, value }) => {
+const DetalheDoItem: FC<IProps> = ({ label, value, linkHref }) => {
   const classes = useStyles()
   return (
     <Box className={classes.diario}>
@@ -44,7 +44,7 @@ const DetalheDoItem: FC<IProps> = ({ label, value }) => {
           {label}:
         </Typography>
 
-        <Link href="">
+        <Link href={linkHref}>
           <Typography color="primary" className={classes.textoLink}>
             Editar
           </Typography>
