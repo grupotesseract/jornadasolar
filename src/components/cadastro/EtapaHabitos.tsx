@@ -4,7 +4,7 @@ import { bindActionCreators } from '@reduxjs/toolkit'
 import { Box } from '@material-ui/core'
 import Layout from '../Layout'
 import Titulo from '../Titulo'
-import Habitos from '../diario/Habitos'
+import HabitosCheckboxGroup from '../diario/HabitosCheckboxGroup'
 import { avancoParaEtapa5Solicitado as avancoParaEtapa5SolicitadoAction } from '../../redux/cadastro'
 
 const EtapaHabitos: FC = () => {
@@ -70,7 +70,10 @@ const EtapaHabitos: FC = () => {
       </Titulo>
 
       <Box mt="42px" maxWidth={360} pl="28px">
-        <Habitos onChange={setGruposDeHabitos} values={gruposDeHabitos} />
+        <HabitosCheckboxGroup
+          onChange={setGruposDeHabitos}
+          values={gruposDeHabitos}
+        />
       </Box>
     </Layout>
   )
