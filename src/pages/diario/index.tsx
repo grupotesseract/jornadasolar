@@ -19,7 +19,7 @@ import {
 } from 'date-fns'
 import RegistroDoDia from '../../components/diario/RegistroDoDia'
 import Saudacao from '../../components/Saudacao'
-import PageNavigator from '../../components/PageNavigator'
+import DiarioNavigator from '../../components/DiarioNavigator'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -115,11 +115,11 @@ const Diario: FC<IDiarioProps> = ({ user, isSignedIn }) => {
           <Saudacao className={classes.nome} nome={user?.displayName} />
         </Box>
         <Box mt={16} mr={2} ml={2}>
-          <PageNavigator
+          <DiarioNavigator
             label={format(mes, 'MMMM, yyyy', { locale: ptBR })}
             onVoltarClick={voltarMes}
             onAvancarClick={avancarMes}
-            onAvancarDisabled={isThisMonth(mes)}
+            avancarDisabled={isThisMonth(mes)}
           />
         </Box>
 
