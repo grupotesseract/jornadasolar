@@ -1,16 +1,15 @@
-import React, { FC, Fragment, useEffect, useState } from 'react'
+import React, { FC, Fragment, useState } from 'react'
 import { NextPageContext } from 'next'
 import { Box, Container, Typography } from '@material-ui/core'
 import { addDays, isToday, parse, format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import PageNavigator from '../../../components/PageNavigator'
 import DetalheDoItem from '../../../components/diario/RegistroDoDia/DetalheDoItem'
-import GetUserDiarioByDate, {
-  IDiario
-} from '../../../services/GetUserDiarioByDate'
+import { IDiario } from '../../../services/GetUserDiarioByDate'
 import Sentimento from '../../../components/diario/Sentimento'
 import LinkVoltar from '../../../components/LinkVoltar'
 import withAuth from '../../../components/hocs/withAuth'
+import RegistroDoDiaNavigator from '../../../components/RegistroDoDiaNavigator'
+import useRegistroDoDia from '../../../hooks/useRegistroDoDia'
 
 interface IProps {
   userId?: string
@@ -18,46 +17,32 @@ interface IProps {
 }
 
 const Detalhe: FC<IProps> = ({ userId, date }) => {
-  const [dia, setDia] = useState(parse(date, 'd-M-yyyy', new Date()))
-
+  const dia = parse(date, 'd-M-yyyy', new Date())
   const [registroDoDia, setRegistroDoDia] = useState<IDiario>()
   const habitos = registroDoDia?.gruposDeHabitos
     ?.map(grupo => grupo.habitos)
     .flat()
 
-  const avancarDia = () => {
-    const novoDia = addDays(dia, 1)
-    setDia(novoDia)
-  }
-
-  const voltarDia = () => {
-    const novoDia = addDays(dia, -1)
-    setDia(novoDia)
-  }
-
-  useEffect(() => {
-    const buscarRegistroDodia = async () => {
-      const newRegistroDoDia = await GetUserDiarioByDate({
-        userId,
-        date: dia
-      })
-      setRegistroDoDia(newRegistroDoDia)
+  useRegistroDoDia({
+    userId,
+    date: dia,
+    selector: registroDoDia => {
+      setRegistroDoDia(registroDoDia)
     }
-    buscarRegistroDodia()
-  }, [userId, dia])
+  })
 
   return (
     <Container maxWidth="xs">
       <LinkVoltar href="/diario" />
 
       <Box mt={3} mr={1} ml={1}>
-        <PageNavigator
+        <RegistroDoDiaNavigator
           label={format(dia, "EEEE, d 'de' MMMM", {
             locale: ptBR
           })}
-          onVoltarClick={voltarDia}
-          onAvancarClick={avancarDia}
-          onAvancarDisabled={isToday(dia)}
+          anterior={addDays(dia, -1)}
+          proximo={addDays(dia, 1)}
+          proximoDisabled={isToday(dia)}
         />
       </Box>
 
@@ -71,7 +56,7 @@ const Detalhe: FC<IProps> = ({ userId, date }) => {
             </Fragment>
           )
         })}
-        linkHref={`/diario/${date}/anotacoes`}
+        linkHref={`/diario/${date}/sentimentos`}
       />
 
       <DetalheDoItem
@@ -88,7 +73,7 @@ const Detalhe: FC<IProps> = ({ userId, date }) => {
             ))}
           </Box>
         }
-        linkHref={`/diario/${date}/anotacoes`}
+        linkHref={`/diario/${date}/habitos`}
       />
 
       <DetalheDoItem
