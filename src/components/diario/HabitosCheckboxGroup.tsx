@@ -3,6 +3,8 @@ import { Box, Checkbox, Grid, Typography, withStyles } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import { IGruposDeHabitos } from '../../services/GetUserDiariosByDateRange'
+import Emoji from '../Emoji'
+import { gruposDeHabitos } from './Habito'
 
 const StyledCheckbox = withStyles({
   root: {
@@ -75,9 +77,60 @@ const useStyles = makeStyles(() =>
     icone: {
       marginRight: 6,
       color: '#BDBDBD'
+    },
+    emoji: {
+      '&[aria-label="amigos"]': {
+        fontSize: '0.6em'
+      },
+      '&[aria-label="companheiro"]': {
+        fontSize: '0.6em'
+      }
     }
   })
 )
+
+export const valoresIniciais = [
+  {
+    nome: 'social',
+    habitos: []
+  },
+  {
+    nome: 'Lazer',
+    habitos: []
+  },
+  {
+    nome: 'Atividade física',
+    habitos: []
+  },
+  {
+    nome: 'sono',
+    habitos: []
+  },
+  {
+    nome: 'Alimentação',
+    habitos: []
+  },
+  {
+    nome: 'Saúde',
+    habitos: []
+  },
+  {
+    nome: 'Profissional',
+    habitos: []
+  },
+  {
+    nome: 'Tarefa',
+    habitos: []
+  },
+  {
+    nome: 'Sexo',
+    habitos: []
+  },
+  {
+    nome: 'Vício',
+    habitos: []
+  }
+]
 
 interface IHabitosCheckboxGroupProps {
   onChange: (event) => void
@@ -89,101 +142,6 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
   values
 }) => {
   const classes = useStyles()
-
-  const gruposDeHabitos = [
-    {
-      nome: 'social',
-      habitos: [
-        'Família',
-        'Amigos',
-        'Sozinho',
-        'Encontro casual',
-        'Companheir@',
-        'Digital'
-      ]
-    },
-    {
-      nome: 'Atividade física',
-      habitos: [
-        'Nada',
-        'Caminhada',
-        'Esporte',
-        'Alongamentos',
-        'Treino intenso',
-        'Lesionado'
-      ]
-    },
-    {
-      nome: 'sono',
-      habitos: [
-        'Dormi cedo',
-        'Dormi tarde',
-        'Dormi bem',
-        'Insônia',
-        'Sonho',
-        'Pesadelo'
-      ]
-    },
-    {
-      nome: 'Alimentação',
-      habitos: [
-        'Caseira',
-        'Fast food',
-        'Restaurante',
-        'Carne',
-        'Exagerei',
-        'Comida leve'
-      ]
-    },
-    {
-      nome: 'Saúde',
-      habitos: ['Médico', 'Remédios', 'Água', 'Terapia', 'Chás', 'Florais']
-    },
-    {
-      nome: 'Profissional',
-      habitos: [
-        'Estudos',
-        'Trabalho leve',
-        'Pressão/tensão',
-        'Voluntariado',
-        'Workaholic',
-        'Procrastinei'
-      ]
-    },
-    {
-      nome: 'Tarefa',
-      habitos: [
-        'Faxina',
-        'Reforma',
-        'Compras',
-        'Finanças',
-        'Lavar roupa',
-        'Cozinhar'
-      ]
-    },
-    {
-      nome: 'Sexo',
-      habitos: [
-        'Masturbação',
-        'Usei proteção',
-        'Casual',
-        'Companheir@',
-        'Com tesão',
-        'Ejaculei'
-      ]
-    },
-    {
-      nome: 'Vício',
-      habitos: [
-        'Cigarro',
-        'Álcool',
-        'Entorpecente',
-        'Pornografia',
-        'Jogos',
-        'Rede Social'
-      ]
-    }
-  ]
 
   const handleChange = ({ indexGrupo, habito, checked }) => {
     const newGruposDeHabitos = values[indexGrupo]
@@ -212,31 +170,47 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
                 {grupo.habitos.map(habito => (
                   <Grid
                     item
-                    key={`habito-${habito}`}
+                    key={`habito-${habito.nome}`}
                     xs={4}
                     style={{ textAlign: 'center', padding: 0 }}
                   >
                     <StyledCheckbox
-                      icon={<span />}
-                      checkedIcon={<span />}
+                      icon={
+                        <span>
+                          <Emoji
+                            nome={habito.emoji}
+                            className={classes.emoji}
+                          />
+                        </span>
+                      }
+                      checkedIcon={
+                        <span>
+                          <Emoji
+                            nome={habito.emoji}
+                            className={classes.emoji}
+                          />
+                        </span>
+                      }
                       color="primary"
                       onChange={event =>
                         handleChange({
                           indexGrupo,
-                          habito: habito,
+                          habito: habito.nome,
                           checked: event.target.checked
                         })
                       }
-                      checked={values[indexGrupo].habitos.includes(habito)}
+                      checked={values[indexGrupo]?.habitos.includes(
+                        habito.nome
+                      )}
                     />
                     <Typography
                       className={
-                        values[indexGrupo].habitos.includes(habito)
+                        values[indexGrupo]?.habitos.includes(habito.nome)
                           ? `${classes.habito} ${classes.habitoChecked}`
                           : classes.habito
                       }
                     >
-                      {habito}
+                      {habito.nome}
                     </Typography>
                   </Grid>
                 ))}

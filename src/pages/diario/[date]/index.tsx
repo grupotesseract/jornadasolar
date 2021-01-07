@@ -10,6 +10,7 @@ import LinkVoltar from '../../../components/LinkVoltar'
 import withAuth from '../../../components/hocs/withAuth'
 import RegistroDoDiaNavigator from '../../../components/RegistroDoDiaNavigator'
 import useRegistroDoDia from '../../../hooks/useRegistroDoDia'
+import Habito from '../../../components/diario/Habito'
 
 interface IProps {
   userId?: string
@@ -64,12 +65,12 @@ const Detalhe: FC<IProps> = ({ userId, date }) => {
         value={
           <Box display="flex" flexWrap="wrap">
             {habitos?.map((habito, index) => (
-              <Typography
+              <Box
                 style={{ flexGrow: 1, width: '50%' }}
                 key={`habito-${index}`}
               >
-                {habito}
-              </Typography>
+                <Habito nome={habito} key={`habito-${index}`} />
+              </Box>
             ))}
           </Box>
         }

@@ -7,12 +7,14 @@ import withAuth from '../../../components/hocs/withAuth'
 import CreateOrUpdateDiario from '../../../services/CreateOrUpdateDiario'
 import EdicaoDiario from '../../../components/templates/EdicaoDiario'
 import useRegistroDoDia from '../../../hooks/useRegistroDoDia'
-import HabitosCheckboxGroup from '../../../components/diario/HabitosCheckboxGroup'
+import HabitosCheckboxGroup, {
+  valoresIniciais
+} from '../../../components/diario/HabitosCheckboxGroup'
 
 const useStyles = makeStyles(() =>
   createStyles({
     textoInformativo: {
-      margin: '24px auto',
+      margin: '24px 29px',
       width: 284,
       color: '#BDBDBD',
       lineHeight: '22px'
@@ -28,44 +30,7 @@ interface IProps {
 const Habitos: FC<IProps> = ({ userId, date }) => {
   const classes = useStyles()
   const [diarioId, setDiarioId] = useState<string>()
-  const [gruposDeHabitos, setGruposDeHabitos] = useState([
-    {
-      nome: 'social',
-      habitos: []
-    },
-    {
-      nome: 'Atividade física',
-      habitos: []
-    },
-    {
-      nome: 'sono',
-      habitos: []
-    },
-    {
-      nome: 'Alimentação',
-      habitos: []
-    },
-    {
-      nome: 'Saúde',
-      habitos: []
-    },
-    {
-      nome: 'Profissional',
-      habitos: []
-    },
-    {
-      nome: 'Tarefa',
-      habitos: []
-    },
-    {
-      nome: 'Sexo',
-      habitos: []
-    },
-    {
-      nome: 'Vício',
-      habitos: []
-    }
-  ])
+  const [gruposDeHabitos, setGruposDeHabitos] = useState(valoresIniciais)
 
   const dia = parse(date, 'd-M-yyyy', new Date())
 
@@ -89,7 +54,7 @@ const Habitos: FC<IProps> = ({ userId, date }) => {
 
   return (
     <EdicaoDiario date={date} onClick={onSalvarClick}>
-      <Box mt="19px" maxWidth={360} pl="28px">
+      <Box mt="19px" maxWidth={360} ml="28px">
         <HabitosCheckboxGroup
           onChange={setGruposDeHabitos}
           values={gruposDeHabitos}

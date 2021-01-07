@@ -7,6 +7,7 @@ import { ptBR } from 'date-fns/locale'
 import Item from './Item'
 import { IDiario } from '../../../services/GetUserDiariosByDateRange'
 import Sentimento from '../Sentimento'
+import Habito from '../Habito'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -42,7 +43,7 @@ interface IProps {
 
 const RegistroDoDia: FC<IProps> = ({ diario }) => {
   const classes = useStyles()
-  const habitos = []
+  const habitos = diario.gruposDeHabitos?.map(grupo => grupo.habitos).flat()
 
   if (!diario) {
     return null
@@ -82,9 +83,14 @@ const RegistroDoDia: FC<IProps> = ({ diario }) => {
       <Item
         key="registro-do-dia-habitos"
         label="hábitos"
-        value={diario.gruposDeHabitos?.map(grupo =>
-          habitos.concat(grupo.habitos).join(', ')
-        )}
+        value={habitos?.map((nomeHabito, index) => {
+          return (
+            <>
+              <Habito nome={nomeHabito} key={`habito-${index}`} />
+              {index === habitos.length - 1 ? null : ', '}
+            </>
+          )
+        })}
       />
       <Item
         key="registro-do-dia-anotacoes"
