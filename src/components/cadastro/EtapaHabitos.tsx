@@ -4,7 +4,9 @@ import { bindActionCreators } from '@reduxjs/toolkit'
 import { Box } from '@material-ui/core'
 import Layout from '../Layout'
 import Titulo from '../Titulo'
-import HabitosCheckboxGroup from '../diario/HabitosCheckboxGroup'
+import HabitosCheckboxGroup, {
+  valoresIniciais
+} from '../diario/HabitosCheckboxGroup'
 import { avancoParaEtapa5Solicitado as avancoParaEtapa5SolicitadoAction } from '../../redux/cadastro'
 
 const EtapaHabitos: FC = () => {
@@ -14,44 +16,7 @@ const EtapaHabitos: FC = () => {
     dispatch
   )
 
-  const [gruposDeHabitos, setGruposDeHabitos] = useState([
-    {
-      nome: 'social',
-      habitos: []
-    },
-    {
-      nome: 'Atividade física',
-      habitos: []
-    },
-    {
-      nome: 'sono',
-      habitos: []
-    },
-    {
-      nome: 'Alimentação',
-      habitos: []
-    },
-    {
-      nome: 'Saúde',
-      habitos: []
-    },
-    {
-      nome: 'Profissional',
-      habitos: []
-    },
-    {
-      nome: 'Tarefa',
-      habitos: []
-    },
-    {
-      nome: 'Sexo',
-      habitos: []
-    },
-    {
-      nome: 'Vício',
-      habitos: []
-    }
-  ])
+  const [gruposDeHabitos, setGruposDeHabitos] = useState(valoresIniciais)
 
   const handleOnClickButton = () => {
     avancoParaEtapa5Solicitado({ gruposDeHabitos })

@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import Emoji from '../Emoji'
+import EmojiComNome from '../EmojiComNome'
 
 export const sentimentos = [
   { emoji: 'triste', nome: 'triste' },
@@ -25,15 +25,8 @@ interface IProps {
   className?: string
 }
 
-const Sentimento: FC<IProps> = ({ nome, className }) => {
-  const sentimento = sentimentos.find(sentimento => sentimento.nome === nome)
-
-  return (
-    <>
-      <Emoji nome={sentimento.emoji} />{' '}
-      <span className={className}>{sentimento.nome}</span>
-    </>
-  )
-}
+const Sentimento: FC<IProps> = ({ nome, className }) => (
+  <EmojiComNome lista={sentimentos} nome={nome} className={className} />
+)
 
 export default Sentimento
