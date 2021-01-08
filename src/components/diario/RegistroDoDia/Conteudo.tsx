@@ -6,12 +6,13 @@ import Emoji from '../../Emoji'
 
 const useStyles = makeStyles(() =>
   createStyles({
-    textoLink: {
+    link: {
       marginLeft: 8,
       fontWeight: 700,
-      fontSize: 14
+      fontSize: 14,
+      cursor: 'pointer'
     },
-    value: {
+    conteudo: {
       marginLeft: 8,
       maxWidth: 220,
       overflow: 'hidden',
@@ -24,28 +25,27 @@ const useStyles = makeStyles(() =>
 )
 
 interface IProps {
-  label: string
-  value: ReactFragment
+  conteudo: ReactFragment
+  linkHref: string
+  linkLabel: string
 }
 
-const ItemValue: FC<IProps> = ({ value, label }) => {
+const Conteudo: FC<IProps> = ({ conteudo, linkHref, linkLabel }) => {
   const classes = useStyles()
-  const textoLink =
-    label === 'anotações' ? 'Escrever sobre seu dia' : `Preencher ${label}`
 
-  if (value) {
-    return <Typography className={classes.value}>{value}</Typography>
+  if (conteudo) {
+    return <Typography className={classes.conteudo}>{conteudo}</Typography>
   }
   return (
     <>
       <Emoji nome="lapis" />
-      <Link href="/">
-        <Typography color="primary" className={classes.textoLink}>
-          {textoLink}
+      <Link href={linkHref}>
+        <Typography color="primary" className={classes.link}>
+          {linkLabel}
         </Typography>
       </Link>
     </>
   )
 }
 
-export default ItemValue
+export default Conteudo
