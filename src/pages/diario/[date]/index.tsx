@@ -1,4 +1,4 @@
-import React, { FC, Fragment, useState } from 'react'
+import React, { FC, Fragment } from 'react'
 import { NextPageContext } from 'next'
 import { Box, Container, Typography } from '@material-ui/core'
 import { addDays, isToday, parse, format } from 'date-fns'
@@ -11,6 +11,7 @@ import withAuth from '../../../components/hocs/withAuth'
 import RegistroDoDiaNavigator from '../../../components/RegistroDoDiaNavigator'
 import useRegistroDoDia from '../../../hooks/useRegistroDoDia'
 import Habito from '../../../components/diario/Habito'
+import Loading from '../../../components/Loading'
 
 interface IProps {
   userId?: string
@@ -19,18 +20,19 @@ interface IProps {
 
 const Detalhe: FC<IProps> = ({ userId, date }) => {
   const dia = parse(date, 'd-M-yyyy', new Date())
-  const [registroDoDia, setRegistroDoDia] = useState<IDiario>()
+
+  const { loading, registroDoDia } = useRegistroDoDia({
+    userId,
+    date: dia
+  })
+
   const habitos = registroDoDia?.gruposDeHabitos
     ?.map(grupo => grupo.habitos)
     .flat()
 
-  useRegistroDoDia({
-    userId,
-    date: dia,
-    selector: registroDoDia => {
-      setRegistroDoDia(registroDoDia)
-    }
-  })
+  if (loading) {
+    return <Loading />
+  }
 
   return (
     <Container maxWidth="xs">

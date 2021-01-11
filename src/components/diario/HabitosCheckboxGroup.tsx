@@ -144,16 +144,16 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
   const classes = useStyles()
 
   const handleChange = ({ indexGrupo, habito, checked }) => {
-    const newGruposDeHabitos = values[indexGrupo]
-    let newhabitos
+    const newGruposDeHabitos = { ...values[indexGrupo] }
+    let newHabitos
     if (checked) {
-      newhabitos = [...newGruposDeHabitos.habitos, habito]
+      newHabitos = [...newGruposDeHabitos.habitos, habito]
     } else {
-      newhabitos = newGruposDeHabitos.habitos.filter(value => value !== habito)
+      newHabitos = newGruposDeHabitos.habitos.filter(value => value !== habito)
     }
 
-    const newValues = [...values]
-    newValues[indexGrupo].habitos = newhabitos
+    const newValues = Array.from(values, value => ({ ...value }))
+    newValues[indexGrupo].habitos = newHabitos
     onChange(newValues)
   }
 

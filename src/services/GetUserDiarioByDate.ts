@@ -23,9 +23,8 @@ const GetUserDiarioByDate = async ({
   userId,
   date
 }: Parameters): Promise<IDiario> => {
-  const diario = {}
   if (!userId || !date) {
-    return diario
+    return null
   }
   try {
     const querySnapshot = await firestore
