@@ -3,7 +3,7 @@ import { NextPageContext } from 'next'
 import { Box, Container, Typography } from '@material-ui/core'
 import { addDays, isToday, parse, format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import DetalheDoItem from '../../../components/diario/RegistroDoDia/DetalheDoItem'
+import DetalheDaCategoria from '../../../components/diario/Detalhe/DetalheDaCategoria'
 import { IDiario } from '../../../services/GetUserDiarioByDate'
 import Sentimento from '../../../components/diario/Sentimento'
 import LinkVoltar from '../../../components/LinkVoltar'
@@ -47,9 +47,9 @@ const Detalhe: FC<IProps> = ({ userId, date }) => {
         />
       </Box>
 
-      <DetalheDoItem
-        label="Sentimentos"
-        value={registroDoDia?.sentimentos?.map((nomeSentimento, index) => {
+      <DetalheDaCategoria
+        nome="Sentimentos"
+        conteudo={registroDoDia?.sentimentos?.map((nomeSentimento, index) => {
           return (
             <Fragment key={`sentimento-${index}`}>
               <Sentimento nome={nomeSentimento} />
@@ -60,9 +60,9 @@ const Detalhe: FC<IProps> = ({ userId, date }) => {
         linkHref={`/diario/${date}/sentimentos`}
       />
 
-      <DetalheDoItem
-        label="Hábitos"
-        value={
+      <DetalheDaCategoria
+        nome="Hábitos"
+        conteudo={
           <Box display="flex" flexWrap="wrap">
             {habitos?.map((habito, index) => (
               <Box
@@ -77,9 +77,9 @@ const Detalhe: FC<IProps> = ({ userId, date }) => {
         linkHref={`/diario/${date}/habitos`}
       />
 
-      <DetalheDoItem
-        label="Anotações"
-        value={<Typography>{registroDoDia?.anotacoes}</Typography>}
+      <DetalheDaCategoria
+        nome="Anotações"
+        conteudo={<Typography>{registroDoDia?.anotacoes}</Typography>}
         linkHref={`/diario/${date}/anotacoes`}
       />
     </Container>

@@ -13,7 +13,7 @@ const useStyles = makeStyles(() =>
       boxShadow: '1px 3px 8px rgba(255, 255, 255, 0.15)',
       borderRadius: '4px'
     },
-    label: {
+    nome: {
       marginTop: 4,
       alignItems: 'center',
       fontSize: 16,
@@ -21,7 +21,7 @@ const useStyles = makeStyles(() =>
       lineHeight: '22px',
       textTransform: 'capitalize'
     },
-    textoLink: {
+    linkLabel: {
       fontWeight: 700,
       fontSize: 12,
       cursor: 'pointer'
@@ -30,29 +30,29 @@ const useStyles = makeStyles(() =>
 )
 
 interface IProps {
-  label: string
-  value: ReactFragment
+  nome: string
+  conteudo: ReactFragment
   linkHref: string
 }
 
-const DetalheDoItem: FC<IProps> = ({ label, value, linkHref }) => {
+const DetalheDaCategoria: FC<IProps> = ({ nome, conteudo, linkHref }) => {
   const classes = useStyles()
   return (
     <Box className={classes.diario}>
       <Box display="flex" justifyContent="space-between" p={2} pb={0}>
-        <Typography className={classes.label} color="textSecondary">
-          {label}:
+        <Typography className={classes.nome} color="textSecondary">
+          {nome}:
         </Typography>
 
         <Link href={linkHref}>
-          <Typography color="primary" className={classes.textoLink}>
+          <Typography color="primary" className={classes.linkLabel}>
             Editar
           </Typography>
         </Link>
       </Box>
-      <Box p={2}>{value}</Box>
+      <Box p={2}>{conteudo}</Box>
     </Box>
   )
 }
 
-export default DetalheDoItem
+export default DetalheDaCategoria
