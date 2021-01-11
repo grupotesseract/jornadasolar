@@ -1,32 +1,37 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import GetUserDiarioByDate from '../services/GetUserDiarioByDate'
 import { IDiario } from '../services/GetUserDiariosByDateRange'
 
 interface IParameters {
   userId: string
   date: Date
-  selector: (IDiario) => unknown
 }
 
-const useRegistroDoDia = ({ userId, date, selector }: IParameters): IDiario => {
-  let selected = null
+interface IResult {
+  registroDoDia: IDiario
+  loading: boolean
+}
+
+const useRegistroDoDia = ({ userId, date }: IParameters): IResult => {
+  const initialData = { loading: true, registroDoDia: null }
+  const [data, setData] = useState(initialData)
 
   const buscar = async () => {
+    await setData(initialData)
+
     const registroDoDia = await GetUserDiarioByDate({
       userId,
       date
     })
 
-    if (Object.keys(registroDoDia || {}).length > 0) {
-      selected = selector(registroDoDia)
-    }
+    setData({ loading: false, registroDoDia })
   }
 
   useEffect(() => {
     buscar()
   }, [userId, date.toString()])
 
-  return selected
+  return data
 }
 
 export default useRegistroDoDia
