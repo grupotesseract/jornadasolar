@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { NextPageContext } from 'next'
 import { Box, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
@@ -29,19 +29,17 @@ interface IProps {
 
 const Anotacoes: FC<IProps> = ({ userId, date }) => {
   const classes = useStyles()
-  const [diarioId, setDiarioId] = useState<string>()
-  const [anotacoes, setAnotacoes] = useState<string>()
-
+  const [anotacoes, setAnotacoes] = useState<string>('')
   const dia = parse(date, 'd-M-yyyy', new Date())
 
-  useRegistroDoDia({
+  const { loading, registroDoDia } = useRegistroDoDia({
     userId,
-    date: dia,
-    selector: registroDoDia => {
-      setAnotacoes(registroDoDia.anotacoes)
-      setDiarioId(registroDoDia.id)
-    }
+    date: dia
   })
+
+  useEffect(() => {
+    setAnotacoes(registroDoDia?.anotacoes)
+  }, [registroDoDia])
 
   const onChangeAnotacoes = ({ target: { value } }) => {
     setAnotacoes(value)
@@ -49,7 +47,7 @@ const Anotacoes: FC<IProps> = ({ userId, date }) => {
 
   const onSalvarClick = async () => {
     await CreateOrUpdateDiario({
-      id: diarioId,
+      id: registroDoDia?.id,
       date: dia,
       userId,
       atributos: { anotacoes }
@@ -57,7 +55,7 @@ const Anotacoes: FC<IProps> = ({ userId, date }) => {
   }
 
   return (
-    <EdicaoDiario date={date} onClick={onSalvarClick}>
+    <EdicaoDiario date={date} onClick={onSalvarClick} loading={loading}>
       <Box className={classes.containerRegistro}>
         <Box display="flex" justifyContent="space-between" p={2} pb={0}>
           <Typography color="textSecondary">Anotações:</Typography>

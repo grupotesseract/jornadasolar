@@ -7,26 +7,28 @@ import Button from '../Button'
 import Snackbar from '../Snackbar'
 import LinkVoltar from '../LinkVoltar'
 import Data from '../Data'
+import Loading from '../Loading'
 
 interface IProps {
   date: string
+  loading: boolean
   onClick: () => void
 }
 
-const EdicaoDiario: FC<IProps> = ({ children, onClick, date }) => {
-  const [loading, setLoading] = useState(false)
+const EdicaoDiario: FC<IProps> = ({ children, date, loading, onClick }) => {
+  const [submit, setSubmit] = useState(false)
   const [openSucessMessage, setOpenSucessMessage] = useState(false)
   const dia = parse(date, 'd-M-yyyy', new Date())
 
   const handleOnClick = async () => {
-    setLoading(true)
+    setSubmit(true)
     await onClick()
-    setLoading(false)
+    setSubmit(false)
     setOpenSucessMessage(true)
   }
 
   const TextoBotao = () => {
-    if (loading) {
+    if (submit) {
       return <CircularProgress color="secondary" />
     } else {
       return (
@@ -36,6 +38,10 @@ const EdicaoDiario: FC<IProps> = ({ children, onClick, date }) => {
         </>
       )
     }
+  }
+
+  if (loading) {
+    return <Loading />
   }
 
   return (

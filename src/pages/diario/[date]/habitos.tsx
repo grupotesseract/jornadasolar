@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { NextPageContext } from 'next'
 import { parse } from 'date-fns'
 import { Box, Typography } from '@material-ui/core'
@@ -29,23 +29,22 @@ interface IProps {
 
 const Habitos: FC<IProps> = ({ userId, date }) => {
   const classes = useStyles()
-  const [diarioId, setDiarioId] = useState<string>()
-  const [gruposDeHabitos, setGruposDeHabitos] = useState(valoresIniciais)
-
   const dia = parse(date, 'd-M-yyyy', new Date())
 
-  useRegistroDoDia({
+  const { loading, registroDoDia } = useRegistroDoDia({
     userId,
-    date: dia,
-    selector: registroDoDia => {
-      setGruposDeHabitos(registroDoDia.gruposDeHabitos || gruposDeHabitos)
-      setDiarioId(registroDoDia.id)
-    }
+    date: dia
   })
+
+  const [gruposDeHabitos, setGruposDeHabitos] = useState(valoresIniciais)
+
+  useEffect(() => {
+    setGruposDeHabitos(registroDoDia?.gruposDeHabitos || valoresIniciais)
+  }, [registroDoDia])
 
   const onSalvarClick = async () => {
     await CreateOrUpdateDiario({
-      id: diarioId,
+      id: registroDoDia?.id,
       date: dia,
       userId,
       atributos: { gruposDeHabitos }
@@ -53,7 +52,7 @@ const Habitos: FC<IProps> = ({ userId, date }) => {
   }
 
   return (
-    <EdicaoDiario date={date} onClick={onSalvarClick}>
+    <EdicaoDiario date={date} onClick={onSalvarClick} loading={loading}>
       <Box mt="19px" maxWidth={360} ml="28px">
         <HabitosCheckboxGroup
           onChange={setGruposDeHabitos}
