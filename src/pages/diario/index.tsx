@@ -2,7 +2,6 @@ import React, { FC, useEffect, useState } from 'react'
 import { ptBR } from 'date-fns/locale'
 import { Box, Container } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
-import { FirebaseAuthConsumer } from '@react-firebase/auth'
 import { useRouter } from 'next/dist/client/router'
 import GetUserDiariosByDateRange from '../../services/GetUserDiariosByDateRange'
 import {
@@ -19,7 +18,9 @@ import {
 } from 'date-fns'
 import RegistroDoDia from '../../components/diario/RegistroDoDia'
 import Saudacao from '../../components/Saudacao'
-import PageNavigator from '../../components/PageNavigator'
+import DiarioNavigator from '../../components/DiarioNavigator'
+import withAuth from '../../components/hocs/withAuth'
+import PageWithBottomNavigation from '../../components/templates/PageWithBottomNavigation'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -51,17 +52,13 @@ const useStyles = makeStyles(() =>
   })
 )
 
-type User = {
-  uid: string
-  displayName: string
-}
-
 interface IDiarioProps {
-  user: User
+  userId: string
+  userName: string
   isSignedIn: boolean
 }
 
-const Diario: FC<IDiarioProps> = ({ user, isSignedIn }) => {
+const Diario: FC<IDiarioProps> = ({ userId, userName, isSignedIn }) => {
   const [diarios, setDiarios] = useState([])
   const [mes, setMes] = useState(new Date())
   const [dataInicial, setDataInicial] = useState(startOfMonth(mes))
@@ -90,14 +87,14 @@ const Diario: FC<IDiarioProps> = ({ user, isSignedIn }) => {
   useEffect(() => {
     const buscarDiarios = async () => {
       const newDiarios = await GetUserDiariosByDateRange({
-        userId: user?.uid,
+        userId,
         dataInicial,
         dataFinal
       })
       setDiarios(newDiarios)
     }
     buscarDiarios()
-  }, [user?.uid, dataInicial, dataFinal])
+  }, [userId, dataInicial, dataFinal])
 
   useEffect(() => {
     if (!isSignedIn) {
@@ -106,20 +103,20 @@ const Diario: FC<IDiarioProps> = ({ user, isSignedIn }) => {
   }, [isSignedIn])
 
   return (
-    <>
+    <PageWithBottomNavigation currentPage="registro">
       <Container maxWidth="xs" className={classes.container}>
         <Box style={{ position: 'relative' }}>
           <Box className={classes.background}></Box>
         </Box>
         <Box>
-          <Saudacao className={classes.nome} nome={user?.displayName} />
+          <Saudacao className={classes.nome} nome={userName} />
         </Box>
         <Box mt={16} mr={2} ml={2}>
-          <PageNavigator
+          <DiarioNavigator
             label={format(mes, 'MMMM, yyyy', { locale: ptBR })}
             onVoltarClick={voltarMes}
             onAvancarClick={avancarMes}
-            onAvancarDisabled={isThisMonth(mes)}
+            avancarDisabled={isThisMonth(mes)}
           />
         </Box>
 
@@ -140,18 +137,10 @@ const Diario: FC<IDiarioProps> = ({ user, isSignedIn }) => {
           return <RegistroDoDia diario={diario} key={diario.id} />
         })}
       </Container>
-    </>
+    </PageWithBottomNavigation>
   )
 }
 
-const DiarioWithAuth: FC = () => {
-  return (
-    <FirebaseAuthConsumer>
-      {({ user, isSignedIn }) => {
-        return <Diario user={user} isSignedIn={isSignedIn} />
-      }}
-    </FirebaseAuthConsumer>
-  )
-}
+const DiarioWithAuth = withAuth(Diario)
 
 export default DiarioWithAuth

@@ -4,9 +4,10 @@ import { makeStyles, createStyles } from '@material-ui/core/styles'
 import Link from 'next/link'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import Item from './Item'
+import Categoria from './Categoria'
 import { IDiario } from '../../../services/GetUserDiariosByDateRange'
 import Sentimento from '../Sentimento'
+import Habito from '../Habito'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -42,7 +43,8 @@ interface IProps {
 
 const RegistroDoDia: FC<IProps> = ({ diario }) => {
   const classes = useStyles()
-  const habitos = []
+  const habitos = diario.gruposDeHabitos?.map(grupo => grupo.habitos).flat()
+  const dataFormatada = format(diario.date, 'd-M-yyyy')
 
   if (!diario) {
     return null
@@ -60,17 +62,17 @@ const RegistroDoDia: FC<IProps> = ({ diario }) => {
             locale: ptBR
           })}
         </Typography>
-        <Link href={`/diario/${format(diario.date, 'd-M-yyyy')}`}>
+        <Link href={`/diario/${dataFormatada}`}>
           <Typography color="primary" className={classes.textoLink}>
             Ver mais
           </Typography>
         </Link>
       </Grid>
 
-      <Item
+      <Categoria
         key="registro-do-dia-sentimentos"
-        label="sentimentos"
-        value={diario.sentimentos?.map((nomeSentimento, index) => {
+        nome="sentimentos"
+        conteudo={diario.sentimentos?.map((nomeSentimento, index) => {
           return (
             <>
               <Sentimento nome={nomeSentimento} key={`sentimento-${index}`} />
@@ -78,18 +80,26 @@ const RegistroDoDia: FC<IProps> = ({ diario }) => {
             </>
           )
         })}
+        linkHref={`/diario/${dataFormatada}/sentimentos`}
       />
-      <Item
+      <Categoria
         key="registro-do-dia-habitos"
-        label="hábitos"
-        value={diario.gruposDeHabitos?.map(grupo =>
-          habitos.concat(grupo.habitos).join(', ')
-        )}
+        nome="hábitos"
+        conteudo={habitos?.map((nomeHabito, index) => {
+          return (
+            <>
+              <Habito nome={nomeHabito} key={`habito-${index}`} />
+              {index === habitos.length - 1 ? null : ', '}
+            </>
+          )
+        })}
+        linkHref={`/diario/${dataFormatada}/habitos`}
       />
-      <Item
+      <Categoria
         key="registro-do-dia-anotacoes"
-        label="anotações"
-        value={diario.anotacoes}
+        nome="anotações"
+        conteudo={diario.anotacoes}
+        linkHref={`/diario/${dataFormatada}/anotacoes`}
       />
     </Grid>
   )

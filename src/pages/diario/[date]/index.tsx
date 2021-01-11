@@ -1,16 +1,17 @@
-import React, { FC, Fragment, useEffect, useState } from 'react'
+import React, { FC, Fragment } from 'react'
 import { NextPageContext } from 'next'
 import { Box, Container, Typography } from '@material-ui/core'
 import { addDays, isToday, parse, format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import PageNavigator from '../../../components/PageNavigator'
-import DetalheDoItem from '../../../components/diario/RegistroDoDia/DetalheDoItem'
-import GetUserDiarioByDate, {
-  IDiario
-} from '../../../services/GetUserDiarioByDate'
+import DetalheDaCategoria from '../../../components/diario/Detalhe/DetalheDaCategoria'
+import { IDiario } from '../../../services/GetUserDiarioByDate'
 import Sentimento from '../../../components/diario/Sentimento'
 import LinkVoltar from '../../../components/LinkVoltar'
 import withAuth from '../../../components/hocs/withAuth'
+import RegistroDoDiaNavigator from '../../../components/RegistroDoDiaNavigator'
+import useRegistroDoDia from '../../../hooks/useRegistroDoDia'
+import Habito from '../../../components/diario/Habito'
+import Loading from '../../../components/Loading'
 
 interface IProps {
   userId?: string
@@ -18,52 +19,39 @@ interface IProps {
 }
 
 const Detalhe: FC<IProps> = ({ userId, date }) => {
-  const [dia, setDia] = useState(parse(date, 'd-M-yyyy', new Date()))
+  const dia = parse(date, 'd-M-yyyy', new Date())
 
-  const [registroDoDia, setRegistroDoDia] = useState<IDiario>()
+  const { loading, registroDoDia } = useRegistroDoDia({
+    userId,
+    date: dia
+  })
+
   const habitos = registroDoDia?.gruposDeHabitos
     ?.map(grupo => grupo.habitos)
     .flat()
 
-  const avancarDia = () => {
-    const novoDia = addDays(dia, 1)
-    setDia(novoDia)
+  if (loading) {
+    return <Loading />
   }
-
-  const voltarDia = () => {
-    const novoDia = addDays(dia, -1)
-    setDia(novoDia)
-  }
-
-  useEffect(() => {
-    const buscarRegistroDodia = async () => {
-      const newRegistroDoDia = await GetUserDiarioByDate({
-        userId,
-        date: dia
-      })
-      setRegistroDoDia(newRegistroDoDia)
-    }
-    buscarRegistroDodia()
-  }, [userId, dia])
 
   return (
     <Container maxWidth="xs">
       <LinkVoltar href="/diario" />
 
       <Box mt={3} mr={1} ml={1}>
-        <PageNavigator
+        <RegistroDoDiaNavigator
           label={format(dia, "EEEE, d 'de' MMMM", {
             locale: ptBR
           })}
-          onVoltarClick={voltarDia}
-          onAvancarClick={avancarDia}
-          onAvancarDisabled={isToday(dia)}
+          anterior={addDays(dia, -1)}
+          proximo={addDays(dia, 1)}
+          proximoDisabled={isToday(dia)}
         />
       </Box>
 
-      <DetalheDoItem
-        label="Sentimentos"
-        value={registroDoDia?.sentimentos?.map((nomeSentimento, index) => {
+      <DetalheDaCategoria
+        nome="Sentimentos"
+        conteudo={registroDoDia?.sentimentos?.map((nomeSentimento, index) => {
           return (
             <Fragment key={`sentimento-${index}`}>
               <Sentimento nome={nomeSentimento} />
@@ -71,29 +59,29 @@ const Detalhe: FC<IProps> = ({ userId, date }) => {
             </Fragment>
           )
         })}
-        linkHref={`/diario/${date}/anotacoes`}
+        linkHref={`/diario/${date}/sentimentos`}
       />
 
-      <DetalheDoItem
-        label="Hábitos"
-        value={
+      <DetalheDaCategoria
+        nome="Hábitos"
+        conteudo={
           <Box display="flex" flexWrap="wrap">
             {habitos?.map((habito, index) => (
-              <Typography
+              <Box
                 style={{ flexGrow: 1, width: '50%' }}
                 key={`habito-${index}`}
               >
-                {habito}
-              </Typography>
+                <Habito nome={habito} key={`habito-${index}`} />
+              </Box>
             ))}
           </Box>
         }
-        linkHref={`/diario/${date}/anotacoes`}
+        linkHref={`/diario/${date}/habitos`}
       />
 
-      <DetalheDoItem
-        label="Anotações"
-        value={<Typography>{registroDoDia?.anotacoes}</Typography>}
+      <DetalheDaCategoria
+        nome="Anotações"
+        conteudo={<Typography>{registroDoDia?.anotacoes}</Typography>}
         linkHref={`/diario/${date}/anotacoes`}
       />
     </Container>

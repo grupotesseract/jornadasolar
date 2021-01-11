@@ -72,6 +72,7 @@ const SentimentosCheckboxGroup: FC<ISentimentosProps> = ({
           }
           value={sentimento.nome}
           name={sentimento.nome}
+          checked={values.includes(sentimento.nome)}
           onChange={handleChange}
         />
       ))}

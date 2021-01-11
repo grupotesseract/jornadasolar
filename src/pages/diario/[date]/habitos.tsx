@@ -1,23 +1,23 @@
 import React, { FC, useEffect, useState } from 'react'
 import { NextPageContext } from 'next'
+import { parse } from 'date-fns'
 import { Box, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
-import { parse } from 'date-fns'
 import withAuth from '../../../components/hocs/withAuth'
 import CreateOrUpdateDiario from '../../../services/CreateOrUpdateDiario'
-import TextArea from '../../../components/TextArea'
 import EdicaoDiario from '../../../components/templates/EdicaoDiario'
 import useRegistroDoDia from '../../../hooks/useRegistroDoDia'
+import HabitosCheckboxGroup, {
+  valoresIniciais
+} from '../../../components/diario/HabitosCheckboxGroup'
 
 const useStyles = makeStyles(() =>
   createStyles({
-    containerRegistro: {
-      margin: '0 auto',
-      width: 332,
-      minHeight: 100,
-      borderRadius: '4px',
-      background: '#222222',
-      boxShadow: '1px 3px 8px rgba(255, 255, 255, 0.15)'
+    textoInformativo: {
+      margin: '24px 29px',
+      width: 284,
+      color: '#BDBDBD',
+      lineHeight: '22px'
     }
   })
 )
@@ -27,9 +27,8 @@ interface IProps {
   date: string
 }
 
-const Anotacoes: FC<IProps> = ({ userId, date }) => {
+const Habitos: FC<IProps> = ({ userId, date }) => {
   const classes = useStyles()
-  const [anotacoes, setAnotacoes] = useState<string>('')
   const dia = parse(date, 'd-M-yyyy', new Date())
 
   const { loading, registroDoDia } = useRegistroDoDia({
@@ -37,51 +36,46 @@ const Anotacoes: FC<IProps> = ({ userId, date }) => {
     date: dia
   })
 
-  useEffect(() => {
-    setAnotacoes(registroDoDia?.anotacoes)
-  }, [registroDoDia])
+  const [gruposDeHabitos, setGruposDeHabitos] = useState(valoresIniciais)
 
-  const onChangeAnotacoes = ({ target: { value } }) => {
-    setAnotacoes(value)
-  }
+  useEffect(() => {
+    setGruposDeHabitos(registroDoDia?.gruposDeHabitos || valoresIniciais)
+  }, [registroDoDia])
 
   const onSalvarClick = async () => {
     await CreateOrUpdateDiario({
       id: registroDoDia?.id,
       date: dia,
       userId,
-      atributos: { anotacoes }
+      atributos: { gruposDeHabitos }
     })
   }
 
   return (
     <EdicaoDiario date={date} onClick={onSalvarClick} loading={loading}>
-      <Box className={classes.containerRegistro}>
-        <Box display="flex" justifyContent="space-between" p={2} pb={0}>
-          <Typography color="textSecondary">Anotações:</Typography>
-        </Box>
-
-        <Box p={2}>
-          <TextArea
-            onChange={onChangeAnotacoes}
-            id="anotacoes"
-            value={anotacoes}
-          />
-        </Box>
+      <Box mt="19px" maxWidth={360} ml="28px">
+        <HabitosCheckboxGroup
+          onChange={setGruposDeHabitos}
+          values={gruposDeHabitos}
+        />
       </Box>
+      <Typography className={classes.textoInformativo}>
+        Gostaria de editar ou incluir um novo hábito? Envie uma sugestão para
+        <span style={{ color: '#F7C92A' }}> contato@jornadasolar.com.br</span>
+      </Typography>
     </EdicaoDiario>
   )
 }
 
-interface IAnotacoesWithAuthProps {
+interface IHabitosWithAuthProps {
   date: string
 }
 
-const AnotacoesWithAuth = withAuth(Anotacoes)
+const HabitosWithAuth = withAuth(Habitos)
 
-AnotacoesWithAuth.getInitialProps = (
+HabitosWithAuth.getInitialProps = (
   context: NextPageContext
-): IAnotacoesWithAuthProps => {
+): IHabitosWithAuthProps => {
   const date = context.query.date as string
 
   return {
@@ -89,4 +83,4 @@ AnotacoesWithAuth.getInitialProps = (
   }
 }
 
-export default AnotacoesWithAuth
+export default HabitosWithAuth
