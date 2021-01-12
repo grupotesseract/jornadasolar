@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { bindActionCreators } from '@reduxjs/toolkit'
-import Layout from '../Layout'
+import Layout from '../templates/Layout'
 import Titulo from '../Titulo'
 import Subtitulo from '../Subtitulo'
 import { Box, FormGroup } from '@material-ui/core'

@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { bindActionCreators } from '@reduxjs/toolkit'
 import { Box } from '@material-ui/core'
-import Layout from '../Layout'
+import Layout from '../templates/Layout'
 import Titulo from '../Titulo'
 import HabitosCheckboxGroup, {
   valoresIniciais
