@@ -1,6 +1,6 @@
 import React, { FC, ReactNode } from 'react'
 import { Box, Container } from '@material-ui/core/'
-import Button from './Button'
+import Button from '../Button'
 
 interface ILayoutProps {
   children: ReactNode
@@ -16,12 +16,12 @@ const Layout: FC<ILayoutProps> = ({
   onButtonClick
 }) => (
   <Container maxWidth="xs">
-    <Box display="flex" flexDirection="column" minHeight="100vh">
+    <Box display="flex" flexDirection="column">
       <Box mt={2} mb={10} alignSelf="center" flexGrow="1">
         {children}
       </Box>
 
-      <Box alignSelf="center" position="fixed" top="calc(100vh - 80px)">
+      <Box alignSelf="center" position="fixed" bottom="20px">
         {exibirBotao && (
           <Button variant="contained" color="primary" onClick={onButtonClick}>
             {textoBotao}
