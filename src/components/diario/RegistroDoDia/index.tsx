@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import Categoria from './Categoria'
-import { IDiario } from '../../../services/GetUserDiariosByDateRange'
+import { IDiario } from '../../../services/GetUserDiariosByMes'
 import Sentimento from '../Sentimento'
 import Habito from '../Habito'
 

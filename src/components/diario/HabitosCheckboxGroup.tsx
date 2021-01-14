@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import { Box, Checkbox, Grid, Typography, withStyles } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
-import { IGruposDeHabitos } from '../../services/GetUserDiariosByDateRange'
+import { IGruposDeHabitos } from '../../services/GetUserDiariosByMes'
 import Emoji from '../Emoji'
 import { gruposDeHabitos } from './Habito'
 
