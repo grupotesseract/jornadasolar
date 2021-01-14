@@ -70,7 +70,7 @@ const EdicaoDiario: FC<IProps> = ({ children, date, loading, onClick }) => {
 
         {children}
 
-        <Box alignSelf="center" position="fixed" top="calc(100vh - 80px)">
+        <Box alignSelf="center" position="fixed" bottom="20px">
           <Button variant="contained" color="primary" onClick={handleOnClick}>
             <TextoBotao />
           </Button>

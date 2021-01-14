@@ -29,25 +29,8 @@ const Detalhe: FC<IProps> = ({ userId, date }) => {
     ?.map(grupo => grupo.habitos)
     .flat()
 
-  if (loading) {
-    return <Loading />
-  }
-
-  return (
-    <Container maxWidth="xs">
-      <LinkVoltar href="/diario" />
-
-      <Box mt={3} mr={1} ml={1}>
-        <RegistroDoDiaNavigator
-          label={format(dia, "EEEE, d 'de' MMMM", {
-            locale: ptBR
-          })}
-          anterior={addDays(dia, -1)}
-          proximo={addDays(dia, 1)}
-          proximoDisabled={isToday(dia)}
-        />
-      </Box>
-
+  const detalhesdaCategoria = (
+    <>
       <DetalheDaCategoria
         nome="Sentimentos"
         conteudo={registroDoDia?.sentimentos?.map((nomeSentimento, index) => {
@@ -83,6 +66,25 @@ const Detalhe: FC<IProps> = ({ userId, date }) => {
         conteudo={<Typography>{registroDoDia?.anotacoes}</Typography>}
         linkHref={`/diario/${date}/anotacoes`}
       />
+    </>
+  )
+
+  return (
+    <Container maxWidth="xs">
+      <LinkVoltar href="/diario" />
+
+      <Box mt={3} mr={1} ml={1}>
+        <RegistroDoDiaNavigator
+          label={format(dia, "EEEE, d 'de' MMMM", {
+            locale: ptBR
+          })}
+          anterior={addDays(dia, -1)}
+          proximo={addDays(dia, 1)}
+          proximoDisabled={isToday(dia)}
+        />
+      </Box>
+
+      {loading ? <Loading /> : detalhesdaCategoria}
     </Container>
   )
 }

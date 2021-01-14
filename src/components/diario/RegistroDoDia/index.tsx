@@ -1,5 +1,5 @@
 import { Grid, Typography } from '@material-ui/core'
-import React, { FC } from 'react'
+import React, { FC, Fragment } from 'react'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import Link from 'next/link'
 import { format } from 'date-fns'
@@ -74,10 +74,10 @@ const RegistroDoDia: FC<IProps> = ({ diario }) => {
         nome="sentimentos"
         conteudo={diario.sentimentos?.map((nomeSentimento, index) => {
           return (
-            <>
-              <Sentimento nome={nomeSentimento} key={`sentimento-${index}`} />
+            <Fragment key={`sentimento-${index}`}>
+              <Sentimento nome={nomeSentimento} />
               {index === diario.sentimentos.length - 1 ? null : ', '}
-            </>
+            </Fragment>
           )
         })}
         linkHref={`/diario/${dataFormatada}/sentimentos`}
@@ -87,10 +87,10 @@ const RegistroDoDia: FC<IProps> = ({ diario }) => {
         nome="hábitos"
         conteudo={habitos?.map((nomeHabito, index) => {
           return (
-            <>
-              <Habito nome={nomeHabito} key={`habito-${index}`} />
+            <Fragment key={`habito-${index}`}>
+              <Habito nome={nomeHabito} />
               {index === habitos.length - 1 ? null : ', '}
-            </>
+            </Fragment>
           )
         })}
         linkHref={`/diario/${dataFormatada}/habitos`}
