@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import GetUserDiarioByDate from '../services/GetUserDiarioByDate'
-import { IDiario } from '../services/GetUserDiariosByDateRange'
+import { IDiario } from '../services/GetUserDiariosByMes'
 
 interface IParameters {
   userId: string

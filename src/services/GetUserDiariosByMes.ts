@@ -1,9 +1,9 @@
+import { lastDayOfMonth, startOfMonth } from 'date-fns'
 import { firestore } from '../components/firebase/firebase.config'
 
 type Parameters = {
   userId?: string | null
-  dataInicial: Date
-  dataFinal: Date
+  mes: Date
 }
 
 export interface IGruposDeHabitos {
@@ -19,21 +19,20 @@ export interface IDiario {
   anotacoes: string
 }
 
-const GetUserDiariosByDateRange = async ({
+const GetUserDiariosByMes = async ({
   userId,
-  dataInicial,
-  dataFinal
+  mes
 }: Parameters): Promise<Array<IDiario>> => {
   const diarios = []
   if (!userId) {
-    return diarios
+    return null
   }
   try {
     const querySnapshot = await firestore
       .collection('diario')
       .where('userId', '==', userId)
-      .where('date', '>=', dataInicial)
-      .where('date', '<=', dataFinal)
+      .where('date', '>=', startOfMonth(mes))
+      .where('date', '<=', lastDayOfMonth(mes))
       .get()
     querySnapshot.forEach(diarioSnapshot => {
       const diariosData = diarioSnapshot.data()
@@ -53,4 +52,4 @@ const GetUserDiariosByDateRange = async ({
   }
 }
 
-export default GetUserDiariosByDateRange
+export default GetUserDiariosByMes

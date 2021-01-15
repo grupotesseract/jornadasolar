@@ -1,16 +1,11 @@
 import React, { FC, useEffect, useState } from 'react'
-import { ptBR } from 'date-fns/locale'
 import { Box, Container } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/dist/client/router'
-import GetUserDiariosByDateRange from '../../services/GetUserDiariosByDateRange'
 import {
-  format,
-  addMonths,
   isThisMonth,
   startOfMonth,
   lastDayOfMonth,
-  endOfDay,
   startOfDay,
   isEqual,
   eachDayOfInterval,
@@ -18,9 +13,11 @@ import {
 } from 'date-fns'
 import RegistroDoDia from '../../components/diario/RegistroDoDia'
 import Saudacao from '../../components/Saudacao'
-import DiarioNavigator from '../../components/DiarioNavigator'
+import MonthNavigator from '../../components/MonthNavigator'
 import withAuth from '../../components/hocs/withAuth'
 import PageWithBottomNavigation from '../../components/templates/PageWithBottomNavigation'
+import useDiarios from '../../hooks/useDiarios'
+import Loading from '../../components/Loading'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -59,48 +56,41 @@ interface IDiarioProps {
 }
 
 const Diario: FC<IDiarioProps> = ({ userId, userName, isSignedIn }) => {
-  const [diarios, setDiarios] = useState([])
   const [mes, setMes] = useState(new Date())
-  const [dataInicial, setDataInicial] = useState(startOfMonth(mes))
-  const [dataFinal, setDataFinal] = useState(endOfDay(lastDayOfMonth(mes)))
   const classes = useStyles()
   const router = useRouter()
   const dias = eachDayOfInterval({
-    start: dataInicial,
-    end: isThisMonth(mes) ? new Date() : dataFinal
+    start: startOfMonth(mes),
+    end: isThisMonth(mes) ? new Date() : lastDayOfMonth(mes)
   })
 
-  const avancarMes = () => {
-    const novoMes = addMonths(mes, 1)
-    setMes(novoMes)
-    setDataInicial(startOfMonth(novoMes))
-    setDataFinal(lastDayOfMonth(novoMes))
-  }
-
-  const voltarMes = () => {
-    const novoMes = addMonths(mes, -1)
-    setMes(novoMes)
-    setDataInicial(startOfMonth(novoMes))
-    setDataFinal(endOfDay(lastDayOfMonth(novoMes)))
-  }
-
-  useEffect(() => {
-    const buscarDiarios = async () => {
-      const newDiarios = await GetUserDiariosByDateRange({
-        userId,
-        dataInicial,
-        dataFinal
-      })
-      setDiarios(newDiarios)
-    }
-    buscarDiarios()
-  }, [userId, dataInicial, dataFinal])
+  const { loading, diarios } = useDiarios({
+    userId,
+    mes
+  })
 
   useEffect(() => {
     if (!isSignedIn) {
       router.replace('/login')
     }
   }, [isSignedIn])
+
+  const registros = dias.sort(compareDesc).map((dia, index) => {
+    let diario = diarios?.find(diario =>
+      isEqual(startOfDay(diario.date), startOfDay(dia))
+    )
+
+    if (!diario) {
+      diario = {
+        id: `diario-${index}`,
+        date: dia,
+        sentimentos: null,
+        gruposDeHabitos: null,
+        anotacoes: null
+      }
+    }
+    return <RegistroDoDia diario={diario} key={diario.id} />
+  })
 
   return (
     <PageWithBottomNavigation currentPage="registro">
@@ -112,30 +102,10 @@ const Diario: FC<IDiarioProps> = ({ userId, userName, isSignedIn }) => {
           <Saudacao className={classes.nome} nome={userName} />
         </Box>
         <Box mt={16} mr={2} ml={2}>
-          <DiarioNavigator
-            label={format(mes, 'MMMM, yyyy', { locale: ptBR })}
-            onVoltarClick={voltarMes}
-            onAvancarClick={avancarMes}
-            avancarDisabled={isThisMonth(mes)}
-          />
+          <MonthNavigator mes={mes} onClick={setMes} />
         </Box>
 
-        {dias.sort(compareDesc).map(dia => {
-          let diario = diarios?.find(diario =>
-            isEqual(startOfDay(diario.date), startOfDay(dia))
-          )
-
-          if (!diario) {
-            diario = {
-              id: dia,
-              date: dia,
-              sentimentos: null,
-              gruposDeHabitos: null,
-              anotacoes: null
-            }
-          }
-          return <RegistroDoDia diario={diario} key={diario.id} />
-        })}
+        {loading ? <Loading /> : registros}
       </Container>
     </PageWithBottomNavigation>
   )
