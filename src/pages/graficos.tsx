@@ -4,6 +4,7 @@ import { makeStyles, createStyles } from '@material-ui/core/styles'
 import PageWithBottomNavigation from '../components/templates/PageWithBottomNavigation'
 import MonthNavigator from '../components/MonthNavigator'
 import GraficoSentimentos from '../components/graficos/GraficoSentimentos'
+import GraficoHabitos from '../components/graficos/GraficoHabitos'
 import Loading from '../components/Loading'
 import withAuth from '../components/hocs/withAuth'
 import useDiarios from '../hooks/useDiarios'
@@ -60,11 +61,7 @@ const Graficos: FC<IProps> = ({ userId }) => {
     if (currentTab === 'sentimentos') {
       return <GraficoSentimentos diarios={diarios} mesAtual={mes} />
     }
-    return (
-      <Box m={2} display="flex" justifyContent="center">
-        Gráfico Hábitos
-      </Box>
-    )
+    return <GraficoHabitos diarios={diarios} mesAtual={mes} />
   }
 
   return (
@@ -75,10 +72,9 @@ const Graficos: FC<IProps> = ({ userId }) => {
       <Box display="flex" justifyContent="center" mt="34px">
         <Tabs
           value={currentTab}
-          indicatorColor="primary"
           textColor="primary"
           onChange={handleChange}
-          aria-label="disabled tabs example"
+          aria-label="gráfico tabs"
           classes={{
             indicator: classes.indicator
           }}
