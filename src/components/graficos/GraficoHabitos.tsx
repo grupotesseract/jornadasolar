@@ -25,7 +25,7 @@ const GraficoHabitos: FC<IProps> = ({ diarios, mesAtual }) => {
       registrosDoMes={habitosDoMes}
       mesAtual={mesAtual}
       listaComEmojis={listaDeHabitosComEmojis}
-      titulo="Esses hábitos tivaeram o maior impacto em sua vida neste mês:"
+      titulo="Esses hábitos tiveram o maior impacto em sua vida neste mês:"
     />
   )
 }
