@@ -10,9 +10,9 @@ interface IProps {
 
 const GraficoHabitos: FC<IProps> = ({ diarios, mesAtual }) => {
   const habitosDoMes = diarios
-    ?.map(diario => diario.gruposDeHabitos)
+    ?.map(diario => diario?.gruposDeHabitos)
     .flat()
-    .map(grupo => grupo.habitos)
+    .map(grupo => grupo?.habitos)
     .flat()
     .filter(habito => Boolean(habito))
 
@@ -25,7 +25,7 @@ const GraficoHabitos: FC<IProps> = ({ diarios, mesAtual }) => {
       registrosDoMes={habitosDoMes}
       mesAtual={mesAtual}
       listaComEmojis={listaDeHabitosComEmojis}
-      titulo="Esses hábitos tiveram o maior impacto em sua vida neste mês:"
+      titulo="Esses hábitos tivaeram o maior impacto em sua vida neste mês:"
     />
   )
 }
