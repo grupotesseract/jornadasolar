@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import MuiBottomNavigation from '@material-ui/core/BottomNavigation'
 import MuiBottomNavigationAction from '@material-ui/core/BottomNavigationAction'
-import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { SvgIcon } from '@material-ui/core'
 import IconeRegistros from './IconeRegistros'
 import IconeGraficos from './IconeGraficos'
@@ -39,6 +39,11 @@ export interface IBottomNavigationProps {
 
 const BottomNavigation: FC<IBottomNavigationProps> = ({ currentPage }) => {
   const classes = useStyles()
+  const router = useRouter()
+
+  const handleOnClick = link => () => {
+    router.push(link)
+  }
 
   return (
     <MuiBottomNavigation
@@ -47,6 +52,7 @@ const BottomNavigation: FC<IBottomNavigationProps> = ({ currentPage }) => {
       className={classes.root}
     >
       <MuiBottomNavigationAction
+        onClick={handleOnClick('/diario')}
         classes={{
           root: classes.button,
           selected: classes.selected
@@ -54,15 +60,14 @@ const BottomNavigation: FC<IBottomNavigationProps> = ({ currentPage }) => {
         value="registro"
         label="Registros"
         icon={
-          <Link href="/diario">
-            <SvgIcon>
-              <IconeRegistros />
-            </SvgIcon>
-          </Link>
+          <SvgIcon>
+            <IconeRegistros />
+          </SvgIcon>
         }
       />
 
       <MuiBottomNavigationAction
+        onClick={handleOnClick('/graficos')}
         classes={{
           root: classes.button,
           selected: classes.selected
@@ -70,11 +75,9 @@ const BottomNavigation: FC<IBottomNavigationProps> = ({ currentPage }) => {
         value="graficos"
         label="Gráficos"
         icon={
-          <Link href="/graficos">
-            <SvgIcon>
-              <IconeGraficos />
-            </SvgIcon>
-          </Link>
+          <SvgIcon>
+            <IconeGraficos />
+          </SvgIcon>
         }
       />
     </MuiBottomNavigation>
