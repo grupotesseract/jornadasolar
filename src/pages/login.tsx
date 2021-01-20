@@ -10,6 +10,7 @@ import EsqueciMinhaSenha from '../components/login/EsqueciMinhaSenha'
 import { useRouter } from 'next/dist/client/router'
 import { auth } from '../components/firebase/firebase.config'
 import { FirebaseAuthConsumer } from '@react-firebase/auth'
+import { getMessageFromCode } from '../utils/firebaseAuth'
 
 interface ILoginProps {
   isSignedIn: boolean
@@ -18,7 +19,7 @@ const Login: FC<ILoginProps> = ({ isSignedIn }: ILoginProps) => {
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [erro, setErro] = useState('')
+  const [erro, setErro] = useState(null)
   const router = useRouter()
 
   const onChangeEmail = ({ target: { value } }) => setEmail(value)
@@ -31,8 +32,7 @@ const Login: FC<ILoginProps> = ({ isSignedIn }: ILoginProps) => {
       await auth.signInWithEmailAndPassword(email, password)
       router.push('/diario')
     } catch (e) {
-      const { message } = e
-      setErro(message)
+      setErro(getMessageFromCode(e.code))
     }
     setLoading(false)
   }
@@ -55,10 +55,18 @@ const Login: FC<ILoginProps> = ({ isSignedIn }: ILoginProps) => {
       <Box mt={5}>
         <Box>
           <InputLabel>Email</InputLabel>
-          <TextField value={email} onChange={onChangeEmail} helperText={erro} />
+          <TextField
+            value={email}
+            onChange={onChangeEmail}
+            helperText={erro?.email}
+          />
 
           <InputLabel>Senha</InputLabel>
-          <PasswordTextField value={password} onChange={onChangePassword} />
+          <PasswordTextField
+            value={password}
+            onChange={onChangePassword}
+            helperText={erro?.password}
+          />
         </Box>
 
         <EsqueciMinhaSenha />

@@ -11,23 +11,13 @@ import RadioGroup from '../RadioGroup'
 import firebase from 'firebase/app'
 import { auth, firestore } from '../firebase/firebase.config'
 import { useRouter } from 'next/dist/client/router'
-
-const getMessageFromCode = (code: string) => {
-  switch (code) {
-    case 'auth/email-already-in-use':
-      return 'Email já cadastrado'
-    case 'auth/invalid-email':
-      return 'Email inválido'
-    default:
-      return null
-  }
-}
+import { getMessageFromCode } from '../../utils/firebaseAuth'
 
 const DadosAutenticacao: FC = () => {
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [temLivro, setTemLivro] = useState('')
+  const [temLivro, setTemLivro] = useState('Sim, tenho!')
   const [erro, setErro] = useState(null)
   const router = useRouter()
 
@@ -73,7 +63,6 @@ const DadosAutenticacao: FC = () => {
       await auth.signInWithEmailAndPassword(email, password)
       router.push('/diario')
     } catch (e) {
-      console.log('erro', e)
       setErro(getMessageFromCode(e.code))
     }
     setLoading(false)
@@ -90,15 +79,24 @@ const DadosAutenticacao: FC = () => {
 
       <Box mt={5}>
         <InputLabel>Email</InputLabel>
-        <TextField value={email} onChange={onChangeEmail} helperText={erro} />
+        <TextField
+          value={email}
+          onChange={onChangeEmail}
+          helperText={erro?.email}
+        />
 
         <InputLabel>Senha</InputLabel>
-        <PasswordTextField value={password} onChange={onChangePassword} />
+        <PasswordTextField
+          value={password}
+          onChange={onChangePassword}
+          helperText={erro?.password}
+        />
 
         <RadioGroup
           titulo="Você já tem o livro da Jornada Solar?"
           options={radioOptions}
           onChange={onChangeOptions}
+          currentValue={temLivro}
         />
       </Box>
     </Layout>

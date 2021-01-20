@@ -15,6 +15,7 @@ type options = {
 interface IRadioGroupProps {
   titulo: string
   options: Array<options>
+  currentValue: string
   onChange?: (e: ChangeEvent) => void
 }
 
@@ -33,7 +34,12 @@ const useStyles = makeStyles(() =>
   })
 )
 
-const RadioGroup: FC<IRadioGroupProps> = ({ titulo, options, onChange }) => {
+const RadioGroup: FC<IRadioGroupProps> = ({
+  titulo,
+  options,
+  currentValue,
+  onChange
+}) => {
   const classes = useStyles()
 
   return (
@@ -47,7 +53,7 @@ const RadioGroup: FC<IRadioGroupProps> = ({ titulo, options, onChange }) => {
           <FormControlLabel
             key={option.value}
             value={option.value}
-            control={<Radio />}
+            control={<Radio checked={option.value === currentValue} />}
             label={<span className={classes.label}>{option.label}</span>}
           />
         ))}
