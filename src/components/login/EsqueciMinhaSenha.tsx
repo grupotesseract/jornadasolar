@@ -32,7 +32,7 @@ const EsqueciMinhaSenha: FC = () => {
     return (
       <Typography className={classes.contato}>
         Esqueceu sua senha? Entre em contato com a gente pelo email
-        contato@jornadasolar.com.br
+        jornadasolar@gmail.com
       </Typography>
     )
   }
