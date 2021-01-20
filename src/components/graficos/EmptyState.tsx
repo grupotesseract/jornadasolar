@@ -25,8 +25,7 @@ const EmptyState: FC = () => {
       alignItems="center"
       justifyContent="center"
     >
-      {/* TODO: Validar com cliente a ilustração e frase */}
-      <img src="/signo/capricornio.png" width="136px" height="136px" />
+      <img src="/icons/icon-512x512.png" width="136px" height="136px" />
 
       <Typography className={classes.texto}>
         Ainda não existem registros nesse mês
