@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react'
-import { Box, Container } from '@material-ui/core'
+import { Box, Container, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/dist/client/router'
 import {
@@ -18,6 +18,9 @@ import withAuth from '../../components/hocs/withAuth'
 import PageWithBottomNavigation from '../../components/templates/PageWithBottomNavigation'
 import useDiarios from '../../hooks/useDiarios'
 import Loading from '../../components/Loading'
+import getFaseDaLua from '../../utils/getFaseDaLua'
+import getSigno from '../../utils/getSigno'
+import theme from '../../../theme'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -33,18 +36,29 @@ const useStyles = makeStyles(() =>
       position: 'absolute',
       top: '-165px',
       left: 'calc(((582px - 100%) / 2) * -1)',
-      backgroundColor: '#F7C92A',
+      backgroundColor: theme.palette.primary.main,
       zIndex: -1,
       borderBottomLeftRadius: '100%',
       borderBottomRightRadius: '100%'
     },
     nome: {
       paddingTop: 22,
-      color: '#000000',
+      color: theme.palette.secondary.main,
       fontSize: 24,
       fontWeight: 900,
       lineHeight: '33px',
       textAlign: 'center'
+    },
+    mensagem: {
+      margin: '14px auto',
+      width: 334,
+      color: theme.palette.secondary.main,
+      textAlign: 'center',
+      fontSize: 16,
+      lineHeight: '21.86px',
+      '& span': {
+        fontWeight: 700
+      }
     }
   })
 )
@@ -92,6 +106,9 @@ const Diario: FC<IDiarioProps> = ({ userId, userName, isSignedIn }) => {
     return <RegistroDoDia diario={diario} key={diario.id} />
   })
 
+  const signo = getSigno(new Date())
+  const faseDaLua = getFaseDaLua(new Date())
+
   return (
     <PageWithBottomNavigation currentPage="registro">
       <Container maxWidth="xs" className={classes.container}>
@@ -100,8 +117,13 @@ const Diario: FC<IDiarioProps> = ({ userId, userName, isSignedIn }) => {
         </Box>
         <Box>
           <Saudacao className={classes.nome} nome={userName} />
+          <Typography className={classes.mensagem}>
+            Hoje o <span>Sol</span>{' '}
+            {`está no signo de ${signo} e a Lua está na fase
+            ${faseDaLua}.`}
+          </Typography>
         </Box>
-        <Box mt={16} mr={2} ml={2}>
+        <Box mt={8} mr={2} ml={2}>
           <MonthNavigator mes={mes} onClick={setMes} />
         </Box>
 
