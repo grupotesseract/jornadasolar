@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react'
 import { Button, Typography } from '@material-ui/core/'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
+import Link from 'next/link'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -23,24 +24,12 @@ const useStyles = makeStyles(() =>
 )
 
 const EsqueciMinhaSenha: FC = () => {
-  const [botaoClicado, setBotaoClicado] = useState(false)
   const classes = useStyles()
 
-  const handleButtonClick = () => setBotaoClicado(true)
-
-  if (botaoClicado) {
-    return (
-      <Typography className={classes.contato}>
-        Esqueceu sua senha? Entre em contato com a gente pelo email
-        jornadasolar@gmail.com
-      </Typography>
-    )
-  }
-
   return (
-    <Button className={classes.botao} onClick={handleButtonClick}>
-      Esqueci minha senha
-    </Button>
+    <Link href="/auth/esquecisenha">
+      <Typography className={classes.botao}>Esqueci minha senha</Typography>
+    </Link>
   )
 }
 
