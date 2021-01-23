@@ -9,8 +9,8 @@ import InputLabel from '../components/InputLabel'
 import EsqueciMinhaSenha from '../components/login/EsqueciMinhaSenha'
 import { useRouter } from 'next/dist/client/router'
 import { auth } from '../components/firebase/firebase.config'
-import { FirebaseAuthConsumer } from '@react-firebase/auth'
 import { getMessageFromCode } from '../utils/firebaseAuth'
+import withAuth from 'src/components/hocs/withAuth'
 
 interface ILoginProps {
   isSignedIn: boolean
@@ -22,7 +22,9 @@ const Login: FC<ILoginProps> = ({ isSignedIn }: ILoginProps) => {
   const [erro, setErro] = useState(null)
   const router = useRouter()
 
-  const onChangeEmail = ({ target: { value } }) => setEmail(value)
+  const onChangeEmail = ({ target: { value } }) =>
+    setEmail(value.trim().toLowerCase())
+
   const onChangePassword = ({ target: { value } }) => setPassword(value)
 
   const handleLogin = async () => {
@@ -75,13 +77,4 @@ const Login: FC<ILoginProps> = ({ isSignedIn }: ILoginProps) => {
   )
 }
 
-const LoginWithAuth: FC = () => {
-  return (
-    <FirebaseAuthConsumer>
-      {({ isSignedIn }) => {
-        return <Login isSignedIn={isSignedIn} />
-      }}
-    </FirebaseAuthConsumer>
-  )
-}
-export default LoginWithAuth
+export default withAuth(Login)

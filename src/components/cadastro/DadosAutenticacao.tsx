@@ -21,7 +21,8 @@ const DadosAutenticacao: FC = () => {
   const [erro, setErro] = useState(null)
   const router = useRouter()
 
-  const onChangeEmail = ({ target: { value } }) => setEmail(value)
+  const onChangeEmail = ({ target: { value } }) =>
+    setEmail(value.trim().toLowerCase())
   const onChangePassword = ({ target: { value } }) => setPassword(value)
   const onChangeOptions = e => setTemLivro(e.target.value)
 
