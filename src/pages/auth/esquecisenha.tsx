@@ -43,11 +43,12 @@ const EsqueciSenha: FC = () => {
           <Typography style={{ fontSize: '1.45em' }}>
             Te enviaremos um link por email <br></br> para criar uma nova senha.
           </Typography>
-          <InputLabel>Email</InputLabel>
+          <InputLabel error={erro?.email}>Email</InputLabel>
           <TextField
             value={email}
             onChange={onChangeEmail}
             helperText={erro?.email}
+            error={erro?.email}
           />
         </Box>
         {emailEnviado && (

@@ -56,18 +56,19 @@ const Login: FC<ILoginProps> = ({ isSignedIn }: ILoginProps) => {
 
       <Box mt={5}>
         <Box>
-          <InputLabel>Email</InputLabel>
+          <InputLabel error={erro?.email}>Email</InputLabel>
           <TextField
             value={email}
             onChange={onChangeEmail}
             helperText={erro?.email}
+            error={erro?.email}
           />
-
-          <InputLabel>Senha</InputLabel>
+          <InputLabel error={erro?.password}>Senha</InputLabel>
           <PasswordTextField
             value={password}
             onChange={onChangePassword}
             helperText={erro?.password}
+            error={erro?.password}
           />
         </Box>
 
