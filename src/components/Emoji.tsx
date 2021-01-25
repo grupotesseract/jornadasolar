@@ -8,12 +8,13 @@ interface IEmojiProps {
 const Emoji: FC<IEmojiProps> = ({ nome, className }) => {
   const emojis = {
     alegre: '\u{1F603}',
+    wink: '\u{1F609}',
     seguro: '\u{1F609}',
     triste: '\u{1F622}',
     amedrontado: '\u{1F630}',
     irritado: '\u{1F621}',
     pacifico: '\u{1F642}',
-    cansado: '\u{1F971}',
+    cansado: '\u{1F62A}',
     motivado: '\u{1F929}',
     culpado: '\u{1F613}',
     grato: '\u{1F60A}',
@@ -44,7 +45,7 @@ const Emoji: FC<IEmojiProps> = ({ nome, className }) => {
     treinoIntenso: '\u{1F4AA}',
     lesionado: '\u{1F635}',
     dormiCedo: '\u{1F634}',
-    dormiTarde: '\u{1F971}',
+    dormiTarde: '\u{1F62A}',
     dormiBem: '\u{1F60C}',
     insonia: '\u{1F441}\u{FE0F}',
     sonho: '\u{1F4AD}',

@@ -1,8 +1,10 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import { Box, Container, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import Button from '../components/Button'
 import Link from 'next/link'
+import withAuth from 'src/components/hocs/withAuth'
+import { useRouter } from 'next/router'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -19,9 +21,19 @@ const useStyles = makeStyles(() =>
     }
   })
 )
+interface IHomeProps {
+  isSignedIn: boolean
+}
 
-const Home: FC = () => {
+const Home: FC<IHomeProps> = ({ isSignedIn }) => {
   const classes = useStyles()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (isSignedIn) {
+      router.push('/diario')
+    }
+  }, [isSignedIn])
 
   return (
     <Container maxWidth="xs">
@@ -40,7 +52,6 @@ const Home: FC = () => {
           alignItems="center"
           justifyContent="center"
         >
-          {/* TODO: Substituir icon por ilustração */}
           <img src="/icons/icon-512x512.png" width="154px" height="154px" />
 
           <Typography className={classes.texto}>
@@ -69,4 +80,4 @@ const Home: FC = () => {
   )
 }
 
-export default Home
+export default withAuth(Home)

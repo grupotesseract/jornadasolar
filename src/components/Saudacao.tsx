@@ -19,7 +19,7 @@ const Saudacao: FC<IProps> = ({ nome, className }) => {
   } else if (hora > 12 && hora <= 18) {
     return <Typography className={className}>Boa tarde, {nome}</Typography>
   } else {
-    return <Typography className={className}>Boa noite,{nome}</Typography>
+    return <Typography className={className}>Boa noite, {nome}</Typography>
   }
 }
 
