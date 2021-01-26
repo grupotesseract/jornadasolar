@@ -53,7 +53,7 @@ const Habitos: FC<IProps> = ({ userId, date }) => {
 
   return (
     <EdicaoDiario date={date} onClick={onSalvarClick} loading={loading}>
-      <Box mt="19px" maxWidth={360} ml="28px">
+      <Box mt="46px" maxWidth={360} ml="28px">
         <HabitosCheckboxGroup
           onChange={setGruposDeHabitos}
           values={gruposDeHabitos}

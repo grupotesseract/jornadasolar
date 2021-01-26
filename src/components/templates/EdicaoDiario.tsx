@@ -55,22 +55,24 @@ const EdicaoDiario: FC<IProps> = ({ children, date, loading, onClick }) => {
 
   return (
     <Container maxWidth="xs">
-      <Box display="flex" flexDirection="column" minHeight="100vh">
-        <LinkVoltar href={`/diario/${date}`} />
+      <Box display="flex" flexDirection="column">
+        <Box mb={12}>
+          <LinkVoltar href={`/diario/${date}`} />
 
-        <Box
-          mt="23px"
-          mb="23px"
-          textAlign="center"
-          alignItems="center"
-          display="flex"
-        >
-          <Data>{format(dia, "EEEE, d 'de' MMMM", { locale: ptBR })}</Data>
+          <Box
+            mt="23px"
+            mb="23px"
+            textAlign="center"
+            alignItems="center"
+            display="flex"
+          >
+            <Data>{format(dia, "EEEE, d 'de' MMMM", { locale: ptBR })}</Data>
+          </Box>
+
+          {children}
         </Box>
 
-        {children}
-
-        <Box alignSelf="center" position="fixed" bottom="20px">
+        <Box alignSelf="center" position="fixed" bottom="20px" zIndex={1000}>
           <Button variant="contained" color="primary" onClick={handleOnClick}>
             <TextoBotao />
           </Button>
