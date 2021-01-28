@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { createdOrUpdated as createdOrUpdatedDiario } from './diario'
+import { redefinirSenha } from './auth'
 
 export enum AlertSeverity {
   Error = 'error',
@@ -25,11 +26,18 @@ const alertSlice = createSlice({
     }
   },
   extraReducers: builder => {
-    builder.addCase(createdOrUpdatedDiario, state => {
-      state.severity = AlertSeverity.Success
-      state.message = 'Cadastro realizado com sucesso.'
-      state.only = ['/diario/[date]']
-    })
+    builder
+      .addCase(createdOrUpdatedDiario, state => {
+        state.severity = AlertSeverity.Success
+        state.message = 'Cadastro realizado com sucesso.'
+        state.only = ['/diario/[date]']
+      })
+      .addCase(redefinirSenha, state => {
+        state.severity = AlertSeverity.Success
+        state.message =
+          'Senha alterada com sucesso! Você já pode efetuar o login utilizando sua nova senha.'
+        state.only = ['/login']
+      })
   }
 })
 
