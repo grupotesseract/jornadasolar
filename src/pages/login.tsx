@@ -62,6 +62,7 @@ const Login: FC<ILoginProps> = ({ isSignedIn }: ILoginProps) => {
             onChange={onChangeEmail}
             helperText={erro?.email}
             error={erro?.email}
+            data-cy="login_usuario"
           />
           <InputLabel error={erro?.password}>Senha</InputLabel>
           <PasswordTextField
@@ -69,6 +70,7 @@ const Login: FC<ILoginProps> = ({ isSignedIn }: ILoginProps) => {
             onChange={onChangePassword}
             helperText={erro?.password}
             error={erro?.password}
+            data-cy="login_password"
           />
         </Box>
 

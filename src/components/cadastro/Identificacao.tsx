@@ -36,7 +36,11 @@ const Identificacao: FC = () => {
 
       <Box mt="21px">
         <Subtitulo>Para começar, como gostaria de ser chamado?</Subtitulo>
-        <TextField value={nome} onChange={onChangeNome} />
+        <TextField
+          value={nome}
+          onChange={onChangeNome}
+          data-cy="identificacao_nome"
+        />
       </Box>
     </Layout>
   )
