@@ -10,7 +10,7 @@ import { auth } from 'src/components/firebase/firebase.config'
 import { getMessageFromCode } from 'src/utils/firebaseAuth'
 import { redefinirSenha } from '../../redux/auth'
 
-const RedefirSenha: FC = () => {
+const RedefinirSenha: FC = () => {
   const [senha, setSenha] = useState('')
   const [senhaconfirmacao, setSenhaConfirmacao] = useState('')
   const [erroConfirmacao, setErroConfirmacao] = useState('')
@@ -34,7 +34,7 @@ const RedefirSenha: FC = () => {
     }
   }
 
-  const handleRedefirSenha = async () => {
+  const handleRedefinirSenha = async () => {
     if (oobCode && oobCode !== '') {
       setLoading(true)
       try {
@@ -55,7 +55,7 @@ const RedefirSenha: FC = () => {
 
   return (
     <Layout
-      onButtonClick={handleRedefirSenha}
+      onButtonClick={handleRedefinirSenha}
       exibirBotao={Boolean(senha) && senha === senhaconfirmacao}
       textoBotao={
         loading ? <CircularProgress color="secondary" /> : 'Continuar'
@@ -89,4 +89,4 @@ const RedefirSenha: FC = () => {
   )
 }
 
-export default RedefirSenha
+export default RedefinirSenha
