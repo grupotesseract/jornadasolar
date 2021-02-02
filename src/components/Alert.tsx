@@ -26,7 +26,7 @@ const Alert: FC = () => {
   return (
     <Snackbar
       open={Boolean(message)}
-      autoHideDuration={3000}
+      autoHideDuration={5000}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       onClose={onClose}
     >

@@ -18,6 +18,11 @@ export const getMessageFromCode = (code: string): Message => {
       }
     case 'auth/user-not-found':
       return { email: 'Email não encontrado' }
+    case 'auth/invalid-action-code':
+      return {
+        password:
+          'O link para redefinir a senha expirou. Clique em "Esqueci minha senha" na tela de login e solicite novamente. '
+      }
     default:
       return null
   }
