@@ -15,7 +15,20 @@
 /**
  * @type {Cypress.PluginConfig}
  */
+
+import FirebaseAdmin from 'firebase-admin'
+import { plugin as cypressFirebasePlugin } from 'cypress-firebase'
+import * as firebaseServiceAccount from './firebaseServiceAccount.json'
+
+FirebaseAdmin.initializeApp({
+  credential: FirebaseAdmin.credential.cert(firebaseServiceAccount)
+})
+
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
+
+  const extendedConfig = cypressFirebasePlugin(on, config, FirebaseAdmin)
+
+  return extendedConfig
 }

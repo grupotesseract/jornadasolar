@@ -14,8 +14,4 @@ describe('Login', () => {
     cy.get('[data-cy=login_password]').type(user.password)
     cy.get('[data-cy=submit]').click()
   })
-
-  it('Redirects to Diario (/diario)', () => {
-    cy.url().should('equal', 'http://localhost:3000/diario')
-  })
 })
