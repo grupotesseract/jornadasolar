@@ -23,7 +23,12 @@ const Layout: FC<ILayoutProps> = ({
 
       <Box alignSelf="center" position="fixed" bottom="20px">
         {exibirBotao && (
-          <Button variant="contained" color="primary" onClick={onButtonClick}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={onButtonClick}
+            data-cy="submit"
+          >
             {textoBotao}
           </Button>
         )}

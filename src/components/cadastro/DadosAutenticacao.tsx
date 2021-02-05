@@ -85,6 +85,7 @@ const DadosAutenticacao: FC = () => {
           onChange={onChangeEmail}
           helperText={erro?.email}
           error={erro?.email}
+          data-cy="autenticacao_email"
         />
 
         <InputLabel error={erro?.password}>Senha</InputLabel>
@@ -93,6 +94,7 @@ const DadosAutenticacao: FC = () => {
           onChange={onChangePassword}
           helperText={erro?.password}
           error={erro?.password}
+          data-cy="autenticacao_password"
         />
 
         <RadioGroup

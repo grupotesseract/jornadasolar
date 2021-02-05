@@ -1,30 +1,37 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1 align="center">
+  <img src="public/icons/icon-192x192.png" height="100" /><br>
+  Jornada Solar
+</h1>
 
-## Getting Started
+<p align="center">
+  Aplicativo do <a href="https://jornadasolar.grupotesseract.vercel.app/" target="_blank" rel="nofollow noopener">Jornada Solar</a> criado com <a href="https://nextjs.org/" target="_blank" rel="nofollow noopener">Next</a>
+</p>
 
-First, run the development server:
+<p align="center">
+  <a href="#instalação">Instalação</a> •
+  <a href="#notas">Testes</a>
+</p>
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## Instalação 🚀
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+  ```shell
+  git clone https://github.com/grupotesseract/jornadasolar.git
+  cd jornadasolar
+  yarn install
+  yarn dev
+  ```
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Testes 🔧
+ Testes unitários com <a href="https://jestjs.io/" target="_blank" rel="nofollow noopener">Jest</a> e <a href="https://enzymejs.github.io/enzyme/" target="_blank" rel="nofollow noopener">Enzyme</a>
 
-## Learn More
+  ```shell
+  yarn test
+  ```
 
-To learn more about Next.js, take a look at the following resources:
+ Testes de integração com <a href="https://jestjs.io/" target="_blank" rel="nofollow noopener">Cypress</a>
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+  ```shell
+  yarn cypress
+  ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+  > ❗ **Nota**: Para rodar os testes de integração é necessário adicionar os dados da conta de serviço do firebase. Acesse firebase *(banco de dados de desenvolvimento)* e em Configurações do projeto > Contas de serviço, clique em "Gerar nova chave privada". Salve o arquivo como `firebaseServiceAccount.json` em `/cypress/plugins/firebaseServiceAccount.json`.

@@ -16,9 +16,9 @@ const StyledButton = withStyles({
   }
 })(MuiButton)
 
-const Button: FC<Props> = ({ children, color, variant, onClick }) => {
+const Button: FC<Props> = ({ children, color, variant, onClick, ...other }) => {
   return (
-    <StyledButton onClick={onClick} color={color} variant={variant}>
+    <StyledButton onClick={onClick} color={color} variant={variant} {...other}>
       {children}
     </StyledButton>
   )
