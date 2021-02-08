@@ -8,7 +8,7 @@ type Parameters = {
   atributos: IDiario
 }
 
-const CreateOrUpdateDiario = async ({
+const CreateOrUpdateDiario = ({
   id,
   date,
   userId,
@@ -16,15 +16,15 @@ const CreateOrUpdateDiario = async ({
 }: Parameters): Promise<boolean> => {
   try {
     if (id) {
-      await firestore.collection('diario').doc(id).update(atributos)
+      firestore.collection('diario').doc(id).update(atributos)
     } else {
-      await firestore.collection('diario').add({
+      firestore.collection('diario').add({
         date,
         userId,
         ...atributos
       })
     }
-    return true
+    return
   } catch (e) {
     throw new Error('Ocorreu um erro inesperado ao salvar o diário.')
   }
