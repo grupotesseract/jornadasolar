@@ -8,7 +8,7 @@ import Sentimento from '../../../components/diario/Sentimento'
 import LinkVoltar from '../../../components/LinkVoltar'
 import withAuth from '../../../components/hocs/withAuth'
 import RegistroDoDiaNavigator from '../../../components/RegistroDoDiaNavigator'
-import useRegistroDoDia from '../../../hooks/useRegistroDoDia'
+import useRegistroByDate from '../../../hooks/useRegistroByDate'
 import Habito from '../../../components/diario/Habito'
 import Loading from '../../../components/Loading'
 
@@ -20,7 +20,7 @@ interface IProps {
 const Detalhe: FC<IProps> = ({ userId, date }) => {
   const dia = parse(date, 'd-M-yyyy', new Date())
 
-  const { loading, registroDoDia } = useRegistroDoDia({
+  const { loading, registroDoDia } = useRegistroByDate({
     userId,
     date: dia
   })

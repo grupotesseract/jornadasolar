@@ -16,7 +16,7 @@ import Saudacao from '../../components/Saudacao'
 import MonthNavigator from '../../components/MonthNavigator'
 import withAuth from '../../components/hocs/withAuth'
 import PageWithBottomNavigation from '../../components/templates/PageWithBottomNavigation'
-import useDiarios from '../../hooks/useDiarios'
+import useRegistrosByMonth from '../../hooks/useRegistrosByMonth'
 import Loading from '../../components/Loading'
 import getFaseDaLua from '../../utils/getFaseDaLua'
 import getSigno from '../../utils/getSigno'
@@ -78,7 +78,7 @@ const Diario: FC<IDiarioProps> = ({ userId, userName, isSignedIn }) => {
     end: isThisMonth(mes) ? new Date() : lastDayOfMonth(mes)
   })
 
-  const { loading, diarios } = useDiarios({
+  const { loading, diarios } = useRegistrosByMonth({
     userId,
     mes
   })
