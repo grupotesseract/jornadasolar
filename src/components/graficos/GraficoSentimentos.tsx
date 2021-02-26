@@ -1,10 +1,10 @@
 import React, { FC } from 'react'
 import { sentimentos as listaDeSentimentosComEmojis } from '../diario/Sentimento'
-import { IDiario } from '../../services/GetUserDiarioByDate'
+import { IRegistro } from '../../entities/Registro'
 import GraficoBase from './GraficoBase'
 
 interface IProps {
-  diarios: Array<IDiario>
+  diarios: Array<IRegistro>
   mesAtual: Date
 }
 

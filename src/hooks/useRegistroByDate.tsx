@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import GetUserDiarioByDate from '../services/GetUserDiarioByDate'
-import { IDiario } from '../services/GetUserDiariosByMes'
+import { IRegistro } from '../entities/Registro'
+import GetRegistroByDate from '../services/registro/GetRegistroByDate'
 
 interface IParameters {
   userId: string
@@ -8,22 +8,17 @@ interface IParameters {
 }
 
 interface IResult {
-  registroDoDia: IDiario
+  registroDoDia: IRegistro
   loading: boolean
 }
 
-const useRegistroDoDia = ({ userId, date }: IParameters): IResult => {
+const useRegistroByDate = ({ userId, date }: IParameters): IResult => {
   const initialData = { loading: true, registroDoDia: null }
   const [data, setData] = useState(initialData)
 
   const buscar = async () => {
     await setData(initialData)
-
-    const registroDoDia = await GetUserDiarioByDate({
-      userId,
-      date
-    })
-
+    const registroDoDia = await new GetRegistroByDate().call(userId, date)
     setData({ loading: false, registroDoDia })
   }
 
@@ -34,4 +29,4 @@ const useRegistroDoDia = ({ userId, date }: IParameters): IResult => {
   return data
 }
 
-export default useRegistroDoDia
+export default useRegistroByDate

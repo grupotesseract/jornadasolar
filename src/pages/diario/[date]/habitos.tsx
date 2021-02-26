@@ -4,9 +4,9 @@ import { parse } from 'date-fns'
 import { Box, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import withAuth from '../../../components/hocs/withAuth'
-import CreateOrUpdateDiario from '../../../services/CreateOrUpdateDiario'
+import CreateOrUpdateRegistro from '../../../services/registro/CreateOrUpdateRegistro'
 import EdicaoDiario from '../../../components/templates/EdicaoDiario'
-import useRegistroDoDia from '../../../hooks/useRegistroDoDia'
+import useRegistroByDate from '../../../hooks/useRegistroByDate'
 import HabitosCheckboxGroup, {
   valoresIniciais
 } from '../../../components/diario/HabitosCheckboxGroup'
@@ -31,7 +31,7 @@ const Habitos: FC<IProps> = ({ userId, date }) => {
   const classes = useStyles()
   const dia = parse(date, 'd-M-yyyy', new Date())
 
-  const { loading, registroDoDia } = useRegistroDoDia({
+  const { loading, registroDoDia } = useRegistroByDate({
     userId,
     date: dia
   })
@@ -43,11 +43,11 @@ const Habitos: FC<IProps> = ({ userId, date }) => {
   }, [registroDoDia])
 
   const onSalvarClick = async () => {
-    await CreateOrUpdateDiario({
+    await new CreateOrUpdateRegistro().call({
       id: registroDoDia?.id,
       date: dia,
       userId,
-      atributos: { gruposDeHabitos }
+      gruposDeHabitos
     })
   }
 

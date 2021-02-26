@@ -8,16 +8,17 @@ import Layout from '../templates/Layout'
 import Titulo from '../Titulo'
 import InputLabel from '../InputLabel'
 import RadioGroup from '../RadioGroup'
-import firebase from 'firebase/app'
-import { auth, firestore } from '../firebase/firebase.config'
 import { useRouter } from 'next/dist/client/router'
 import { getMessageFromCode } from '../../utils/firebaseAuth'
+import CreateUser from '../../services/user/CreateUser'
+import SignInUser from '../../services/user/SignInUser'
+import TemLivroOptions from '../../enums/user/TemLivroOptions'
 
 const DadosAutenticacao: FC = () => {
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [temLivro, setTemLivro] = useState('Sim, tenho!')
+  const [temLivro, setTemLivro] = useState(TemLivroOptions.TemLivro)
   const [erro, setErro] = useState(null)
   const router = useRouter()
 
@@ -27,9 +28,12 @@ const DadosAutenticacao: FC = () => {
   const onChangeOptions = e => setTemLivro(e.target.value)
 
   const radioOptions = [
-    { value: 'Sim, tenho!', label: 'Sim, tenho!' },
-    { value: 'Não tenho', label: 'Não tenho' },
-    { value: 'Não, mas quero saber mais', label: 'Não, mas quero saber mais' }
+    { value: TemLivroOptions.TemLivro, label: TemLivroOptions.TemLivro },
+    { value: TemLivroOptions.NaoTemLivro, label: TemLivroOptions.NaoTemLivro },
+    {
+      value: TemLivroOptions.QueroSaberMais,
+      label: TemLivroOptions.QueroSaberMais
+    }
   ]
 
   const { nome, objetivos, sentimentos, gruposDeHabitos } = useSelector(
@@ -39,29 +43,16 @@ const DadosAutenticacao: FC = () => {
   const handleOnClickButton = async () => {
     setLoading(true)
     try {
-      const { user } = await auth.createUserWithEmailAndPassword(
-        email,
-        password
-      )
-      await user.updateProfile({
-        displayName: nome
-      })
-      const now = firebase.firestore.FieldValue.serverTimestamp()
-      await firestore.collection('user').doc(user.uid).set({
+      const user = await new CreateUser().call({
         nome,
         email,
+        password,
         objetivos,
         temLivro,
-        created_at: now,
-        updated_at: now
-      })
-      await firestore.collection('diario').add({
-        date: now,
-        userId: user.uid,
         sentimentos,
         gruposDeHabitos
       })
-      await auth.signInWithEmailAndPassword(email, password)
+      new SignInUser().call(user)
       router.push('/diario')
     } catch (e) {
       setErro(getMessageFromCode(e.code))

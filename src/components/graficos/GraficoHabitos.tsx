@@ -1,10 +1,10 @@
 import React, { FC } from 'react'
-import { IDiario } from '../../services/GetUserDiarioByDate'
+import { IRegistro } from '../../entities/Registro'
 import { gruposDeHabitos } from '../diario/Habito'
 import BaseGraficos from './GraficoBase'
 
 interface IProps {
-  diarios: Array<IDiario>
+  diarios: Array<IRegistro>
   mesAtual: Date
 }
 

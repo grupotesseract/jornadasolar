@@ -2,10 +2,10 @@ import React, { FC, useEffect, useState } from 'react'
 import { NextPageContext } from 'next'
 import { parse } from 'date-fns'
 import withAuth from '../../../components/hocs/withAuth'
-import CreateOrUpdateDiario from '../../../services/CreateOrUpdateDiario'
+import CreateOrUpdateRegistro from '../../../services/registro/CreateOrUpdateRegistro'
 import SentimentosCheckboxGroup from '../../../components/diario/SentimentosCheckboxGroup'
 import EdicaoDiario from '../../../components/templates/EdicaoDiario'
-import useRegistroDoDia from '../../../hooks/useRegistroDoDia'
+import useRegistroByDate from '../../../hooks/useRegistroByDate'
 
 interface IProps {
   userId?: string
@@ -16,7 +16,7 @@ const Sentimentos: FC<IProps> = ({ userId, date }) => {
   const [sentimentos, setSentimentos] = useState<string[]>([])
   const dia = parse(date, 'd-M-yyyy', new Date())
 
-  const { loading, registroDoDia } = useRegistroDoDia({
+  const { loading, registroDoDia } = useRegistroByDate({
     userId,
     date: dia
   })
@@ -26,11 +26,11 @@ const Sentimentos: FC<IProps> = ({ userId, date }) => {
   }, [registroDoDia])
 
   const onSalvarClick = async () => {
-    await CreateOrUpdateDiario({
+    await new CreateOrUpdateRegistro().call({
       id: registroDoDia?.id,
       date: dia,
       userId,
-      atributos: { sentimentos }
+      sentimentos
     })
   }
 

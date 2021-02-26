@@ -4,10 +4,10 @@ import { Box, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { parse } from 'date-fns'
 import withAuth from '../../../components/hocs/withAuth'
-import CreateOrUpdateDiario from '../../../services/CreateOrUpdateDiario'
+import CreateOrUpdateRegistro from '../../../services/registro/CreateOrUpdateRegistro'
 import TextArea from '../../../components/TextArea'
 import EdicaoDiario from '../../../components/templates/EdicaoDiario'
-import useRegistroDoDia from '../../../hooks/useRegistroDoDia'
+import useRegistroByDate from '../../../hooks/useRegistroByDate'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -32,7 +32,7 @@ const Anotacoes: FC<IProps> = ({ userId, date }) => {
   const [anotacoes, setAnotacoes] = useState<string>('')
   const dia = parse(date, 'd-M-yyyy', new Date())
 
-  const { loading, registroDoDia } = useRegistroDoDia({
+  const { loading, registroDoDia } = useRegistroByDate({
     userId,
     date: dia
   })
@@ -46,11 +46,11 @@ const Anotacoes: FC<IProps> = ({ userId, date }) => {
   }
 
   const onSalvarClick = async () => {
-    await CreateOrUpdateDiario({
+    await new CreateOrUpdateRegistro().call({
       id: registroDoDia?.id,
       date: dia,
       userId,
-      atributos: { anotacoes }
+      anotacoes
     })
   }
 

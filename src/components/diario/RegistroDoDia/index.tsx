@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import Categoria from './Categoria'
-import { IDiario } from '../../../services/GetUserDiariosByMes'
+import { IRegistro } from '../../../entities/Registro'
 import Sentimento from '../Sentimento'
 import Habito from '../Habito'
 
@@ -38,7 +38,7 @@ const useStyles = makeStyles(() =>
 )
 
 interface IProps {
-  diario: IDiario
+  diario: IRegistro
 }
 
 const RegistroDoDia: FC<IProps> = ({ diario }) => {
