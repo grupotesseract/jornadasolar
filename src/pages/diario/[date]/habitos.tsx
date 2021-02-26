@@ -61,7 +61,7 @@ const Habitos: FC<IProps> = ({ userId, date }) => {
       </Box>
       <Typography className={classes.textoInformativo}>
         Gostaria de editar ou incluir um novo hábito? Envie uma sugestão para
-        <span style={{ color: '#F7C92A' }}> contato@jornadasolar.com.br</span>
+        <span style={{ color: '#F7C92A' }}> jornadasolar@gmail.com.br</span>
       </Typography>
     </EdicaoDiario>
   )
