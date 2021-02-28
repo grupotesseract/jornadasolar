@@ -45,6 +45,21 @@ const BottomNavigation: FC<IBottomNavigationProps> = ({ currentPage }) => {
     router.push(link)
   }
 
+  const requestPermission = () => {
+    console.log('Requesting permission...')
+    Notification.requestPermission().then(permission => {
+      if (permission === 'granted') {
+        console.log('Notification permission granted.')
+        // TODO(developer): Retrieve a registration token for use with FCM.
+        // In many cases once an app has been granted notification permission,
+        // it should update its UI reflecting this.
+        // resetUI()
+      } else {
+        console.log('Unable to get permission to notify.')
+      }
+    })
+  }
+
   return (
     <MuiBottomNavigation
       value={currentPage}
@@ -68,6 +83,21 @@ const BottomNavigation: FC<IBottomNavigationProps> = ({ currentPage }) => {
 
       <MuiBottomNavigationAction
         onClick={handleOnClick('/graficos')}
+        classes={{
+          root: classes.button,
+          selected: classes.selected
+        }}
+        value="graficos"
+        label="Gráficos"
+        icon={
+          <SvgIcon>
+            <IconeGraficos />
+          </SvgIcon>
+        }
+      />
+
+      <MuiBottomNavigationAction
+        onClick={() => requestPermission()}
         classes={{
           root: classes.button,
           selected: classes.selected

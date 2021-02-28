@@ -8,7 +8,9 @@ import { AppProps } from 'next/app'
 import store from '../redux/store'
 import AuthProvider from '../components/firebase/AuthProvider'
 import StoreProvider from '../components/firebase/FirestoreProvider'
-
+import { firebaseCloudMessaging } from '../webPush'
+import firebase from 'firebase/app'
+import 'firebase/messaging'
 const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
   useEffect(() => {
     // Remove the server-side injected CSS.
@@ -16,6 +18,34 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
     if (jssStyles) {
       jssStyles.parentElement.removeChild(jssStyles)
     }
+  }, [])
+
+  useEffect(() => {
+    console.log('load app')
+    function getMessage() {
+      const messaging = firebase.messaging()
+      messaging.onMessage(message => {
+        const { title, body } = JSON.parse(message.data.notification)
+        const options = {
+          body
+        }
+        console.log('message', title, options)
+        // self.registration.showNotification(title, options)
+      })
+    }
+    async function setToken() {
+      try {
+        console.log('init token')
+        const token = await firebaseCloudMessaging.init()
+        console.log('token', token)
+        if (token) {
+          getMessage()
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    setToken()
   }, [])
 
   return (
@@ -26,13 +56,14 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <AuthProvider>
+          
+        {/* <AuthProvider>
           <StoreProvider>
             <Provider store={store}>
               <Component {...pageProps} />
             </Provider>
           </StoreProvider>
-        </AuthProvider>
+        </AuthProvider> */}
       </ThemeProvider>
     </>
   )
