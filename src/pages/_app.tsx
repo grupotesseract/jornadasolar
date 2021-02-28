@@ -11,6 +11,7 @@ import StoreProvider from '../components/firebase/FirestoreProvider'
 import { firebaseCloudMessaging } from '../webPush'
 import firebase from 'firebase/app'
 import 'firebase/messaging'
+import { config } from 'src/components/firebase/firebase.config'
 const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
   useEffect(() => {
     // Remove the server-side injected CSS.
@@ -23,6 +24,10 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
   useEffect(() => {
     console.log('load app')
     function getMessage() {
+      if (!firebase.apps.length) {
+    console.log('config', config)
+        firebase.initializeApp(config)
+      }
       const messaging = firebase.messaging()
       messaging.onMessage(message => {
         const { title, body } = JSON.parse(message.data.notification)
@@ -56,14 +61,13 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-          
-        {/* <AuthProvider>
+        <AuthProvider>
           <StoreProvider>
             <Provider store={store}>
               <Component {...pageProps} />
             </Provider>
           </StoreProvider>
-        </AuthProvider> */}
+        </AuthProvider>
       </ThemeProvider>
     </>
   )
