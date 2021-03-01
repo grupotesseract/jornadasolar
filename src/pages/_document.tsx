@@ -8,10 +8,10 @@ import Document, {
   DocumentInitialProps
 } from 'next/document'
 import { ServerStyleSheets } from '@material-ui/core/styles'
-import { GA_TRACKING_ID } from 'src/utils/gtag'
 
 const APP_NAME = 'Jornada Solar'
 const APP_DESCRIPTION = 'Uma jornada para homens mais inteiros'
+const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS
 
 export default class extends Document {
   static getInitialProps = async (
