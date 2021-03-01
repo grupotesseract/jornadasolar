@@ -1,7 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
-import 'firebase/analytics'
 
 export const config = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -15,10 +14,6 @@ export const config = {
 }
 if (!firebase.apps.length) {
   firebase.initializeApp(config)
-  if (typeof window !== 'undefined' && 'measurementId' in config) {
-    firebase.analytics()
-    firebase.analytics().logEvent('app_started')
-  }
 }
 const auth = firebase.auth()
 const firestore = firebase.firestore()

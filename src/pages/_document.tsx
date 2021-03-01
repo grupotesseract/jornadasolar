@@ -8,6 +8,7 @@ import Document, {
   DocumentInitialProps
 } from 'next/document'
 import { ServerStyleSheets } from '@material-ui/core/styles'
+import { GA_TRACKING_ID } from 'src/utils/gtag'
 
 const APP_NAME = 'Jornada Solar'
 const APP_DESCRIPTION = 'Uma jornada para homens mais inteiros'
@@ -66,6 +67,24 @@ export default class extends Document {
           <link
             href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
             rel="stylesheet"
+          />
+
+          <script
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+          />
+          <script
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_TRACKING_ID}', {
+                page_path: window.location.pathname,
+                });
+              `
+            }}
           />
         </Head>
         <body>
