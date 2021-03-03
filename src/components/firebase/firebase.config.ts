@@ -11,13 +11,15 @@ export const config = {
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 }
+
+let analytics = null
+
 if (!firebase.apps.length) {
   firebase.initializeApp(config)
   if (typeof window !== 'undefined' && 'measurementId' in config) {
-    firebase.analytics()
-    firebase.analytics().logEvent('app_started')
+    analytics = firebase.analytics()
   }
 }
 const auth = firebase.auth()
@@ -27,4 +29,4 @@ if (process.browser) {
   firestore.enablePersistence()
 }
 
-export { auth, firestore }
+export { auth, firestore, analytics }
