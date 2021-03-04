@@ -11,6 +11,7 @@ const firebaseCloudMessaging = {
   // initializing firebase app
   init: async function () {
     try {
+      console.log('init')
       const tokenInLocalForage = await this.tokenInlocalforage()
 
       // if FCM token is already there just return the token
@@ -24,7 +25,10 @@ const firebaseCloudMessaging = {
       if (status && status === 'granted') {
         // getting token from FCM
         const messaging = firebase.messaging()
-        const fcmToken = await messaging.getToken()
+        const fcmToken = await messaging.getToken({
+          vapidKey:
+            'BPS78lJ69bDC3d2hoiY3IWCF00E_PMNxLoxMviV_WwndY9gyC8BcRH44f7cmGFGiqMK7wiw97cvw6JvSeWpokWo'
+        })
         console.log('fcmToken', fcmToken)
         if (fcmToken) {
           // setting FCM token in indexed db using localforage

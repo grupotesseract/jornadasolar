@@ -25,17 +25,18 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
     console.log('load app')
     function getMessage() {
       if (!firebase.apps.length) {
-    console.log('config', config)
+        console.log('config', config)
         firebase.initializeApp(config)
       }
       const messaging = firebase.messaging()
+      console.log('set messaging', messaging)
       messaging.onMessage(message => {
         const { title, body } = JSON.parse(message.data.notification)
         const options = {
           body
         }
         console.log('message', title, options)
-        // self.registration.showNotification(title, options)
+        self.registration.showNotification(title, options)
       })
     }
     async function setToken() {
