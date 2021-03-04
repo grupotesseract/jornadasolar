@@ -34,6 +34,7 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
       const messaging = firebase.messaging()
       console.log('set messaging', messaging)
       messaging.onMessage(message => {
+        console.log('on message ativado')
         const { title, body } = JSON.parse(message.data.notification)
         const options = {
           body
