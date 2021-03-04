@@ -7,6 +7,26 @@ importScripts('https://www.gstatic.com/firebasejs/7.9.1/firebase-messaging.js');
     messagingSenderId: '606006334999',
     appId: '1:606006334999:web:22f530ae5fce3e2474ee5'
   });
-  firebase.messaging();
+const messaging = firebase.messaging();
   //background notifications will be received here
-  firebase.messaging().setBackgroundMessageHandler((payload) => console.log('payload', payload));
+  messaging.setBackgroundMessageHandler((payload) => {
+  const notificationTitle = payload.notification.title + ' - in';
+  const notificationOptions = {
+    body: payload.notification.body,
+  };
+
+  self.registration.showNotification(notificationTitle,
+    notificationOptions);
+  });
+
+messaging.onBackgroundMessage(function(payload) {
+  console.log('Received background message ', payload);
+
+  const notificationTitle = payload.notification.title + ' - on';
+  const notificationOptions = {
+    body: payload.notification.body,
+  };
+
+  self.registration.showNotification(notificationTitle,
+    notificationOptions);
+});
