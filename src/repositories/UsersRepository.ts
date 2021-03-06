@@ -2,7 +2,7 @@ import { firestore, auth } from '../components/firebase/firebase.config'
 import firebase from 'firebase/app'
 import CreateOrUpdateRegistro from '../services/registro/CreateOrUpdateRegistro'
 import User, { IUser } from '../entities/User'
-import { IGruposDeHabitos } from 'src/entities/Registro'
+import { IGrupoDeHabitos } from '../entities/GrupoDeHabitos'
 import TemLivroOptions from '../enums/user/TemLivroOptions'
 
 interface ICreateParameters {
@@ -12,7 +12,7 @@ interface ICreateParameters {
   objetivos: Array<string>
   temLivro: TemLivroOptions
   sentimentos: Array<string>
-  gruposDeHabitos: Array<IGruposDeHabitos>
+  gruposDeHabitos: Array<IGrupoDeHabitos>
 }
 
 export interface IUsersRepository {
