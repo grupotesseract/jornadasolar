@@ -3,13 +3,14 @@ import { NextPageContext } from 'next'
 import { parse } from 'date-fns'
 import { Box, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
-import withAuth from '../../../components/hocs/withAuth'
-import CreateOrUpdateRegistro from '../../../services/registro/CreateOrUpdateRegistro'
-import EdicaoDiario from '../../../components/templates/EdicaoDiario'
-import useRegistroByDate from '../../../hooks/useRegistroByDate'
+import withAuth from '../../../../components/hocs/withAuth'
+import CreateOrUpdateRegistro from '../../../../services/registro/CreateOrUpdateRegistro'
+import EdicaoDiario from '../../../../components/templates/EdicaoDiario'
+import useRegistroByDate from '../../../../hooks/useRegistroByDate'
 import HabitosCheckboxGroup, {
   valoresIniciais
-} from '../../../components/diario/HabitosCheckboxGroup'
+} from '../../../../components/diario/HabitosCheckboxGroup'
+import { useRouter } from 'next/router'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -30,6 +31,7 @@ interface IProps {
 const Habitos: FC<IProps> = ({ userId, date }) => {
   const classes = useStyles()
   const dia = parse(date, 'd-M-yyyy', new Date())
+  const router = useRouter()
 
   const { loading, registroDoDia } = useRegistroByDate({
     userId,
@@ -51,12 +53,18 @@ const Habitos: FC<IProps> = ({ userId, date }) => {
     })
   }
 
+  const handleAdicionarHabito = () => {
+    router.push(`/diario/${date}/habitos/novo`)
+  }
+
   return (
     <EdicaoDiario date={date} onClick={onSalvarClick} loading={loading}>
       <Box mt="46px" maxWidth={360} ml="28px">
         <HabitosCheckboxGroup
           onChange={setGruposDeHabitos}
           values={gruposDeHabitos}
+          onAdicionarHabitoClick={handleAdicionarHabito}
+          userId={userId}
         />
       </Box>
       <Typography className={classes.textoInformativo}>
