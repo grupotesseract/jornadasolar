@@ -85,14 +85,12 @@ const RegistroDoDia: FC<IProps> = ({ diario }) => {
       <Categoria
         key="registro-do-dia-habitos"
         nome="hábitos"
-        conteudo={habitos?.map((nomeHabito, index) => {
-          return (
-            <Fragment key={`habito-${index}`}>
-              <Habito nome={nomeHabito} />
-              {index === habitos.length - 1 ? null : ', '}
-            </Fragment>
-          )
-        })}
+        conteudo={habitos?.map((habito, index) => (
+          <Fragment key={`habito-${index}`}>
+            <Habito habito={habito} />
+            {index === habitos.length - 1 ? null : ', '}
+          </Fragment>
+        ))}
         linkHref={`/diario/${dataFormatada}/habitos`}
       />
       <Categoria
