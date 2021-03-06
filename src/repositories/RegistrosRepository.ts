@@ -2,13 +2,14 @@ import { endOfDay, startOfDay } from 'date-fns'
 import GrupoDeHabitos from 'src/entities/GrupoDeHabitos'
 import GetGrupoDeHabitosTemplateByUserId from 'src/services/grupoDehabitos/GetGrupoDeHabitosTemplateByUserId'
 import { firestore } from '../components/firebase/firebase.config'
-import Registro, { IRegistro, IGruposDeHabitos } from '../entities/Registro'
+import Registro, { IRegistro } from '../entities/Registro'
+import { IGrupoDeHabitos } from '../entities/GrupoDeHabitos'
 
 export interface ICreateParameters {
   date: Date
   userId: string
   sentimentos?: Array<string>
-  gruposDeHabitos?: Array<IGruposDeHabitos>
+  gruposDeHabitos?: Array<IGrupoDeHabitos>
   anotacoes?: string
 }
 
