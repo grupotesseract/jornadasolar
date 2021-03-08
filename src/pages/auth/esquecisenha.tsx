@@ -4,9 +4,9 @@ import Emoji from '../../components/Emoji'
 import TextField from 'src/components/TextField'
 import Layout from 'src/components/templates/Layout'
 import Titulo from 'src/components/Titulo'
-import { auth } from 'src/components/firebase/firebase.config'
 import { getMessageFromCode } from 'src/utils/firebaseAuth'
 import InputLabel from 'src/components/InputLabel'
+import SendPasswordResetEmail from 'src/services/user/SendPasswordResetEmail'
 
 const EsqueciSenha: FC = () => {
   const [loading, setLoading] = useState(false)
@@ -21,7 +21,7 @@ const EsqueciSenha: FC = () => {
     setLoading(true)
     setErro('')
     try {
-      await auth.sendPasswordResetEmail(email)
+      await new SendPasswordResetEmail().call(email)
       setEmailEnviado(true)
     } catch (e) {
       setErro(getMessageFromCode(e.code))

@@ -53,7 +53,7 @@ const DadosAutenticacao: FC = () => {
         sentimentos,
         gruposDeHabitos
       })
-      new SignInUser().call(user)
+      await new SignInUser().call(user.email, user.password)
       analytics?.logEvent('sign_up')
       router.push('/diario')
     } catch (e) {

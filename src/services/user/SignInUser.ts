@@ -1,13 +1,12 @@
-import { IUser } from '../../entities/User'
 import { auth } from '../../components/firebase/firebase.config'
 
 interface ISignInUser {
-  call(user: IUser): boolean
+  call(email: string, password: string): Promise<boolean>
 }
 
 export default class SignInUser implements ISignInUser {
-  call(user: IUser): boolean {
-    auth.signInWithEmailAndPassword(user.email, user.password)
+  async call(email: string, password: string): Promise<boolean> {
+    await auth.signInWithEmailAndPassword(email, password)
     return true
   }
 }
