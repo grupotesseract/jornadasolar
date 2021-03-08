@@ -8,9 +8,9 @@ import Titulo from '../components/Titulo'
 import InputLabel from '../components/InputLabel'
 import EsqueciMinhaSenha from '../components/login/EsqueciMinhaSenha'
 import { useRouter } from 'next/dist/client/router'
-import { auth } from '../components/firebase/firebase.config'
 import { getMessageFromCode } from '../utils/firebaseAuth'
 import withAuth from 'src/components/hocs/withAuth'
+import SignInUser from 'src/services/user/SignInUser'
 
 interface ILoginProps {
   isSignedIn: boolean
@@ -31,7 +31,7 @@ const Login: FC<ILoginProps> = ({ isSignedIn }: ILoginProps) => {
     setLoading(true)
     setErro('')
     try {
-      await auth.signInWithEmailAndPassword(email, password)
+      await new SignInUser().call(email, password)
       router.push('/diario')
     } catch (e) {
       setErro(getMessageFromCode(e.code))
