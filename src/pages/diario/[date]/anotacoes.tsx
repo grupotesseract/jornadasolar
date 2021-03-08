@@ -18,6 +18,10 @@ const useStyles = makeStyles(() =>
       borderRadius: '4px',
       background: '#222222',
       boxShadow: '1px 3px 8px rgba(255, 255, 255, 0.15)'
+    },
+    label: {
+      fontSize: 16,
+      color: '#E0E0E0'
     }
   })
 )
@@ -57,8 +61,10 @@ const Anotacoes: FC<IProps> = ({ userId, date }) => {
   return (
     <EdicaoDiario date={date} onClick={onSalvarClick} loading={loading}>
       <Box className={classes.containerRegistro}>
-        <Box display="flex" justifyContent="space-between" p={2} pb={0}>
-          <Typography color="textSecondary">Anotações:</Typography>
+        <Box display="flex" justifyContent="space-between" p={2} pb={0} clone>
+          <label htmlFor="anotacoes" className={classes.label}>
+            Anotações:
+          </label>
         </Box>
 
         <Box p={2}>
