@@ -86,7 +86,7 @@ const Emoji: FC<IEmojiProps> = ({ nome, className }) => {
 
   return (
     <span role="img" aria-label={nome} aria-hidden className={className}>
-      {emojis[nome]}
+      {emojis[nome] || nome}
     </span>
   )
 }

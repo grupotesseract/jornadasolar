@@ -1,14 +1,11 @@
-export interface IGruposDeHabitos {
-  nome: string
-  habitos: Array<string>
-}
+import { IGrupoDeHabitos } from './GrupoDeHabitos'
 
 interface IRegistroAttributes {
   id: string
   userId?: string
   date: Date
   sentimentos?: Array<string>
-  gruposDeHabitos?: Array<IGruposDeHabitos>
+  gruposDeHabitos?: Array<IGrupoDeHabitos>
   anotacoes?: string
 }
 
@@ -19,7 +16,7 @@ export default class Registro implements IRegistro {
   public date: Date
   public userId: string
   public sentimentos: Array<string>
-  public gruposDeHabitos: Array<IGruposDeHabitos>
+  public gruposDeHabitos: Array<IGrupoDeHabitos>
   public anotacoes: string
 
   constructor({

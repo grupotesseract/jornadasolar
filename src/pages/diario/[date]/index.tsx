@@ -53,7 +53,7 @@ const Detalhe: FC<IProps> = ({ userId, date }) => {
                 style={{ flexGrow: 1, width: '50%' }}
                 key={`habito-${index}`}
               >
-                <Habito nome={habito} key={`habito-${index}`} />
+                <Habito habito={habito} key={`habito-${index}`} />
               </Box>
             ))}
           </Box>

@@ -2,22 +2,22 @@ import React, { FC } from 'react'
 import EmojiComNome from '../EmojiComNome'
 
 export const sentimentos = [
-  { emoji: 'triste', nome: 'triste' },
-  { emoji: 'alegre', nome: 'alegre' },
-  { emoji: 'amedrontado', nome: 'amedrontado' },
-  { emoji: 'seguro', nome: 'seguro' },
-  { emoji: 'irritado', nome: 'irritado' },
-  { emoji: 'pacifico', nome: 'pacífico' },
-  { emoji: 'cansado', nome: 'cansado' },
-  { emoji: 'motivado', nome: 'motivado' },
-  { emoji: 'culpado', nome: 'culpado' },
-  { emoji: 'grato', nome: 'grato' },
-  { emoji: 'desanimado', nome: 'desanimado' },
-  { emoji: 'confiante', nome: 'confiante' },
-  { emoji: 'inseguro', nome: 'inseguro' },
-  { emoji: 'amoroso', nome: 'amoroso' },
-  { emoji: 'ansioso', nome: 'ansioso' },
-  { emoji: 'calmo', nome: 'calmo' }
+  { emoji: 'triste', nome: 'Triste' },
+  { emoji: 'alegre', nome: 'Alegre' },
+  { emoji: 'amedrontado', nome: 'Amedrontado' },
+  { emoji: 'seguro', nome: 'Seguro' },
+  { emoji: 'irritado', nome: 'Irritado' },
+  { emoji: 'pacifico', nome: 'Pacífico' },
+  { emoji: 'cansado', nome: 'Cansado' },
+  { emoji: 'motivado', nome: 'Motivado' },
+  { emoji: 'culpado', nome: 'Culpado' },
+  { emoji: 'grato', nome: 'Grato' },
+  { emoji: 'desanimado', nome: 'Desanimado' },
+  { emoji: 'confiante', nome: 'Confiante' },
+  { emoji: 'inseguro', nome: 'Inseguro' },
+  { emoji: 'amoroso', nome: 'Amoroso' },
+  { emoji: 'ansioso', nome: 'Ansioso' },
+  { emoji: 'calmo', nome: 'Calmo' }
 ]
 
 interface IProps {
@@ -25,8 +25,17 @@ interface IProps {
   className?: string
 }
 
-const Sentimento: FC<IProps> = ({ nome, className }) => (
-  <EmojiComNome lista={sentimentos} nome={nome} className={className} />
-)
+const Sentimento: FC<IProps> = ({ nome, className }) => {
+  const sentimento = sentimentos.find(
+    sentimento => sentimento.nome.toLowerCase() === nome.toLowerCase()
+  )
+  return (
+    <EmojiComNome
+      emoji={sentimento.emoji}
+      nome={sentimento.nome}
+      className={className}
+    />
+  )
+}
 
 export default Sentimento

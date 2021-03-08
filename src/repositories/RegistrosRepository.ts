@@ -1,12 +1,15 @@
 import { endOfDay, startOfDay } from 'date-fns'
+import GrupoDeHabitos from 'src/entities/GrupoDeHabitos'
+import GetGrupoDeHabitosTemplateByUserId from 'src/services/grupoDehabitos/GetGrupoDeHabitosTemplateByUserId'
 import { firestore } from '../components/firebase/firebase.config'
-import { IRegistro, IGruposDeHabitos } from '../entities/Registro'
+import Registro, { IRegistro } from '../entities/Registro'
+import { IGrupoDeHabitos } from '../entities/GrupoDeHabitos'
 
 export interface ICreateParameters {
   date: Date
   userId: string
   sentimentos?: Array<string>
-  gruposDeHabitos?: Array<IGruposDeHabitos>
+  gruposDeHabitos?: Array<IGrupoDeHabitos>
   anotacoes?: string
 }
 
@@ -76,25 +79,45 @@ export default class RegistrosRepository implements IRegistrosRepository {
       return null
     }
     try {
+      const gruposdeHabitosTemplate = await new GetGrupoDeHabitosTemplateByUserId().call(
+        { userId }
+      )
       const querySnapshot = await this.collection
         .where('userId', '==', userId)
         .where('date', '>=', startDate)
         .where('date', '<=', endDate)
         .get()
       querySnapshot.forEach(RegistroSnapshot => {
-        const RegistrosData = RegistroSnapshot.data()
-        const Registros = {
+        const registrosData = RegistroSnapshot.data()
+        const gruposDeHabitosDoRegistro = (
+          registrosData.gruposDeHabitos || []
+        ).map(grupoDehabito => {
+          const grupoDeHabitoDoUsuario = gruposdeHabitosTemplate.find(
+            grupoDehabitoDoTemplate =>
+              grupoDehabitoDoTemplate.nome === grupoDehabito.nome
+          )
+          const habitos = grupoDehabito.habitos.map(habito => {
+            return grupoDeHabitoDoUsuario.habitos.find(
+              habitoDoUsuario => habitoDoUsuario.nome === habito
+            )
+          })
+          return new GrupoDeHabitos({
+            nome: grupoDehabito.nome,
+            habitos: habitos
+          })
+        })
+        const registros = new Registro({
           id: RegistroSnapshot.id,
-          date: RegistrosData.date.toDate(),
-          sentimentos: RegistrosData.sentimentos,
-          gruposDeHabitos: RegistrosData.gruposDeHabitos,
-          anotacoes: RegistrosData.anotacoes
-        }
+          date: registrosData.date.toDate(),
+          sentimentos: registrosData.sentimentos,
+          gruposDeHabitos: gruposDeHabitosDoRegistro,
+          anotacoes: registrosData.anotacoes
+        })
 
-        registrosDoDia.push(Registros)
+        registrosDoDia.push(registros)
       })
       return registrosDoDia
-    } catch (e) {
+    } catch {
       throw new Error(
         'Ocorreu um erro inesperado ao buscar os registros do dia.'
       )
