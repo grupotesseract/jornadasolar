@@ -1,20 +1,15 @@
 import React, { FC } from 'react'
 import Emoji from './Emoji'
-import { IHabito } from '../entities/Habito'
-
-type ListaEmojisComNome = {
-  nome: string
-  emoji: string
-}
 
 interface IProps {
-  item: ListaEmojisComNome | IHabito
+  emoji: string
+  nome: string
   className?: string
 }
 
-const EmojiComNome: FC<IProps> = ({ className, item }) => (
+const EmojiComNome: FC<IProps> = ({ emoji, nome, className }) => (
   <>
-    <Emoji nome={item?.emoji} /> <span className={className}>{item?.nome}</span>
+    <Emoji nome={emoji} /> <span className={className}>{nome}</span>
   </>
 )
 

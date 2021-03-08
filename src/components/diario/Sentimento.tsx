@@ -29,7 +29,13 @@ const Sentimento: FC<IProps> = ({ nome, className }) => {
   const sentimento = sentimentos.find(
     sentimento => sentimento.nome.toLowerCase() === nome.toLowerCase()
   )
-  return <EmojiComNome item={sentimento} className={className} />
+  return (
+    <EmojiComNome
+      emoji={sentimento.emoji}
+      nome={sentimento.nome}
+      className={className}
+    />
+  )
 }
 
 export default Sentimento

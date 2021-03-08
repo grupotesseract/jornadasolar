@@ -8,7 +8,11 @@ interface IProps {
 }
 
 const Habito: FC<IProps> = ({ habito, className }) => (
-  <EmojiComNome item={habito} className={className} />
+  <EmojiComNome
+    emoji={habito?.emoji}
+    nome={habito?.nome}
+    className={className}
+  />
 )
 
 export default Habito
