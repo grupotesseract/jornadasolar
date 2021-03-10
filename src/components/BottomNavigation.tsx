@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 import { SvgIcon } from '@material-ui/core'
 import IconeRegistros from './IconeRegistros'
 import IconeGraficos from './IconeGraficos'
+import SpaIcon from '@material-ui/icons/Spa';
 
 const useStyles = makeStyles({
   root: {
@@ -77,6 +78,21 @@ const BottomNavigation: FC<IBottomNavigationProps> = ({ currentPage }) => {
         icon={
           <SvgIcon>
             <IconeGraficos />
+          </SvgIcon>
+        }
+      />
+
+      <MuiBottomNavigationAction
+        onClick={handleOnClick('/meditacoes')}
+        classes={{
+          root: classes.button,
+          selected: classes.selected
+        }}
+        value="meditacoes"
+        label="Meditações"
+        icon={
+          <SvgIcon>
+            <SpaIcon />
           </SvgIcon>
         }
       />
