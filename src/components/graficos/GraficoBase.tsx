@@ -85,10 +85,11 @@ const GraficoBase: FC<IProps> = ({
       <Box mt={2}>
         {registrosAgrupados.map(([registro, quantidade], index) => {
           const percentual = (quantidade * 100) / getDaysInMonth(mesAtual)
-          const itens = listaComEmojis.find(
-            item => item.nome === registro || registro.nome
-          )
-
+          const itens = listaComEmojis.find(item => {
+            const nomeDoRegistro =
+              typeof registro === 'string' ? registro : registro?.nome
+            return item.nome.toLowerCase() === nomeDoRegistro?.toLowerCase()
+          })
           return (
             <ProgressBar
               key={index}
