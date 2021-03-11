@@ -38,11 +38,11 @@ describe('Cadastro', () => {
 
     cy.get(
       ':nth-child(2) > .MuiIconButton-label > .PrivateSwitchBase-input-23'
-    ).check(['makeStyles-label-31', 'alegre'])
+    ).check(['makeStyles-label-31', 'Alegre'])
     cy.get('[data-cy=submit]').click()
 
     cy.get(
-      '.MuiBox-root-50 > .MuiGrid-container > :nth-child(2)> .MuiButtonBase-root > .MuiIconButton-label > .PrivateSwitchBase-input-23'
+      '.MuiBox-root-51 > .MuiGrid-container > :nth-child(2)> .MuiButtonBase-root > .MuiIconButton-label > .PrivateSwitchBase-input-57'
     ).check()
     cy.get('[data-cy=submit]').click()
 
