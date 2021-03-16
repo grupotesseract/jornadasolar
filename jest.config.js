@@ -7,4 +7,5 @@ module.exports = {
     '.(ts|tsx)': 'babel-jest',
   },
   testPathIgnorePatterns: ['/.next/', '/node_modules/'],
+  testMatch: ["<rootDir>/**/*test.ts"]
 }
