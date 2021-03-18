@@ -40,7 +40,11 @@ const Conteudo: FC<IProps> = ({ conteudo, linkHref, linkLabel }) => {
     <>
       <Emoji nome="lapis" />
       <Link href={linkHref}>
-        <Typography color="primary" className={classes.link}>
+        <Typography
+          color="primary"
+          className={classes.link}
+          data-cy="link-preencher"
+        >
           {linkLabel}
         </Typography>
       </Link>

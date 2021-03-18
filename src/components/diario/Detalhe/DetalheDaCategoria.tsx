@@ -38,14 +38,18 @@ interface IProps {
 const DetalheDaCategoria: FC<IProps> = ({ nome, conteudo, linkHref }) => {
   const classes = useStyles()
   return (
-    <Box className={classes.diario}>
+    <Box className={classes.diario} data-cy="box-detalhe">
       <Box display="flex" justifyContent="space-between" p={2} pb={0}>
         <Typography className={classes.nome} color="textSecondary">
           {nome}:
         </Typography>
 
         <Link href={linkHref}>
-          <Typography color="primary" className={classes.linkLabel}>
+          <Typography
+            color="primary"
+            className={classes.linkLabel}
+            data-cy="link-editar"
+          >
             Editar
           </Typography>
         </Link>
