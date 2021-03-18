@@ -26,6 +26,7 @@ const TextArea: FC<TextFieldProps> = ({ onChange, id, value }) => {
       multiline
       value={value}
       InputProps={{ classes }}
+      data-cy="text-area"
     />
   )
 }

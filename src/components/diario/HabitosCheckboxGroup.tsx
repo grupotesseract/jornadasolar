@@ -244,6 +244,7 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
                       style={{ textAlign: 'center', padding: 0 }}
                     >
                       <StyledCheckbox
+                        name={habito.nome}
                         icon={
                           <span>
                             <Emoji
