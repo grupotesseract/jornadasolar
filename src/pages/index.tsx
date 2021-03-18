@@ -1,10 +1,11 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC } from 'react'
 import { Box, Container, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import Button from '../components/Button'
 import Link from 'next/link'
 import withAuth from 'src/components/hocs/withAuth'
 import { useRouter } from 'next/router'
+import SplashScreen from 'src/components/SplashScreen'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -23,17 +24,21 @@ const useStyles = makeStyles(() =>
 )
 interface IHomeProps {
   isSignedIn: boolean
+  loadingAuth: boolean
 }
 
-const Home: FC<IHomeProps> = ({ isSignedIn }) => {
+const Home: FC<IHomeProps> = ({ isSignedIn, loadingAuth }) => {
   const classes = useStyles()
   const router = useRouter()
 
-  useEffect(() => {
-    if (isSignedIn) {
-      router.push('/diario')
-    }
-  }, [isSignedIn])
+  if (isSignedIn) {
+    router.push('/diario')
+    return <SplashScreen />
+  }
+
+  if (loadingAuth) {
+    return <SplashScreen />
+  }
 
   return (
     <Container maxWidth="xs">
