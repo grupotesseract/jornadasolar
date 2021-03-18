@@ -41,7 +41,9 @@ const Habitos: FC<IProps> = ({ userId, date }) => {
   const [gruposDeHabitos, setGruposDeHabitos] = useState(valoresIniciais)
 
   useEffect(() => {
-    setGruposDeHabitos(registroDoDia?.gruposDeHabitos || valoresIniciais)
+    if (registroDoDia?.gruposDeHabitos?.length > 0) {
+      setGruposDeHabitos(registroDoDia.gruposDeHabitos)
+    }
   }, [registroDoDia])
 
   const onSalvarClick = async () => {
