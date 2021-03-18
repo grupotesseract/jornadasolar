@@ -5,6 +5,8 @@ import Button from '../components/Button'
 import Link from 'next/link'
 import withAuth from 'src/components/hocs/withAuth'
 import { useRouter } from 'next/router'
+import { appVersion } from '../utils/appVersion'
+import theme from '../../theme'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -18,6 +20,12 @@ const useStyles = makeStyles(() =>
       fontSize: 20,
       lineHeight: '27px',
       textAlign: 'center'
+    },
+    appVersion: {
+      textAlign: 'center',
+      margin: 0,
+      fontSize: 10,
+      color: theme.palette.primary.main
     }
   })
 )
@@ -41,6 +49,9 @@ const Home: FC<IHomeProps> = ({ isSignedIn }) => {
         <Box mt={2} alignSelf="center">
           <Typography color="primary" className={classes.titulo}>
             Jornada Solar
+          </Typography>
+          <Typography className={classes.appVersion}>
+            versão {appVersion}
           </Typography>
         </Box>
 
