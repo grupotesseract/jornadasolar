@@ -21,6 +21,7 @@ import Loading from '../../components/Loading'
 import getFaseDaLua from '../../utils/getFaseDaLua'
 import getSigno from '../../utils/getSigno'
 import theme from '../../../theme'
+import { appVersion } from '../../utils/appVersion'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -59,6 +60,12 @@ const useStyles = makeStyles(() =>
       '& span': {
         fontWeight: 700
       }
+    },
+    appVersion: {
+      textAlign: 'right',
+      margin: '8px 8px 0px 8px',
+      fontSize: 10,
+      color: theme.palette.secondary.main
     }
   })
 )
@@ -122,6 +129,9 @@ const Diario: FC<IDiarioProps> = ({
           <Box className={classes.background}></Box>
         </Box>
         <Box>
+          <Typography className={classes.appVersion}>
+            versão {appVersion}
+          </Typography>
           <Saudacao className={classes.nome} nome={userName} />
           <Typography className={classes.mensagem}>
             Hoje o <span>Sol</span>{' '}
