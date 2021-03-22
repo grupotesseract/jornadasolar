@@ -166,7 +166,7 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
       const newGruposDeHabitosTemplate = await new GetGrupoDeHabitosTemplateByUserId().call(
         {
           userId,
-          allowPersonalizados: !isCadastro
+          allowPersonalizados: false // TODO: Alterar para receber !isCadastro quando a funcionalidade de novos hábitos estiver disponível
         }
       )
       setGruposDeHabitosTemplate(newGruposDeHabitosTemplate)
