@@ -11,6 +11,7 @@ import HabitosCheckboxGroup, {
   valoresIniciais
 } from '../../../../components/diario/HabitosCheckboxGroup'
 import { useRouter } from 'next/router'
+import { analytics } from '../../../../components/firebase/firebase.config'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -41,7 +42,9 @@ const Habitos: FC<IProps> = ({ userId, date }) => {
   const [gruposDeHabitos, setGruposDeHabitos] = useState(valoresIniciais)
 
   useEffect(() => {
-    setGruposDeHabitos(registroDoDia?.gruposDeHabitos || valoresIniciais)
+    if (registroDoDia?.gruposDeHabitos?.length > 0) {
+      setGruposDeHabitos(registroDoDia.gruposDeHabitos)
+    }
   }, [registroDoDia])
 
   const onSalvarClick = async () => {
@@ -51,6 +54,7 @@ const Habitos: FC<IProps> = ({ userId, date }) => {
       userId,
       gruposDeHabitos
     })
+    analytics?.logEvent('add_habitos')
   }
 
   const handleAdicionarHabito = () => {

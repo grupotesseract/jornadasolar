@@ -51,7 +51,13 @@ const RegistroDoDia: FC<IProps> = ({ diario }) => {
   }
 
   return (
-    <Grid container className={classes.diario} spacing={3} key={diario.id}>
+    <Grid
+      container
+      className={classes.diario}
+      spacing={3}
+      key={diario.id}
+      data-cy="box-diario"
+    >
       <Grid
         item
         xs={12}
@@ -63,7 +69,11 @@ const RegistroDoDia: FC<IProps> = ({ diario }) => {
           })}
         </Typography>
         <Link href={`/diario/${dataFormatada}`}>
-          <Typography color="primary" className={classes.textoLink}>
+          <Typography
+            color="primary"
+            className={classes.textoLink}
+            data-cy="ver-mais"
+          >
             Ver mais
           </Typography>
         </Link>

@@ -73,7 +73,12 @@ const EdicaoDiario: FC<IProps> = ({ children, date, loading, onClick }) => {
         </Box>
 
         <Box alignSelf="center" position="fixed" bottom="20px" zIndex={1000}>
-          <Button variant="contained" color="primary" onClick={handleOnClick}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleOnClick}
+            data-cy="submit"
+          >
             <TextoBotao />
           </Button>
         </Box>

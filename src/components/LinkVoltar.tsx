@@ -29,7 +29,7 @@ const LinkVoltar: FC<IProps> = ({ href }) => {
 
   return (
     <Link href={href}>
-      <Typography className={classes.label}>
+      <Typography className={classes.label} data-cy="link-voltar">
         <ArrowBackIcon className={classes.icone} fontSize="small" />
         Voltar
       </Typography>

@@ -27,7 +27,7 @@ const Alert: FC = () => {
     <Snackbar
       open={Boolean(message)}
       autoHideDuration={5000}
-      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       onClose={onClose}
     >
       <MuiAlert severity={severity}>{message}</MuiAlert>

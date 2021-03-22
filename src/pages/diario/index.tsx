@@ -74,9 +74,15 @@ interface IDiarioProps {
   userId: string
   userName: string
   isSignedIn: boolean
+  loadingAuth: boolean
 }
 
-const Diario: FC<IDiarioProps> = ({ userId, userName, isSignedIn }) => {
+const Diario: FC<IDiarioProps> = ({
+  userId,
+  userName,
+  loadingAuth,
+  isSignedIn
+}) => {
   const [mes, setMes] = useState(new Date())
   const classes = useStyles()
   const router = useRouter()
@@ -91,7 +97,7 @@ const Diario: FC<IDiarioProps> = ({ userId, userName, isSignedIn }) => {
   })
 
   useEffect(() => {
-    if (!isSignedIn) {
+    if (!loadingAuth && !isSignedIn) {
       router.replace('/login')
     }
   }, [isSignedIn])
