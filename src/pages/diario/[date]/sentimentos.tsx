@@ -6,6 +6,7 @@ import CreateOrUpdateRegistro from '../../../services/registro/CreateOrUpdateReg
 import SentimentosCheckboxGroup from '../../../components/diario/SentimentosCheckboxGroup'
 import EdicaoDiario from '../../../components/templates/EdicaoDiario'
 import useRegistroByDate from '../../../hooks/useRegistroByDate'
+import { analytics } from '../../../components/firebase/firebase.config'
 
 interface IProps {
   userId?: string
@@ -32,6 +33,7 @@ const Sentimentos: FC<IProps> = ({ userId, date }) => {
       userId,
       sentimentos
     })
+    analytics?.logEvent('add_sentimentos')
   }
 
   return (

@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react'
 import { NextPageContext } from 'next'
-import { Box, Typography } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { parse } from 'date-fns'
 import withAuth from '../../../components/hocs/withAuth'
@@ -8,6 +8,7 @@ import CreateOrUpdateRegistro from '../../../services/registro/CreateOrUpdateReg
 import TextArea from '../../../components/TextArea'
 import EdicaoDiario from '../../../components/templates/EdicaoDiario'
 import useRegistroByDate from '../../../hooks/useRegistroByDate'
+import { analytics } from '../../../components/firebase/firebase.config'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -56,6 +57,7 @@ const Anotacoes: FC<IProps> = ({ userId, date }) => {
       userId,
       anotacoes
     })
+    analytics?.logEvent('add_anotacoes')
   }
 
   return (
