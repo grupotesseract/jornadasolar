@@ -5,6 +5,7 @@ import { makeStyles, createStyles } from '@material-ui/core/styles'
 import GetAllMeditacoes from 'src/services/meditacoes/GetAllMeditacoes'
 import PageWithBottomNavigation from '../components/templates/PageWithBottomNavigation'
 import Loading from 'src/components/Loading'
+import { analytics } from '../components/firebase/firebase.config'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -44,7 +45,14 @@ const Meditacoes: FC = () => {
   const listaDeMeditacoes = meditacoes.map(meditacao => (
     <ListItem key={`meditacao-${meditacao.nome}`} className={classes.listItem}>
       <ListItemText primary={meditacao.nome} secondary={meditacao.data} />
-      <audio controls src={meditacao.url} className={classes.player} />
+      <audio
+        controls
+        src={meditacao.url}
+        className={classes.player}
+        onPlay={() => {
+          analytics?.logEvent('play_meditacao', { nome: meditacao.nome })
+        }}
+      />
     </ListItem>
   ))
 
