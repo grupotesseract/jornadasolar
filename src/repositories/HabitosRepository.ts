@@ -11,6 +11,7 @@ export interface ICreateParameters {
 export interface IHabitosRepository {
   add(params): boolean
   getAllByUserId(userId: string): Promise<Array<IHabito>>
+  update(id, values): boolean
 }
 
 export default class HabitosRepository implements IHabitosRepository {
@@ -26,6 +27,15 @@ export default class HabitosRepository implements IHabitosRepository {
       return true
     } catch (e) {
       throw new Error('Ocorreu um erro inesperado ao criar o hábito')
+    }
+  }
+
+  update(id: string, values: Record<string, unknown>): boolean {
+    try {
+      this.collection.doc(id).update(values)
+      return true
+    } catch (e) {
+      throw new Error('Ocorreu um erro inesperado ao atualizar o hábito')
     }
   }
 
