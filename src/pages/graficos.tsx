@@ -6,7 +6,7 @@ import MonthNavigator from '../components/MonthNavigator'
 import GraficoSentimentos from '../components/graficos/GraficoSentimentos'
 import GraficoHabitos from '../components/graficos/GraficoHabitos'
 import Loading from '../components/Loading'
-import withAuth from '../components/hocs/withAuth'
+import { withUser } from '../components/hocs/withAuth'
 import useRegistrosByMonth from '../hooks/useRegistrosByMonth'
 import theme from '../../theme'
 
@@ -106,6 +106,4 @@ const Graficos: FC<IProps> = ({ userId }) => {
   )
 }
 
-const GraficosWithAuth = withAuth(Graficos)
-
-export default GraficosWithAuth
+export default withUser(Graficos)

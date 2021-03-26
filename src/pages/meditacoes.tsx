@@ -6,6 +6,7 @@ import GetAllMeditacoes from 'src/services/meditacoes/GetAllMeditacoes'
 import PageWithBottomNavigation from '../components/templates/PageWithBottomNavigation'
 import Loading from 'src/components/Loading'
 import { analytics } from '../components/firebase/firebase.config'
+import { withUser } from 'src/components/hocs/withAuth'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -69,4 +70,4 @@ const Meditacoes: FC = () => {
   )
 }
 
-export default Meditacoes
+export default withUser(Meditacoes)

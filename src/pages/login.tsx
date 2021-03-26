@@ -9,13 +9,10 @@ import InputLabel from '../components/InputLabel'
 import EsqueciMinhaSenha from '../components/login/EsqueciMinhaSenha'
 import { useRouter } from 'next/dist/client/router'
 import { getMessageFromCode } from '../utils/firebaseAuth'
-import withAuth from 'src/components/hocs/withAuth'
+import { withGuest } from 'src/components/hocs/withAuth'
 import SignInUser from 'src/services/user/SignInUser'
 
-interface ILoginProps {
-  isSignedIn: boolean
-}
-const Login: FC<ILoginProps> = ({ isSignedIn }: ILoginProps) => {
+const Login: FC = () => {
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -38,12 +35,6 @@ const Login: FC<ILoginProps> = ({ isSignedIn }: ILoginProps) => {
     }
     setLoading(false)
   }
-
-  useEffect(() => {
-    if (isSignedIn) {
-      router.replace('/diario')
-    }
-  }, [isSignedIn])
 
   return (
     <Layout
@@ -80,4 +71,4 @@ const Login: FC<ILoginProps> = ({ isSignedIn }: ILoginProps) => {
   )
 }
 
-export default withAuth(Login)
+export default withGuest(Login)

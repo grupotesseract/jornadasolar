@@ -1,12 +1,26 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { ElementType, useEffect, useState } from 'react'
 import { NextPage } from 'next'
 import Alert from '../Alert'
 import { auth } from '../firebase/firebase.config'
+import { useRouter } from 'next/router'
+import SplashScreen from '../SplashScreen'
 
-const withAuth = <T extends unknown>(WrappedComponent: FC<T>): NextPage => {
-  const ComponentWithAuth = (props: T) => {
+enum AuthType {
+  User = 'user',
+  Guest = 'guest'
+}
+
+interface withAuthParams {
+  type: AuthType
+}
+
+const withAuth = ({ type }: withAuthParams) => (
+  WrappedComponent: ElementType
+): NextPage => {
+  const ComponentWithAuth = props => {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
+    const router = useRouter()
 
     useEffect(() => {
       auth.onAuthStateChanged(function (user) {
@@ -18,6 +32,20 @@ const withAuth = <T extends unknown>(WrappedComponent: FC<T>): NextPage => {
         }
       })
     }, [])
+
+    if (type === AuthType.Guest && user) {
+      router.push('/diario')
+      return <SplashScreen />
+    }
+
+    if (type === AuthType.User && !loading && !user) {
+      router.push('/')
+      return <SplashScreen />
+    }
+
+    if (loading) {
+      return <SplashScreen />
+    }
 
     return (
       <>
@@ -35,5 +63,8 @@ const withAuth = <T extends unknown>(WrappedComponent: FC<T>): NextPage => {
 
   return ComponentWithAuth
 }
+
+export const withUser = withAuth({ type: AuthType.User })
+export const withGuest = withAuth({ type: AuthType.Guest })
 
 export default withAuth

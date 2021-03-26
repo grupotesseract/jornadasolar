@@ -5,7 +5,7 @@ import TextField from '../../../../components/TextField'
 import Titulo from '../../../../components/Titulo'
 import InputLabel from '../../../../components/InputLabel'
 import { useRouter } from 'next/dist/client/router'
-import withAuth from 'src/components/hocs/withAuth'
+import { withUser } from 'src/components/hocs/withAuth'
 import Layout from '../../../../components/templates/Layout'
 import CreateHabito from '../../../../services/habito/CreateHabito'
 import { NextPageContext } from 'next'
@@ -78,7 +78,7 @@ interface INovoHabitoWithAuthProps {
   date: string
 }
 
-const NovoHabitoWithAuth = withAuth(NovoHabito)
+const NovoHabitoWithAuth = withUser(NovoHabito)
 
 NovoHabitoWithAuth.getInitialProps = (
   context: NextPageContext

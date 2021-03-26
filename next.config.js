@@ -5,3 +5,16 @@ module.exports = withPWA({
     dest: 'public'
   }
 })
+
+// TODO: Remover quando a funcionalidade de novos hábitos estiver disponível
+module.exports = {
+  async redirects() {
+    return [
+      {
+        source: '/diario/:date/habitos/novo',
+        destination: '/',
+        permanent: true,
+      },
+    ]
+  },
+}
