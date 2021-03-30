@@ -16,7 +16,6 @@ import {
 import MenuIcon from '@material-ui/icons/Menu'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import { mainListItems } from '../../components/admin/MenuListItens'
-import Meditacoes from './meditacoes'
 import AccountButton from 'src/components/admin/AccountButton'
 import { withAdmin } from 'src/components/hocs/withAuth'
 
