@@ -3,9 +3,9 @@ import { Box, Container, List, ListItem, ListItemText } from '@material-ui/core'
 import Titulo from 'src/components/Titulo'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import GetAllMeditacoes from 'src/services/meditacoes/GetAllMeditacoes'
-import PageWithBottomNavigation from '../components/templates/PageWithBottomNavigation'
+import PageWithBottomNavigation from '../../components/templates/PageWithBottomNavigation'
 import Loading from 'src/components/Loading'
-import { analytics } from '../components/firebase/firebase.config'
+import { analytics } from '../../components/firebase/firebase.config'
 import { withUser } from 'src/components/hocs/withAuth'
 
 const useStyles = makeStyles(() =>

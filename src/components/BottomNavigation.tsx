@@ -4,9 +4,9 @@ import MuiBottomNavigation from '@material-ui/core/BottomNavigation'
 import MuiBottomNavigationAction from '@material-ui/core/BottomNavigationAction'
 import { useRouter } from 'next/router'
 import { SvgIcon } from '@material-ui/core'
+import SpaIcon from '@material-ui/icons/Spa'
 import IconeRegistros from './IconeRegistros'
 import IconeGraficos from './IconeGraficos'
-import SpaIcon from '@material-ui/icons/Spa';
 
 const useStyles = makeStyles({
   root: {
@@ -53,7 +53,7 @@ const BottomNavigation: FC<IBottomNavigationProps> = ({ currentPage }) => {
       className={classes.root}
     >
       <MuiBottomNavigationAction
-        onClick={handleOnClick('/diario')}
+        onClick={handleOnClick('/app/diario')}
         classes={{
           root: classes.button,
           selected: classes.selected
@@ -68,7 +68,7 @@ const BottomNavigation: FC<IBottomNavigationProps> = ({ currentPage }) => {
       />
 
       <MuiBottomNavigationAction
-        onClick={handleOnClick('/graficos')}
+        onClick={handleOnClick('/app/graficos')}
         classes={{
           root: classes.button,
           selected: classes.selected
@@ -83,7 +83,7 @@ const BottomNavigation: FC<IBottomNavigationProps> = ({ currentPage }) => {
       />
 
       <MuiBottomNavigationAction
-        onClick={handleOnClick('/meditacoes')}
+        onClick={handleOnClick('/app/meditacoes')}
         classes={{
           root: classes.button,
           selected: classes.selected

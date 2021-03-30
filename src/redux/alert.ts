@@ -30,7 +30,7 @@ const alertSlice = createSlice({
       .addCase(createdOrUpdatedDiario, state => {
         state.severity = AlertSeverity.Success
         state.message = 'Cadastro realizado com sucesso.'
-        state.only = ['/diario/[date]']
+        state.only = ['/app/diario/[date]']
       })
       .addCase(redefinirSenha, state => {
         state.severity = AlertSeverity.Success

@@ -3,15 +3,15 @@ import { NextPageContext } from 'next'
 import { parse } from 'date-fns'
 import { Box, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
-import { withUser } from '../../../../components/hocs/withAuth'
-import CreateOrUpdateRegistro from '../../../../services/registro/CreateOrUpdateRegistro'
-import EdicaoDiario from '../../../../components/templates/EdicaoDiario'
-import useRegistroByDate from '../../../../hooks/useRegistroByDate'
+import { withUser } from '../../../../../components/hocs/withAuth'
+import CreateOrUpdateRegistro from '../../../../../services/registro/CreateOrUpdateRegistro'
+import EdicaoDiario from '../../../../../components/templates/EdicaoDiario'
+import useRegistroByDate from '../../../../../hooks/useRegistroByDate'
 import HabitosCheckboxGroup, {
   valoresIniciais
-} from '../../../../components/diario/HabitosCheckboxGroup'
+} from '../../../../../components/diario/HabitosCheckboxGroup'
 import { useRouter } from 'next/router'
-import { analytics } from '../../../../components/firebase/firebase.config'
+import { analytics } from '../../../../../components/firebase/firebase.config'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -58,7 +58,7 @@ const Habitos: FC<IProps> = ({ userId, date }) => {
   }
 
   const handleAdicionarHabito = () => {
-    router.push(`/diario/${date}/habitos/novo`)
+    router.push(`/app/diario/${date}/habitos/novo`)
   }
 
   return (

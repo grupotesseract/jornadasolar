@@ -10,17 +10,17 @@ import {
   eachDayOfInterval,
   compareDesc
 } from 'date-fns'
-import RegistroDoDia from '../../components/diario/RegistroDoDia'
-import Saudacao from '../../components/Saudacao'
-import MonthNavigator from '../../components/MonthNavigator'
-import { withUser } from '../../components/hocs/withAuth'
-import PageWithBottomNavigation from '../../components/templates/PageWithBottomNavigation'
-import useRegistrosByMonth from '../../hooks/useRegistrosByMonth'
-import Loading from '../../components/Loading'
-import getFaseDaLua from '../../utils/getFaseDaLua'
-import getSigno from '../../utils/getSigno'
-import theme from '../../../theme'
-import { appVersion } from '../../utils/appVersion'
+import RegistroDoDia from '../../../components/diario/RegistroDoDia'
+import Saudacao from '../../../components/Saudacao'
+import MonthNavigator from '../../../components/MonthNavigator'
+import { withUser } from '../../../components/hocs/withAuth'
+import PageWithBottomNavigation from '../../../components/templates/PageWithBottomNavigation'
+import useRegistrosByMonth from '../../../hooks/useRegistrosByMonth'
+import Loading from '../../../components/Loading'
+import getFaseDaLua from '../../../utils/getFaseDaLua'
+import getSigno from '../../../utils/getSigno'
+import theme from '../../../../theme'
+import { appVersion } from '../../../utils/appVersion'
 
 const useStyles = makeStyles(() =>
   createStyles({

@@ -68,7 +68,7 @@ const RegistroDoDia: FC<IProps> = ({ diario }) => {
             locale: ptBR
           })}
         </Typography>
-        <Link href={`/diario/${dataFormatada}`}>
+        <Link href={`/app/diario/${dataFormatada}`}>
           <Typography
             color="primary"
             className={classes.textoLink}
@@ -90,7 +90,7 @@ const RegistroDoDia: FC<IProps> = ({ diario }) => {
             </Fragment>
           )
         })}
-        linkHref={`/diario/${dataFormatada}/sentimentos`}
+        linkHref={`/app/diario/${dataFormatada}/sentimentos`}
       />
       <Categoria
         key="registro-do-dia-habitos"
@@ -101,13 +101,13 @@ const RegistroDoDia: FC<IProps> = ({ diario }) => {
             {index === habitos.length - 1 ? null : ', '}
           </Fragment>
         ))}
-        linkHref={`/diario/${dataFormatada}/habitos`}
+        linkHref={`/app/diario/${dataFormatada}/habitos`}
       />
       <Categoria
         key="registro-do-dia-anotacoes"
         nome="anotações"
         conteudo={diario.anotacoes}
-        linkHref={`/diario/${dataFormatada}/anotacoes`}
+        linkHref={`/app/diario/${dataFormatada}/anotacoes`}
       />
     </Grid>
   )
