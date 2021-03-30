@@ -4,10 +4,12 @@ import Alert from '../Alert'
 import { auth } from '../firebase/firebase.config'
 import { useRouter } from 'next/router'
 import SplashScreen from '../SplashScreen'
+import GetUserById from 'src/services/user/GetUserById'
 
 enum AuthType {
   User = 'user',
-  Guest = 'guest'
+  Guest = 'guest',
+  Admin = 'admin'
 }
 
 interface withAuthParams {
@@ -25,16 +27,34 @@ const withAuth = ({ type }: withAuthParams) => (
     useEffect(() => {
       auth.onAuthStateChanged(function (user) {
         if (user) {
-          setUser(user)
-          setLoading(false)
+          const getUser = async () => {
+            try {
+              const newUser = await new GetUserById().call(user.uid)
+              setUser(newUser)
+              setLoading(false)
+            } catch {
+              // Ignora erro se o usuário não foi criando na collection
+            }
+          }
+          getUser()
         } else {
           setLoading(false)
         }
       })
     }, [])
 
+    if (type === AuthType.Admin && !loading && user?.role !== AuthType.Admin) {
+      router.replace('/')
+      return <SplashScreen />
+    }
+
+    if (type === AuthType.Guest && user?.role === AuthType.Admin) {
+      router.push('/admin')
+      return <SplashScreen />
+    }
+
     if (type === AuthType.Guest && user) {
-      router.push('/diario')
+      router.push('/app/diario')
       return <SplashScreen />
     }
 
@@ -50,13 +70,7 @@ const withAuth = ({ type }: withAuthParams) => (
     return (
       <>
         <Alert />
-        <WrappedComponent
-          userId={user?.uid}
-          userName={user?.displayName}
-          isSignedIn={Boolean(user)}
-          loadingAuth={loading}
-          {...props}
-        />
+        <WrappedComponent userId={user?.id} userName={user?.nome} {...props} />
       </>
     )
   }
@@ -66,5 +80,6 @@ const withAuth = ({ type }: withAuthParams) => (
 
 export const withUser = withAuth({ type: AuthType.User })
 export const withGuest = withAuth({ type: AuthType.Guest })
+export const withAdmin = withAuth({ type: AuthType.Admin })
 
 export default withAuth
