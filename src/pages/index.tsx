@@ -3,9 +3,7 @@ import { Box, Container, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import Button from '../components/Button'
 import Link from 'next/link'
-import withAuth from 'src/components/hocs/withAuth'
-import SplashScreen from 'src/components/SplashScreen'
-import { useRouter } from 'next/router'
+import { withGuest } from 'src/components/hocs/withAuth'
 import { appVersion } from '../utils/appVersion'
 import theme from '../../theme'
 
@@ -30,23 +28,9 @@ const useStyles = makeStyles(() =>
     }
   })
 )
-interface IHomeProps {
-  isSignedIn: boolean
-  loadingAuth: boolean
-}
 
-const Home: FC<IHomeProps> = ({ isSignedIn, loadingAuth }) => {
+const Home: FC = () => {
   const classes = useStyles()
-  const router = useRouter()
-
-  if (isSignedIn) {
-    router.push('/diario')
-    return <SplashScreen />
-  }
-
-  if (loadingAuth) {
-    return <SplashScreen />
-  }
 
   return (
     <Container maxWidth="xs">
@@ -96,4 +80,4 @@ const Home: FC<IHomeProps> = ({ isSignedIn, loadingAuth }) => {
   )
 }
 
-export default withAuth(Home)
+export default withGuest(Home)

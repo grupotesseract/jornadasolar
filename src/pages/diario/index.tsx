@@ -1,7 +1,6 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { Box, Container, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
-import { useRouter } from 'next/dist/client/router'
 import {
   isThisMonth,
   startOfMonth,
@@ -14,7 +13,7 @@ import {
 import RegistroDoDia from '../../components/diario/RegistroDoDia'
 import Saudacao from '../../components/Saudacao'
 import MonthNavigator from '../../components/MonthNavigator'
-import withAuth from '../../components/hocs/withAuth'
+import { withUser } from '../../components/hocs/withAuth'
 import PageWithBottomNavigation from '../../components/templates/PageWithBottomNavigation'
 import useRegistrosByMonth from '../../hooks/useRegistrosByMonth'
 import Loading from '../../components/Loading'
@@ -73,19 +72,11 @@ const useStyles = makeStyles(() =>
 interface IDiarioProps {
   userId: string
   userName: string
-  isSignedIn: boolean
-  loadingAuth: boolean
 }
 
-const Diario: FC<IDiarioProps> = ({
-  userId,
-  userName,
-  loadingAuth,
-  isSignedIn
-}) => {
+const Diario: FC<IDiarioProps> = ({ userId, userName }) => {
   const [mes, setMes] = useState(new Date())
   const classes = useStyles()
-  const router = useRouter()
   const dias = eachDayOfInterval({
     start: startOfMonth(mes),
     end: isThisMonth(mes) ? new Date() : lastDayOfMonth(mes)
@@ -95,12 +86,6 @@ const Diario: FC<IDiarioProps> = ({
     userId,
     mes
   })
-
-  useEffect(() => {
-    if (!loadingAuth && !isSignedIn) {
-      router.replace('/login')
-    }
-  }, [isSignedIn])
 
   const registros = dias.sort(compareDesc).map((dia, index) => {
     let diario = diarios?.find(diario =>
@@ -149,6 +134,4 @@ const Diario: FC<IDiarioProps> = ({
   )
 }
 
-const DiarioWithAuth = withAuth(Diario)
-
-export default DiarioWithAuth
+export default withUser(Diario)

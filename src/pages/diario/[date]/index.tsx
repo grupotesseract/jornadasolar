@@ -6,7 +6,7 @@ import { ptBR } from 'date-fns/locale'
 import DetalheDaCategoria from '../../../components/diario/Detalhe/DetalheDaCategoria'
 import Sentimento from '../../../components/diario/Sentimento'
 import LinkVoltar from '../../../components/LinkVoltar'
-import withAuth from '../../../components/hocs/withAuth'
+import { withUser } from '../../../components/hocs/withAuth'
 import RegistroDoDiaNavigator from '../../../components/RegistroDoDiaNavigator'
 import useRegistroByDate from '../../../hooks/useRegistroByDate'
 import Habito from '../../../components/diario/Habito'
@@ -93,7 +93,7 @@ interface IDetalheWithAuthProps {
   date: string
 }
 
-const DetalheWithAuth = withAuth(Detalhe)
+const DetalheWithAuth = withUser(Detalhe)
 
 DetalheWithAuth.getInitialProps = (
   context: NextPageContext

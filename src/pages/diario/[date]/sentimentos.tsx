@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
 import { NextPageContext } from 'next'
 import { parse } from 'date-fns'
-import withAuth from '../../../components/hocs/withAuth'
+import { withUser } from '../../../components/hocs/withAuth'
 import CreateOrUpdateRegistro from '../../../services/registro/CreateOrUpdateRegistro'
 import SentimentosCheckboxGroup from '../../../components/diario/SentimentosCheckboxGroup'
 import EdicaoDiario from '../../../components/templates/EdicaoDiario'
@@ -50,7 +50,7 @@ interface ISentimentosWithAuthProps {
   date: string
 }
 
-const SentimentosWithAuth = withAuth(Sentimentos)
+const SentimentosWithAuth = withUser(Sentimentos)
 
 SentimentosWithAuth.getInitialProps = (
   context: NextPageContext

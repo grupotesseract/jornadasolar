@@ -3,7 +3,7 @@ import { NextPageContext } from 'next'
 import { Box } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { parse } from 'date-fns'
-import withAuth from '../../../components/hocs/withAuth'
+import { withUser } from '../../../components/hocs/withAuth'
 import CreateOrUpdateRegistro from '../../../services/registro/CreateOrUpdateRegistro'
 import TextArea from '../../../components/TextArea'
 import EdicaoDiario from '../../../components/templates/EdicaoDiario'
@@ -85,7 +85,7 @@ interface IAnotacoesWithAuthProps {
   date: string
 }
 
-const AnotacoesWithAuth = withAuth(Anotacoes)
+const AnotacoesWithAuth = withUser(Anotacoes)
 
 AnotacoesWithAuth.getInitialProps = (
   context: NextPageContext

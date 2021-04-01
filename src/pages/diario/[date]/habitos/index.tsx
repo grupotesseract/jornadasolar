@@ -3,7 +3,7 @@ import { NextPageContext } from 'next'
 import { parse } from 'date-fns'
 import { Box, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
-import withAuth from '../../../../components/hocs/withAuth'
+import { withUser } from '../../../../components/hocs/withAuth'
 import CreateOrUpdateRegistro from '../../../../services/registro/CreateOrUpdateRegistro'
 import EdicaoDiario from '../../../../components/templates/EdicaoDiario'
 import useRegistroByDate from '../../../../hooks/useRegistroByDate'
@@ -83,7 +83,7 @@ interface IHabitosWithAuthProps {
   date: string
 }
 
-const HabitosWithAuth = withAuth(Habitos)
+const HabitosWithAuth = withUser(Habitos)
 
 HabitosWithAuth.getInitialProps = (
   context: NextPageContext
