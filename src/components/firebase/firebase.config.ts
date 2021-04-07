@@ -2,6 +2,7 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
 import 'firebase/analytics'
+import 'firebase/storage'
 
 export const config = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -24,9 +25,10 @@ if (!firebase.apps.length) {
 }
 const auth = firebase.auth()
 const firestore = firebase.firestore()
+const storage = firebase.storage()
 
 if (process.browser) {
   firestore.enablePersistence()
 }
 
-export { auth, firestore, analytics }
+export { auth, firestore, analytics, storage }
