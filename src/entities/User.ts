@@ -7,6 +7,7 @@ interface IUserAttributes {
   password: string
   objetivos: Array<string>
   temLivro: TemLivroOptions
+  role?: string
 }
 
 export type IUser = IUserAttributes
@@ -18,6 +19,7 @@ export default class User implements IUser {
   public password: string
   public objetivos: Array<string>
   public temLivro: TemLivroOptions
+  public role: string
 
   constructor({
     id,
@@ -25,7 +27,8 @@ export default class User implements IUser {
     email,
     password,
     objetivos,
-    temLivro
+    temLivro,
+    role
   }: IUserAttributes) {
     this.id = id
     this.nome = nome
@@ -33,5 +36,6 @@ export default class User implements IUser {
     this.password = password
     this.objetivos = objetivos
     this.temLivro = temLivro
+    this.role = role
   }
 }

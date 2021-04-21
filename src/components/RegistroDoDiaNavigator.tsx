@@ -20,13 +20,13 @@ const RegistroDoDiaNavigator: FC<IProps> = ({
   proximoDisabled
 }) => (
   <Box display="flex" alignItems="center" textAlign="center">
-    <Link href={`/diario/${format(anterior, 'd-M-yyyy')}`}>
+    <Link href={`/app/diario/${format(anterior, 'd-M-yyyy')}`}>
       <IconButton color="inherit">
         <ArrowBackIosIcon fontSize="small" />
       </IconButton>
     </Link>
     <Data>{label}</Data>
-    <Link href={`/diario/${format(proximo, 'd-M-yyyy')}`}>
+    <Link href={`/app/diario/${format(proximo, 'd-M-yyyy')}`}>
       <IconButton color="inherit" disabled={proximoDisabled}>
         <ArrowForwardIosIcon fontSize="small" />
       </IconButton>

@@ -2,7 +2,8 @@ const withPWA = require('next-pwa')
 
 module.exports = withPWA({
   pwa: {
-    dest: 'public'
+    dest: 'public',
+    scope: '/app'
   }
 })
 
@@ -11,7 +12,7 @@ module.exports = {
   async redirects() {
     return [
       {
-        source: '/diario/:date/habitos/novo',
+        source: '/app/diario/:date/habitos/novo',
         destination: '/',
         permanent: true,
       },

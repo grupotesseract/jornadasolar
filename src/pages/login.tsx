@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react'
+import React, { FC, useState } from 'react'
 import { Box, CircularProgress } from '@material-ui/core/'
 import Emoji from '../components/Emoji'
 import TextField from '../components/TextField'
@@ -7,7 +7,6 @@ import Layout from '../components/templates/Layout'
 import Titulo from '../components/Titulo'
 import InputLabel from '../components/InputLabel'
 import EsqueciMinhaSenha from '../components/login/EsqueciMinhaSenha'
-import { useRouter } from 'next/dist/client/router'
 import { getMessageFromCode } from '../utils/firebaseAuth'
 import { withGuest } from 'src/components/hocs/withAuth'
 import SignInUser from 'src/services/user/SignInUser'
@@ -17,7 +16,6 @@ const Login: FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [erro, setErro] = useState(null)
-  const router = useRouter()
 
   const onChangeEmail = ({ target: { value } }) =>
     setEmail(value.trim().toLowerCase())
@@ -29,7 +27,6 @@ const Login: FC = () => {
     setErro('')
     try {
       await new SignInUser().call(email, password)
-      router.push('/diario')
     } catch (e) {
       setErro(getMessageFromCode(e.code))
     }

@@ -55,7 +55,7 @@ const DadosAutenticacao: FC = () => {
       })
       await new SignInUser().call(user.email, user.password)
       analytics?.logEvent('sign_up')
-      router.push('/diario')
+      router.push('/app/diario')
     } catch (e) {
       setErro(getMessageFromCode(e.code))
     }

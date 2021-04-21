@@ -1,13 +1,13 @@
 import React, { FC, useState } from 'react'
 import { Box } from '@material-ui/core/'
-import Emoji from '../../../../components/Emoji'
-import TextField from '../../../../components/TextField'
-import Titulo from '../../../../components/Titulo'
-import InputLabel from '../../../../components/InputLabel'
+import Emoji from '../../../../../components/Emoji'
+import TextField from '../../../../../components/TextField'
+import Titulo from '../../../../../components/Titulo'
+import InputLabel from '../../../../../components/InputLabel'
 import { useRouter } from 'next/dist/client/router'
 import { withUser } from 'src/components/hocs/withAuth'
-import Layout from '../../../../components/templates/Layout'
-import CreateHabito from '../../../../services/habito/CreateHabito'
+import Layout from '../../../../../components/templates/Layout'
+import CreateHabito from '../../../../../services/habito/CreateHabito'
 import { NextPageContext } from 'next'
 import EmojiToUnicode from 'src/services/EmojiToUnicode'
 
@@ -39,7 +39,7 @@ const NovoHabito: FC<IProps> = ({ userId, date }: IProps) => {
 
   const handleAddHabito = async () => {
     new CreateHabito().call({ userId, nome, emojiUnicode })
-    router.push(`/diario/${date}/habitos`)
+    router.push(`/app/diario/${date}/habitos`)
   }
 
   return (

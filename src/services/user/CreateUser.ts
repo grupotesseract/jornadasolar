@@ -27,6 +27,6 @@ export default class Create implements ICreate {
   }
 
   async call(params: Parameters): Promise<IUser> {
-    return this.usersRepository.add(params)
+    return await this.usersRepository.add(params)
   }
 }

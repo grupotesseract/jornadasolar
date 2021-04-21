@@ -4,7 +4,7 @@ export {}
 
 describe('Diario', () => {
   beforeEach(() => {
-    cy.visit('/diario')
+    cy.visit('/app/diario')
     cy.callFirestore('get', 'user', {
       where: ['email', '==', 'testecadastro@teste.com']
     }).then(users => {

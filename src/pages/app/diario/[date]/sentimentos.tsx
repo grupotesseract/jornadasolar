@@ -1,12 +1,12 @@
 import React, { FC, useEffect, useState } from 'react'
 import { NextPageContext } from 'next'
 import { parse } from 'date-fns'
-import { withUser } from '../../../components/hocs/withAuth'
-import CreateOrUpdateRegistro from '../../../services/registro/CreateOrUpdateRegistro'
-import SentimentosCheckboxGroup from '../../../components/diario/SentimentosCheckboxGroup'
-import EdicaoDiario from '../../../components/templates/EdicaoDiario'
-import useRegistroByDate from '../../../hooks/useRegistroByDate'
-import { analytics } from '../../../components/firebase/firebase.config'
+import { withUser } from '../../../../components/hocs/withAuth'
+import CreateOrUpdateRegistro from '../../../../services/registro/CreateOrUpdateRegistro'
+import SentimentosCheckboxGroup from '../../../../components/diario/SentimentosCheckboxGroup'
+import EdicaoDiario from '../../../../components/templates/EdicaoDiario'
+import useRegistroByDate from '../../../../hooks/useRegistroByDate'
+import { analytics } from '../../../../components/firebase/firebase.config'
 
 interface IProps {
   userId?: string
