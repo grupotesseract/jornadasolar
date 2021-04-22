@@ -33,6 +33,8 @@ const withAuth = ({ type }: withAuthParams) => (
               setUser(newUser)
               setLoading(false)
             } catch {
+              setUser(null)
+              setLoading(false)
               // Ignora erro se o usuário não foi criando na collection
             }
           }
