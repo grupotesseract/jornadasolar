@@ -21,6 +21,7 @@ import getFaseDaLua from '../../../utils/getFaseDaLua'
 import getSigno from '../../../utils/getSigno'
 import theme from '../../../../theme'
 import { appVersion } from '../../../utils/appVersion'
+import Link from 'next/link'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -115,7 +116,7 @@ const Diario: FC<IDiarioProps> = ({ userId, userName }) => {
         </Box>
         <Box>
           <Typography className={classes.appVersion}>
-            versão {appVersion}
+            versão <Link href="/app/configuracoes">{appVersion}</Link>
           </Typography>
           <Saudacao className={classes.nome} nome={userName} />
           <Typography className={classes.mensagem}>

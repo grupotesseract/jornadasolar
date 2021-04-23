@@ -30,12 +30,13 @@ const withAuth = ({ type }: withAuthParams) => (
           const getUser = async () => {
             try {
               const newUser = await new GetUserById().call(user.uid)
+              console.log('usuario logado', newUser)
               setUser(newUser)
               setLoading(false)
-            } catch {
+            } catch (e) {
+              console.log('erro ao trazer usuario', e)
               setUser(null)
               setLoading(false)
-              // Ignora erro se o usuário não foi criando na collection
             }
           }
           getUser()
