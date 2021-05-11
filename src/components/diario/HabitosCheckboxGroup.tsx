@@ -33,20 +33,17 @@ const StyledCheckbox = withStyles({
 const useStyles = makeStyles(() =>
   createStyles({
     container: {
+      margin: '0 auto',
       display: 'flex',
-      overflowY: 'hidden',
-      overflowX: 'auto',
-      '&::-webkit-scrollbar': {
-        display: 'none'
-      }
+      flexDirection: 'column'
     },
     grupo: {
       minWidth: 270,
+      marginBottom: 10,
       marginRight: '10px',
       padding: '0 15px',
       maxWidth: '300px',
       height: '252px',
-      flex: '0 0 auto',
       borderRadius: '4px',
       background: '#151515',
       boxShadow: '1px 4px 10px rgba(0, 0, 0, 0.15)'
@@ -70,18 +67,6 @@ const useStyles = makeStyles(() =>
     },
     habitoChecked: {
       color: '#FFF'
-    },
-    scrollInfo: {
-      marginTop: 18,
-      marginLeft: 4,
-      display: 'flex',
-      alignItems: 'center',
-      color: '#828282',
-      fontSize: '16px'
-    },
-    icone: {
-      marginRight: 6,
-      color: '#BDBDBD'
     },
     emoji: {
       '&[aria-label="🧑‍🤝‍🧑"]': {
@@ -303,11 +288,6 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
           })}
         </Box>
       </Box>
-
-      <Typography className={classes.scrollInfo}>
-        <ArrowBackIcon className={classes.icone} />
-        Arraste para a esquerda
-      </Typography>
     </>
   )
 }
