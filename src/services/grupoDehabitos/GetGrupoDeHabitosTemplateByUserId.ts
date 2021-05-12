@@ -191,7 +191,7 @@ export default class GetGrupoDeHabitosTemplateByUserId implements IGetGrupoDeHab
         nome: 'Personalizados',
         habitos: habitosDoUsuario
       })
-      gruposDeHabitos.unshift(personalizados)
+      gruposDeHabitos.push(personalizados)
     }
 
     return gruposDeHabitos
