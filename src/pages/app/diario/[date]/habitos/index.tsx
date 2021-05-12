@@ -54,7 +54,7 @@ const Habitos: FC<IProps> = ({ date, user }) => {
   return (
     <EdicaoDiario date={date} onClick={onSalvarClick} loading={loading}>
       <Novidade slug="habitos-personalizados" user={user} />
-      <Box mt="46px" maxWidth={360} ml="28px">
+      <Box mt="46px" maxWidth={360}>
         <HabitosCheckboxGroup
           onChange={setGruposDeHabitos}
           values={gruposDeHabitos}
