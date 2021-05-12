@@ -75,7 +75,7 @@ const EtapaHabitos: FC = () => {
         hoje?
       </Titulo>
 
-      <Box mt="42px" maxWidth={360} pl="28px">
+      <Box mt="42px" maxWidth={360}>
         <HabitosCheckboxGroup
           onChange={setGruposDeHabitos}
           values={gruposDeHabitos}

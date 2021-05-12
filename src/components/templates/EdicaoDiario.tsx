@@ -56,7 +56,7 @@ const EdicaoDiario: FC<IProps> = ({ children, date, loading, onClick }) => {
   return (
     <Container maxWidth="xs">
       <Box display="flex" flexDirection="column">
-        <Box mb={12}>
+        <Box mb={12} mr="auto" ml="auto">
           <LinkVoltar href={`/app/diario/${date}`} />
 
           <Box
