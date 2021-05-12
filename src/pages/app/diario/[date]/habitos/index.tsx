@@ -1,8 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
 import { NextPageContext } from 'next'
 import { parse } from 'date-fns'
-import { Box, Typography } from '@material-ui/core'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
+import { Box } from '@material-ui/core'
 import { withUser } from '../../../../../components/hocs/withAuth'
 import CreateOrUpdateRegistro from '../../../../../services/registro/CreateOrUpdateRegistro'
 import EdicaoDiario from '../../../../../components/templates/EdicaoDiario'
@@ -15,24 +14,12 @@ import { analytics } from '../../../../../components/firebase/firebase.config'
 import Novidade from '../../../../../components/Novidade'
 import { IUser } from 'src/entities/User'
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    textoInformativo: {
-      margin: '24px 29px',
-      width: 284,
-      color: '#BDBDBD',
-      lineHeight: '22px'
-    }
-  })
-)
-
 interface IProps {
   date: string
   user: IUser
 }
 
 const Habitos: FC<IProps> = ({ date, user }) => {
-  const classes = useStyles()
   const dia = parse(date, 'd-M-yyyy', new Date())
   const router = useRouter()
   const userId = user?.id
@@ -73,12 +60,9 @@ const Habitos: FC<IProps> = ({ date, user }) => {
           values={gruposDeHabitos}
           onAdicionarHabitoClick={handleAdicionarHabito}
           userId={userId}
+          date={date}
         />
       </Box>
-      <Typography className={classes.textoInformativo}>
-        Gostaria de editar ou incluir um novo hábito? Envie uma sugestão para
-        <span style={{ color: '#F7C92A' }}> jornadasolar@gmail.com.br</span>
-      </Typography>
     </EdicaoDiario>
   )
 }
