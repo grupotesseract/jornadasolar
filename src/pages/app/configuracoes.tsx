@@ -7,7 +7,11 @@ import SignOutUser from 'src/services/user/SignOutUser'
 import Button from 'src/components/Button'
 import { useRouter } from 'next/router'
 
-const Configuracoes: FC = ({ userName }) => {
+type Props = {
+  userName?: string
+}
+
+const Configuracoes: FC<Props> = ({ userName }) => {
   const router = useRouter()
 
   return (
