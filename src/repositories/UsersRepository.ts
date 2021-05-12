@@ -16,9 +16,15 @@ interface ICreateParameters {
   gruposDeHabitos: Array<IGrupoDeHabitos>
 }
 
+interface IUpdateParameters {
+  id: string
+  attributes: string
+}
+
 export interface IUsersRepository {
   add(params): Promise<IUser>
   getById(id: string): Promise<IUser>
+  update(params): boolean
 }
 
 export default class UsersRepository implements IUsersRepository {
@@ -77,6 +83,15 @@ export default class UsersRepository implements IUsersRepository {
       return user
     } catch (e) {
       throw new Error('Ocorreu um erro inesperado ao buscar o usuário:' + e)
+    }
+  }
+
+  update({ id, attributes }: IUpdateParameters): boolean {
+    try {
+      this.collection.doc(id).update(attributes)
+      return true
+    } catch (e) {
+      throw new Error('Ocorreu um erro inesperado ao atualizar usuário.' + e)
     }
   }
 }

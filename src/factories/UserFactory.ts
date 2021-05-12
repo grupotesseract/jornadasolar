@@ -13,7 +13,8 @@ export default class UserFactory {
       password,
       temLivro,
       objetivos,
-      role
+      role,
+      novidadesDispensadas
     } = userSnapshot.data()
 
     return new User({
@@ -23,7 +24,8 @@ export default class UserFactory {
       password,
       temLivro,
       objetivos,
-      role
+      role,
+      novidadesDispensadas: novidadesDispensadas || []
     })
   }
 }

@@ -30,11 +30,9 @@ const withAuth = ({ type }: withAuthParams) => (
           const getUser = async () => {
             try {
               const newUser = await new GetUserById().call(user.uid)
-              console.log('usuario logado', newUser)
               setUser(newUser)
               setLoading(false)
             } catch (e) {
-              console.log('erro ao trazer usuario', e)
               setUser(null)
               setLoading(false)
             }
@@ -73,7 +71,12 @@ const withAuth = ({ type }: withAuthParams) => (
     return (
       <>
         <Alert />
-        <WrappedComponent userId={user?.id} userName={user?.nome} {...props} />
+        <WrappedComponent
+          userId={user?.id}
+          userName={user?.nome}
+          user={user}
+          {...props}
+        />
       </>
     )
   }

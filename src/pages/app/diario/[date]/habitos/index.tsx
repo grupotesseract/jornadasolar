@@ -12,6 +12,8 @@ import HabitosCheckboxGroup, {
 } from '../../../../../components/diario/HabitosCheckboxGroup'
 import { useRouter } from 'next/router'
 import { analytics } from '../../../../../components/firebase/firebase.config'
+import Novidade from '../../../../../components/Novidade'
+import { IUser } from 'src/entities/User'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -25,14 +27,15 @@ const useStyles = makeStyles(() =>
 )
 
 interface IProps {
-  userId?: string
   date: string
+  user: IUser
 }
 
-const Habitos: FC<IProps> = ({ userId, date }) => {
+const Habitos: FC<IProps> = ({ date, user }) => {
   const classes = useStyles()
   const dia = parse(date, 'd-M-yyyy', new Date())
   const router = useRouter()
+  const userId = user?.id
 
   const { loading, registroDoDia } = useRegistroByDate({
     userId,
@@ -63,7 +66,8 @@ const Habitos: FC<IProps> = ({ userId, date }) => {
 
   return (
     <EdicaoDiario date={date} onClick={onSalvarClick} loading={loading}>
-      <Box mt="46px" maxWidth={360}>
+      <Novidade slug="habitos-personalizados" user={user} />
+      <Box mt="46px" maxWidth={360} ml="28px">
         <HabitosCheckboxGroup
           onChange={setGruposDeHabitos}
           values={gruposDeHabitos}
