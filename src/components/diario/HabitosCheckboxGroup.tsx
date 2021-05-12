@@ -1,9 +1,15 @@
 /* eslint-disable multiline-ternary */
 import React, { FC, useEffect, useState } from 'react'
-import { Box, Checkbox, Grid, Typography, withStyles } from '@material-ui/core'
+import {
+  Box,
+  Checkbox,
+  Grid,
+  Link,
+  Typography,
+  withStyles
+} from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { useRouter } from 'next/router'
-import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import Emoji from '../Emoji'
 import GetGrupoDeHabitosTemplateByUserId from 'src/services/grupoDehabitos/GetGrupoDeHabitosTemplateByUserId'
 import BotaoAdicionarHabito from './RegistroDoDia/BotaoAdicionarHabito'
@@ -40,13 +46,20 @@ const useStyles = makeStyles(() =>
     grupo: {
       minWidth: 270,
       marginBottom: 10,
-      marginRight: '10px',
-      padding: '0 15px',
+      padding: '0 8px',
       maxWidth: '300px',
-      height: '252px',
+      height: 260,
       borderRadius: '4px',
       background: '#151515',
       boxShadow: '1px 4px 10px rgba(0, 0, 0, 0.15)'
+    },
+    item: {
+      textAlign: 'center',
+      padding: 0,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      position: 'relative'
     },
     nome: {
       marginTop: 10,
@@ -75,6 +88,13 @@ const useStyles = makeStyles(() =>
       '&[aria-label="👩‍❤️‍👨👨‍❤️‍👨"]': {
         fontSize: '0.6em'
       }
+    },
+    linkEditar: {
+      fontSize: 14,
+      cursor: 'pointer',
+      position: 'absolute',
+      right: 5,
+      top: 25
     }
   })
 )
@@ -126,9 +146,22 @@ export const valoresIniciais = [
   }
 ]
 
+const HabitoLabel = ({ modeDeEdicaoAtivo, href, children }) => {
+  if (modeDeEdicaoAtivo) {
+    return (
+      <Link href={href} underline="none">
+        {children}
+      </Link>
+    )
+  }
+
+  return <>{children}</>
+}
+
 interface IHabitosCheckboxGroupProps {
   values: Array<IGrupoDeHabitos>
   userId?: string
+  date?: string
   onChange: (event) => void
   onAdicionarHabitoClick?: (event) => void
 }
@@ -136,6 +169,7 @@ interface IHabitosCheckboxGroupProps {
 const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
   values,
   userId,
+  date,
   onChange,
   onAdicionarHabitoClick
 }) => {
@@ -144,6 +178,7 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const isCadastro = router.pathname === '/cadastro'
+  const [gruposEmModoEdicao, setGruposEmModoEdicao] = useState([])
 
   useEffect(() => {
     setLoading(true)
@@ -151,7 +186,7 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
       const newGruposDeHabitosTemplate = await new GetGrupoDeHabitosTemplateByUserId().call(
         {
           userId,
-          allowPersonalizados: false // TODO: Alterar para receber !isCadastro quando a funcionalidade de novos hábitos estiver disponível
+          allowPersonalizados: !isCadastro
         }
       )
       setGruposDeHabitosTemplate(newGruposDeHabitosTemplate)
@@ -195,11 +230,23 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
     return <Loading />
   }
 
+  const handleOnClickEditarGrupo = nomeDoGrupo => {
+    if (gruposEmModoEdicao.includes(nomeDoGrupo)) {
+      const grupoEmModoEdicao = gruposEmModoEdicao.filter(
+        nomeDoGrupoEmEdicao => nomeDoGrupoEmEdicao !== nomeDoGrupo
+      )
+      setGruposEmModoEdicao(grupoEmModoEdicao)
+      return
+    }
+    setGruposEmModoEdicao([...gruposEmModoEdicao, nomeDoGrupo])
+  }
+
   return (
     <>
       <Box display="flex">
         <Box className={classes.container}>
           {gruposDeHabitosTemplate.map(grupo => {
+            const isModoDeEdicaoAtivo = gruposEmModoEdicao.includes(grupo.nome)
             const indexGrupo = values.findIndex(
               value => value.nome === grupo.nome
             )
@@ -207,19 +254,32 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
               <Box className={classes.grupo} key={`nome-habito-${grupo.nome}`}>
                 <Grid
                   container
-                  spacing={2}
+                  spacing={1}
                   direction="row"
                   justify="flex-start"
                   alignItems="flex-start"
                 >
-                  <Grid
-                    item
-                    xs={12}
-                    style={{ textAlign: 'center', padding: 0 }}
-                  >
+                  <Grid item xs={12} className={classes.item}>
                     <Typography className={classes.nome}>
                       {grupo.nome}
                     </Typography>
+
+                    {grupo.nome === 'Personalizados' ? (
+                      <Link
+                        href="#"
+                        component="button"
+                        onClick={() => handleOnClickEditarGrupo(grupo.nome)}
+                        style={{ position: 'initial' }}
+                        underline="none"
+                      >
+                        <Typography
+                          color="primary"
+                          className={classes.linkEditar}
+                        >
+                          {isModoDeEdicaoAtivo ? 'Concluir' : 'Editar'}
+                        </Typography>
+                      </Link>
+                    ) : null}
                   </Grid>
                   {grupo.habitos?.map(habito => (
                     <Grid
@@ -258,15 +318,21 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
                           .map(habito => habito.nome)
                           .includes(habito.nome)}
                       />
-                      <Typography
-                        className={
-                          values[indexGrupo]?.habitos.includes(habito.nome)
-                            ? `${classes.habito} ${classes.habitoChecked}`
-                            : classes.habito
-                        }
+                      <HabitoLabel
+                        modeDeEdicaoAtivo={isModoDeEdicaoAtivo}
+                        href={`/app/diario/${date}/habitos/${habito.id}`}
                       >
-                        {habito.nome}
-                      </Typography>
+                        <Typography
+                          className={
+                            values[indexGrupo]?.habitos.includes(habito.nome)
+                              ? `${classes.habito} ${classes.habitoChecked}`
+                              : classes.habito
+                          }
+                        >
+                          {isModoDeEdicaoAtivo ? <Emoji nome="lapis" /> : null}{' '}
+                          {habito.nome}
+                        </Typography>
+                      </HabitoLabel>
                     </Grid>
                   ))}
                   {grupo.nome === 'Personalizados' && !isCadastro ? (
