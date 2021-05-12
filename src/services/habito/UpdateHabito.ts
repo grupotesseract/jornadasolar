@@ -4,7 +4,7 @@ import HabitosRepository, {
 
 type Parameters = {
   id: string
-  emojiUnicode?: string
+  emojiUnicode?: Array<string>
   nome?: string
 }
 
