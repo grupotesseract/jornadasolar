@@ -7,7 +7,11 @@ import SignOutUser from 'src/services/user/SignOutUser'
 import Button from 'src/components/Button'
 import { useRouter } from 'next/router'
 
-const Configuracoes: FC = () => {
+type Props = {
+  userName?: string
+}
+
+const Configuracoes: FC<Props> = ({ userName }) => {
   const router = useRouter()
 
   return (
@@ -16,14 +20,29 @@ const Configuracoes: FC = () => {
         <Box mt={4} mb={2} ml={2} alignSelf="center" flexGrow="1">
           <Titulo>Configurações</Titulo>
         </Box>
-        <Button
-          onClick={async () => {
-            await new SignOutUser().call()
-            router.replace('/login')
-          }}
-        >
-          Logoff
-        </Button>
+        <Box>
+          <span>Changelog v0.7.5</span>
+          <ul>
+            <li>Edição de hábitos personalizados</li>
+            <li>Componente de novidades</li>
+            <li>Alteração do scroll de hábitos</li>
+          </ul>
+        </Box>
+
+        <Box>
+          <span>
+            Você entrou no app com o usuário <b>{userName}</b>
+          </span>
+          <Button
+            onClick={async () => {
+              await new SignOutUser().call()
+              router.replace('/login')
+            }}
+            style={{ width: 'auto', height: 'auto', fontSize: 10, margin: 10 }}
+          >
+            Sair
+          </Button>
+        </Box>
       </Container>
     </PageWithBottomNavigation>
   )

@@ -1,8 +1,7 @@
 import React, { FC, useEffect, useState } from 'react'
 import { NextPageContext } from 'next'
 import { parse } from 'date-fns'
-import { Box, Typography } from '@material-ui/core'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
+import { Box } from '@material-ui/core'
 import { withUser } from '../../../../../components/hocs/withAuth'
 import CreateOrUpdateRegistro from '../../../../../services/registro/CreateOrUpdateRegistro'
 import EdicaoDiario from '../../../../../components/templates/EdicaoDiario'
@@ -12,27 +11,18 @@ import HabitosCheckboxGroup, {
 } from '../../../../../components/diario/HabitosCheckboxGroup'
 import { useRouter } from 'next/router'
 import { analytics } from '../../../../../components/firebase/firebase.config'
-
-const useStyles = makeStyles(() =>
-  createStyles({
-    textoInformativo: {
-      margin: '24px 29px',
-      width: 284,
-      color: '#BDBDBD',
-      lineHeight: '22px'
-    }
-  })
-)
+import Novidade from '../../../../../components/Novidade'
+import { IUser } from 'src/entities/User'
 
 interface IProps {
-  userId?: string
   date: string
+  user: IUser
 }
 
-const Habitos: FC<IProps> = ({ userId, date }) => {
-  const classes = useStyles()
+const Habitos: FC<IProps> = ({ date, user }) => {
   const dia = parse(date, 'd-M-yyyy', new Date())
   const router = useRouter()
+  const userId = user?.id
 
   const { loading, registroDoDia } = useRegistroByDate({
     userId,
@@ -63,18 +53,16 @@ const Habitos: FC<IProps> = ({ userId, date }) => {
 
   return (
     <EdicaoDiario date={date} onClick={onSalvarClick} loading={loading}>
-      <Box mt="46px" maxWidth={360} ml="28px">
+      <Novidade slug="habitos-personalizados" user={user} />
+      <Box mt="46px" maxWidth={360}>
         <HabitosCheckboxGroup
           onChange={setGruposDeHabitos}
           values={gruposDeHabitos}
           onAdicionarHabitoClick={handleAdicionarHabito}
           userId={userId}
+          date={date}
         />
       </Box>
-      <Typography className={classes.textoInformativo}>
-        Gostaria de editar ou incluir um novo hábito? Envie uma sugestão para
-        <span style={{ color: '#F7C92A' }}> jornadasolar@gmail.com.br</span>
-      </Typography>
     </EdicaoDiario>
   )
 }

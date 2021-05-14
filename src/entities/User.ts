@@ -8,6 +8,8 @@ interface IUserAttributes {
   objetivos: Array<string>
   temLivro: TemLivroOptions
   role?: string
+  novidadesDispensadas?: Array<string>
+  novidadeDispensada?(slug: string): boolean
 }
 
 export type IUser = IUserAttributes
@@ -20,6 +22,7 @@ export default class User implements IUser {
   public objetivos: Array<string>
   public temLivro: TemLivroOptions
   public role: string
+  public novidadesDispensadas: Array<string>
 
   constructor({
     id,
@@ -28,7 +31,8 @@ export default class User implements IUser {
     password,
     objetivos,
     temLivro,
-    role
+    role,
+    novidadesDispensadas
   }: IUserAttributes) {
     this.id = id
     this.nome = nome
@@ -37,5 +41,10 @@ export default class User implements IUser {
     this.objetivos = objetivos
     this.temLivro = temLivro
     this.role = role
+    this.novidadesDispensadas = novidadesDispensadas
+  }
+
+  novidadeDispensada(slug: string): boolean {
+    return this.novidadesDispensadas.includes(slug)
   }
 }

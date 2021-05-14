@@ -12,6 +12,7 @@ export interface IHabitosRepository {
   add(params): boolean
   getAllByUserId(userId: string): Promise<Array<IHabito>>
   update(id, values): boolean
+  getById(id: string): Promise<IHabito>
 }
 
 export default class HabitosRepository implements IHabitosRepository {
@@ -62,6 +63,23 @@ export default class HabitosRepository implements IHabitosRepository {
       return habitos
     } catch (e) {
       throw new Error('Ocorreu um erro inesperado ao buscar os hábitos.')
+    }
+  }
+
+  async getById(id: string): Promise<IHabito> {
+    try {
+      const habitoSnapshot = await this.collection.doc(id).get()
+      const HabitosData = habitoSnapshot.data()
+      const habito = new Habito({
+        id: habitoSnapshot.id,
+        userId: HabitosData.userId,
+        nome: HabitosData.nome,
+        emojiUnicode: HabitosData.emojiUnicode
+      })
+
+      return habito
+    } catch (e) {
+      throw new Error('Ocorreu um erro inesperado ao buscar o hábito:' + e)
     }
   }
 }
