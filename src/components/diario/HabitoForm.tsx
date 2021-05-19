@@ -9,6 +9,7 @@ import CreateHabito from '../../services/habito/CreateHabito'
 import EmojiToUnicode from 'src/services/EmojiToUnicode'
 import { IHabito } from 'src/entities/Habito'
 import UpdateHabito from 'src/services/habito/UpdateHabito'
+import LinkVoltar from '../LinkVoltar'
 
 interface IProps {
   userId?: string
@@ -59,6 +60,7 @@ const HabitoForm: FC<IProps> = ({ userId, date, habito, formTitulo }) => {
       textoBotao="Salvar"
       exibirBotao={emoji && nome && !error}
     >
+      <LinkVoltar href={`/app/diario/${date}/habitos`} />
       <Titulo>{formTitulo}</Titulo>
 
       <Box mt={5}>
