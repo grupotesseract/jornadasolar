@@ -16,7 +16,7 @@ const Titulo: FC = ({ children }) => {
   const classes = useStyles()
 
   return (
-    <Box mt={3} maxWidth={300} mr="auto">
+    <Box mt={3} maxWidth={300} mr="auto" ml="auto">
       <Typography variant="h4" component="h1" className={classes.titulo}>
         {children}
       </Typography>
