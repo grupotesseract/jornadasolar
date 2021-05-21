@@ -43,7 +43,9 @@ interface IProps {
 
 const RegistroDoDia: FC<IProps> = ({ diario }) => {
   const classes = useStyles()
-  const habitos = diario.gruposDeHabitos?.map(grupo => grupo.habitos).flat()
+  const habitos = diario.gruposDeHabitos?.some(grupo => grupo.habitos.length)
+    ? diario.gruposDeHabitos?.map(grupo => grupo.habitos).flat()
+    : null
   const dataFormatada = format(diario.date, 'd-M-yyyy')
 
   if (!diario) {
