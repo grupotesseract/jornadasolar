@@ -8,8 +8,7 @@ const useStyles = makeStyles(() =>
     nome: {
       marginRight: 8,
       fontSize: 16,
-      fontWeight: 600,
-      textTransform: 'capitalize'
+      fontWeight: 600
     }
   })
 )
