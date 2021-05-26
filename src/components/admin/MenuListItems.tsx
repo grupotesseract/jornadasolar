@@ -3,12 +3,14 @@ import { Box, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import SpaIcon from '@material-ui/icons/Spa'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 const MenuListItems: FC = () => {
+  const paginaAtual = useRouter().pathname
   return (
     <Box>
       <Link href="/admin">
-        <ListItem button>
+        <ListItem button selected={paginaAtual === '/admin'}>
           <ListItemIcon>
             <DashboardIcon />
           </ListItemIcon>
@@ -16,7 +18,7 @@ const MenuListItems: FC = () => {
         </ListItem>
       </Link>
       <Link href="/admin/meditacoes">
-        <ListItem button>
+        <ListItem button selected={paginaAtual.startsWith('/admin/meditacoes')}>
           <ListItemIcon>
             <SpaIcon />
           </ListItemIcon>
