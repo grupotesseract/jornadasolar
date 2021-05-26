@@ -43,9 +43,7 @@ const Anotacoes: FC<IProps> = ({ userId, date }) => {
   })
 
   useEffect(() => {
-    if (registroDoDia?.anotacoes) {
-      setAnotacoes(registroDoDia?.anotacoes)
-    }
+    setAnotacoes(registroDoDia?.anotacoes || '')
   }, [registroDoDia])
 
   const onChangeAnotacoes = ({ target: { value } }) => {
