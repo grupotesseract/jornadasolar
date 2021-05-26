@@ -12,6 +12,7 @@ import AdminBase from 'src/components/templates/AdminBase'
 import { useDispatch } from 'react-redux'
 import { deleteMeditacao as deleteMeditacaoAction } from '../../../redux/admin/meditacoes'
 import { withAdmin } from 'src/components/hocs/withAuth'
+import Dialogo from 'src/components/Dialogo'
 
 const useStyles = makeStyles({
   tituloContainer: {
@@ -35,6 +36,9 @@ const useStyles = makeStyles({
 
 const Meditacoes: FC = () => {
   const [meditacoes, setMeditacoes] = useState([])
+  const [isDialogoOpen, setIsDialogoOpen] = useState(false)
+  const [meditacaoSelecionada, setMeditacaoSelecionada] = useState('')
+
   const router = useRouter()
   const dispatch = useDispatch()
   const classes = useStyles()
@@ -54,8 +58,18 @@ const Meditacoes: FC = () => {
     { id: 'actions', label: 'Ações' }
   ]
 
-  const handleDelete = id => {
-    new DeleteMeditacao().call(id).then(() => {
+  const abrirDialogo = id => {
+    setMeditacaoSelecionada(id)
+    setIsDialogoOpen(true)
+  }
+
+  const fecharDialogo = () => {
+    setMeditacaoSelecionada('')
+    setIsDialogoOpen(false)
+  }
+
+  const handleDelete = () => {
+    new DeleteMeditacao().call(meditacaoSelecionada).then(() => {
       dispatch(deleteMeditacaoAction())
       buscarMeditacoes()
     })
@@ -68,9 +82,7 @@ const Meditacoes: FC = () => {
     actions: (
       <IconButton
         style={{ padding: 0 }}
-        onClick={() => {
-          handleDelete(meditacao.id)
-        }}
+        onClick={() => abrirDialogo(meditacao.id)}
       >
         <DeleteIcon />
       </IconButton>
@@ -96,6 +108,15 @@ const Meditacoes: FC = () => {
           </Link>
         </Box>
         <Table headCells={headCells} bodyCells={bodyCells} />
+        <Dialogo
+          isOpen={isDialogoOpen}
+          onConfirmar={handleDelete}
+          onFechar={fecharDialogo}
+          titulo="Excluir meditação"
+          labelConfirmar="Excluir"
+        >
+          Você tem certeza que deseja excluir a meditação?
+        </Dialogo>
       </Grid>
     </AdminBase>
   )
