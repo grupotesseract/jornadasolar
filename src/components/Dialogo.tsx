@@ -3,6 +3,7 @@ import {
   Button,
   Dialog,
   DialogContent,
+  DialogTitle,
   DialogActions,
   IconButton
 } from '@material-ui/core'
@@ -27,13 +28,19 @@ interface IDialogoProps {
   isOpen?: boolean
   onConfirmar: () => void
   onFechar: () => void
+  titulo?: ReactNode
+  labelConfirmar?: string
+  labelCancelar?: string
 }
 
 const Dialogo: FC<IDialogoProps> = ({
   children,
+  titulo,
   onConfirmar,
   onFechar,
-  isOpen
+  isOpen = false,
+  labelConfirmar = 'Confirmar',
+  labelCancelar = 'Cancelar'
 }) => {
   const classes = useStyles()
 
@@ -44,7 +51,7 @@ const Dialogo: FC<IDialogoProps> = ({
 
   return (
     <Dialog open={isOpen} PaperProps={{ className: classes.dialogo }}>
-      <DialogContent>
+      <DialogTitle>
         <IconButton
           aria-label="close"
           className={classes.botaoFechar}
@@ -52,22 +59,19 @@ const Dialogo: FC<IDialogoProps> = ({
         >
           <CloseIcon />
         </IconButton>
-        {children}
-      </DialogContent>
+        {titulo}
+      </DialogTitle>
+      <DialogContent>{children}</DialogContent>
       <DialogActions>
         <Button onClick={onFechar} color="primary">
-          Cancelar
+          {labelCancelar}
         </Button>
         <Button onClick={handleConfirmar} color="primary">
-          Confirmar
+          {labelConfirmar}
         </Button>
       </DialogActions>
     </Dialog>
   )
-}
-
-Dialogo.defaultProps = {
-  isOpen: false
 }
 
 export default Dialogo
