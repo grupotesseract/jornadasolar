@@ -18,11 +18,6 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'flex-end'
   },
-  TableRow: {
-    '&:hover': {
-      backgroundColor: '#828282 !important'
-    }
-  },
   tableAlert: {
     padding: 20,
     backgroundColor: '#4F4F4F',
@@ -95,12 +90,7 @@ const Table: FC<ITableProps> = ({ headCells, bodyCells = [] }: ITableProps) => {
             {bodyCells
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map(bodyCell => (
-                <TableRow
-                  key={bodyCell.id}
-                  style={{ cursor: 'pointer' }}
-                  hover
-                  className={classes.TableRow}
-                >
+                <TableRow key={bodyCell.id} style={{ cursor: 'pointer' }} hover>
                   {headCells.map((cell, index) => (
                     <TableCell
                       key={cell.id}
