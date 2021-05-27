@@ -5,6 +5,7 @@ import Meditacao, { IMeditacao } from 'src/entities/Meditacao'
 interface ICreateParameters {
   nome: string
   file: File
+  data: Date
 }
 
 interface IUpdateParameters {
@@ -12,6 +13,7 @@ interface IUpdateParameters {
   nome?: string
   url?: string
   file?: File
+  data?: Date | FirebaseFirestore.Timestamp
 }
 
 interface IUploadFileParameters {
@@ -34,11 +36,11 @@ export default class MeditacoesRepository implements IMeditacoesRepository {
   }
 
   async create(attributes: ICreateParameters): Promise<IMeditacao> {
-    const { nome, file } = attributes
-    const data = firebase.firestore.Timestamp.now()
+    const { nome, file, data } = attributes
+    const dataAsTimestamp = firebase.firestore.Timestamp.fromDate(data)
 
     try {
-      const { id } = await this.collection.add({ nome, data })
+      const { id } = await this.collection.add({ nome, data: dataAsTimestamp })
       const url = await this.uploadFile({ id, file })
       await this.update({ id, url })
 
@@ -46,7 +48,7 @@ export default class MeditacoesRepository implements IMeditacoesRepository {
         id,
         nome,
         url,
-        data: data.toDate().toLocaleDateString('pt-BR')
+        data: dataAsTimestamp?.toDate().toLocaleDateString('pt-BR')
       })
 
       return meditacao
@@ -57,6 +59,13 @@ export default class MeditacoesRepository implements IMeditacoesRepository {
 
   async update({ id, ...attributes }: IUpdateParameters): Promise<IMeditacao> {
     const payload = { ...attributes }
+
+    if (attributes.data) {
+      payload.data = firebase.firestore.Timestamp.fromDate(
+        attributes.data as Date
+      )
+    }
+
     if (attributes.file) {
       payload.url = await this.uploadFile({ id, file: attributes.file })
       delete payload.file
