@@ -18,8 +18,7 @@ const useStyles = makeStyles(() =>
       overflow: 'hidden',
       fontSize: 16,
       whiteSpace: 'nowrap',
-      textOverflow: 'ellipsis',
-      textTransform: 'capitalize'
+      textOverflow: 'ellipsis'
     }
   })
 )
