@@ -115,9 +115,11 @@ const Diario: FC<IDiarioProps> = ({ userId, userName }) => {
           <Box className={classes.background}></Box>
         </Box>
         <Box>
-          <Typography className={classes.appVersion}>
-            versão <Link href="/app/configuracoes">{appVersion}</Link>
-          </Typography>
+          <Link href="/app/configuracoes" passHref>
+            <Typography className={classes.appVersion}>
+              versão {appVersion}
+            </Typography>
+          </Link>
           <Saudacao className={classes.nome} nome={userName} />
           <Typography className={classes.mensagem}>
             Hoje o <span>Sol</span>{' '}

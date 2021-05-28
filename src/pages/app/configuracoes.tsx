@@ -6,6 +6,7 @@ import { withUser } from 'src/components/hocs/withAuth'
 import SignOutUser from 'src/services/user/SignOutUser'
 import Button from 'src/components/Button'
 import { useRouter } from 'next/router'
+import { appVersion } from '../../utils/appVersion'
 
 type Props = {
   userName?: string
@@ -21,15 +22,6 @@ const Configuracoes: FC<Props> = ({ userName }) => {
           <Titulo>Configurações</Titulo>
         </Box>
         <Box>
-          <span>Changelog v0.7.5</span>
-          <ul>
-            <li>Edição de hábitos personalizados</li>
-            <li>Componente de novidades</li>
-            <li>Alteração do scroll de hábitos</li>
-          </ul>
-        </Box>
-
-        <Box>
           <span>
             Você entrou no app com o usuário <b>{userName}</b>
           </span>
@@ -43,6 +35,19 @@ const Configuracoes: FC<Props> = ({ userName }) => {
             Sair
           </Button>
         </Box>
+        <Box>
+          <span>Changelog {appVersion}</span>
+          <ul>
+            <li>Melhorias no layout e correções</li>
+          </ul>
+          <span>Changelog v0.7.5</span>
+          <ul>
+            <li>Edição de hábitos personalizados</li>
+            <li>Componente de novidades</li>
+            <li>Alteração do scroll de hábitos</li>
+          </ul>
+        </Box>
+
       </Container>
     </PageWithBottomNavigation>
   )

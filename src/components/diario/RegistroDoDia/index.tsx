@@ -43,7 +43,10 @@ interface IProps {
 
 const RegistroDoDia: FC<IProps> = ({ diario }) => {
   const classes = useStyles()
-  const habitos = diario.gruposDeHabitos?.map(grupo => grupo.habitos).flat()
+  const habitos = diario.gruposDeHabitos?.some(grupo => grupo.habitos.length)
+    ? diario.gruposDeHabitos?.map(grupo => grupo.habitos).flat()
+    : null
+  const sentimentos = diario.sentimentos?.length ? diario.sentimentos : null
   const dataFormatada = format(diario.date, 'd-M-yyyy')
 
   if (!diario) {
@@ -78,15 +81,14 @@ const RegistroDoDia: FC<IProps> = ({ diario }) => {
           </Typography>
         </Link>
       </Grid>
-
       <Categoria
         key="registro-do-dia-sentimentos"
         nome="sentimentos"
-        conteudo={diario.sentimentos?.map((nomeSentimento, index) => {
+        conteudo={sentimentos?.map((nomeSentimento, index) => {
           return (
             <Fragment key={`sentimento-${index}`}>
               <Sentimento nome={nomeSentimento} />
-              {index === diario.sentimentos.length - 1 ? null : ', '}
+              {index === sentimentos.length - 1 ? null : ', '}
             </Fragment>
           )
         })}

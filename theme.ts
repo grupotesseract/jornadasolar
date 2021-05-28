@@ -21,7 +21,7 @@ const theme = createMuiTheme(
       action: {
         active: '#F7C92A',
         focus: '#F7C92A',
-        hover: '#F7C92A'
+        hover: '#828282'
       }
     },
     typography: {

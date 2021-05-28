@@ -1,30 +1,16 @@
 import React, { FC } from 'react'
-import {
-  Box,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  makeStyles
-} from '@material-ui/core'
+import { Box, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import SpaIcon from '@material-ui/icons/Spa'
 import Link from 'next/link'
-
-const useStyles = makeStyles({
-  root: {
-    '&:hover': {
-      backgroundColor: '#828282'
-    }
-  }
-})
+import { useRouter } from 'next/router'
 
 const MenuListItems: FC = () => {
-  const classes = useStyles()
-
+  const paginaAtual = useRouter().pathname
   return (
     <Box>
       <Link href="/admin">
-        <ListItem button className={classes.root}>
+        <ListItem button selected={paginaAtual === '/admin'}>
           <ListItemIcon>
             <DashboardIcon />
           </ListItemIcon>
@@ -32,7 +18,7 @@ const MenuListItems: FC = () => {
         </ListItem>
       </Link>
       <Link href="/admin/meditacoes">
-        <ListItem button className={classes.root}>
+        <ListItem button selected={paginaAtual.startsWith('/admin/meditacoes')}>
           <ListItemIcon>
             <SpaIcon />
           </ListItemIcon>
