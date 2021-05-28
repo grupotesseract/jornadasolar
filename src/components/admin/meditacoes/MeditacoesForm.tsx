@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Box,
   CircularProgress,
@@ -16,10 +16,12 @@ import { useRouter } from 'next/router'
 import { IMeditacao } from 'src/entities/Meditacao'
 import { createdOrUpdated as createdOrUpdatedMeditacaoAction } from '../../../redux/admin/meditacoes'
 import { useDispatch } from 'react-redux'
+import DateInput from 'src/components/DateInput'
+import { parse } from 'date-fns'
 
 const useStyles = makeStyles(() => ({
   paper: {
-    padding: '1.5rem .5rem'
+    padding: '1.5rem 2rem'
   },
   audioPlayer: {
     width: '100%',
@@ -43,8 +45,13 @@ interface IProps {
   meditacao?: IMeditacao
 }
 
-const MeditacoesForm: FC<IProps> = ({ meditacao }: IProps) => {
+const MeditacoesForm = ({ meditacao }: IProps) => {
   const [nome, setNome] = useState(meditacao?.nome || '')
+  const [data, setData] = useState(
+    meditacao?.data
+      ? parse(meditacao?.data, 'dd/MM/yyyy', new Date())
+      : new Date()
+  )
   const [errors, setErrors] = useState({
     nome: '',
     audio: ''
@@ -64,11 +71,12 @@ const MeditacoesForm: FC<IProps> = ({ meditacao }: IProps) => {
       const id = meditacao.id
       return {
         id,
-        nome
+        nome,
+        data
       }
     }
 
-    return { nome, file: audioFile }
+    return { nome, file: audioFile, data }
   }
 
   const hableClick = async () => {
@@ -121,8 +129,8 @@ const MeditacoesForm: FC<IProps> = ({ meditacao }: IProps) => {
 
   return (
     <Paper className={classes.paper}>
-      <Grid container direction="row" spacing={2} justify="space-around">
-        <Grid item lg={5}>
+      <Grid container direction="row" spacing={2}>
+        <Grid item xs={12} lg={4}>
           <InputLabel>Nome</InputLabel>
           <TextField
             disabled={loading}
@@ -133,7 +141,12 @@ const MeditacoesForm: FC<IProps> = ({ meditacao }: IProps) => {
           />
         </Grid>
 
-        <Grid item lg={5}>
+        <Grid item xs={12} lg={4}>
+          <InputLabel>Data</InputLabel>
+          <DateInput disabled={loading} value={data} onChange={setData} />
+        </Grid>
+
+        <Grid item xs={12} lg={4}>
           <InputLabel>Meditação</InputLabel>
           {exibirMeditacao()}
           <FormHelperText error={!!errors.audio} className={classes.helperText}>
