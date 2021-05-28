@@ -22,13 +22,6 @@ const Configuracoes: FC<Props> = ({ userName }) => {
           <Titulo>Configurações</Titulo>
         </Box>
         <Box>
-          <span>Changelog {appVersion}</span>
-          <ul>
-            <li>Melhorias no layout e correções</li>
-          </ul>
-        </Box>
-
-        <Box>
           <span>
             Você entrou no app com o usuário <b>{userName}</b>
           </span>
@@ -42,6 +35,19 @@ const Configuracoes: FC<Props> = ({ userName }) => {
             Sair
           </Button>
         </Box>
+        <Box>
+          <span>Changelog {appVersion}</span>
+          <ul>
+            <li>Melhorias no layout e correções</li>
+          </ul>
+          <span>Changelog v0.7.5</span>
+          <ul>
+            <li>Edição de hábitos personalizados</li>
+            <li>Componente de novidades</li>
+            <li>Alteração do scroll de hábitos</li>
+          </ul>
+        </Box>
+
       </Container>
     </PageWithBottomNavigation>
   )
