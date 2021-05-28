@@ -4,6 +4,7 @@ import GetGrupoDeHabitosTemplateByUserId from 'src/services/grupoDehabitos/GetGr
 import { firestore } from '../components/firebase/firebase.config'
 import Registro, { IRegistro } from '../entities/Registro'
 import { IGrupoDeHabitos } from '../entities/GrupoDeHabitos'
+import GetHabitosByUserId from 'src/services/habito/GetHabitosByUserId'
 
 export interface ICreateParameters {
   date: Date
@@ -82,6 +83,9 @@ export default class RegistrosRepository implements IRegistrosRepository {
       const gruposdeHabitosTemplate = await new GetGrupoDeHabitosTemplateByUserId().call(
         { userId }
       )
+      const habitosPersonalizadosDoUsuario = await new GetHabitosByUserId().call(
+        userId
+      )
       const querySnapshot = await this.collection
         .where('userId', '==', userId)
         .where('date', '>=', startDate)
@@ -97,8 +101,13 @@ export default class RegistrosRepository implements IRegistrosRepository {
               grupoDehabitoDoTemplate.nome === grupoDehabito.nome
           )
           const habitos = grupoDehabito.habitos.map(habito => {
-            return grupoDeHabitoDoUsuario.habitos.find(
-              habitoDoUsuario => habitoDoUsuario.nome === habito
+            return (
+              grupoDeHabitoDoUsuario.habitos.find(
+                habitoDoUsuario => habitoDoUsuario.nome === habito
+              ) ||
+              habitosPersonalizadosDoUsuario.find(
+                habitoPersonalizado => habitoPersonalizado.id === habito
+              )
             )
           })
           return new GrupoDeHabitos({

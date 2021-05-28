@@ -33,7 +33,9 @@ export default class CreateOrUpdate implements ICreateOrUpdate {
     if (Object.keys(attributes).includes('gruposDeHabitos')) {
       parsedAttributes.gruposDeHabitos = []
       attributes.gruposDeHabitos.forEach(grupoDeHabitos => {
-        const habitos = grupoDeHabitos.habitos.map(habito => habito.nome)
+        const habitos = grupoDeHabitos.habitos.map(
+          habito => habito.id || habito.nome
+        )
         parsedAttributes.gruposDeHabitos.push({
           nome: grupoDeHabitos.nome,
           habitos

@@ -218,7 +218,7 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
       habitosAlterados = [...grupoDeHabitosAlterado.habitos, habito]
     } else {
       habitosAlterados = grupoDeHabitosAlterado.habitos.filter(
-        value => value.nome !== habito.nome
+        value => value.nome !== habito?.nome
       )
     }
 
@@ -284,12 +284,12 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
                   {grupo.habitos?.map(habito => (
                     <Grid
                       item
-                      key={`habito-${habito.nome}`}
+                      key={`habito-${habito?.nome}`}
                       xs={4}
                       style={{ textAlign: 'center', padding: 0 }}
                     >
                       <StyledCheckbox
-                        name={habito.nome}
+                        name={habito?.nome}
                         icon={
                           <span>
                             <Emoji
@@ -315,8 +315,8 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
                           })
                         }
                         checked={values[indexGrupo]?.habitos
-                          .map(habito => habito.nome)
-                          .includes(habito.nome)}
+                          .map(habito => habito?.nome)
+                          .includes(habito?.nome)}
                       />
                       <HabitoLabel
                         modeDeEdicaoAtivo={isModoDeEdicaoAtivo}
@@ -324,13 +324,13 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
                       >
                         <Typography
                           className={
-                            values[indexGrupo]?.habitos.includes(habito.nome)
+                            values[indexGrupo]?.habitos.includes(habito?.nome)
                               ? `${classes.habito} ${classes.habitoChecked}`
                               : classes.habito
                           }
                         >
                           {isModoDeEdicaoAtivo ? <Emoji nome="lapis" /> : null}{' '}
-                          {habito.nome}
+                          {habito?.nome}
                         </Typography>
                       </HabitoLabel>
                     </Grid>
