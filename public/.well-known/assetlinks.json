@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "app.vercel.jornadasolar_git_develop_grupotesseract.twa",
+    "sha256_cert_fingerprints": [
+      "F5:D0:D8:3E:59:FA:F3:20:AF:87:31:D5:B2:15:2A:72:82:BF:FA:75:8D:E5:D9:35:6C:3B:27:64:27:10:C3:EF"
+    ]
+  }
+}]
