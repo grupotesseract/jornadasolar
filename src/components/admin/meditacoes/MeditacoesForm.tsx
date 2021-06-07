@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Box,
   CircularProgress,
@@ -61,6 +61,13 @@ const MeditacoesForm = ({ meditacao }: IProps) => {
   const router = useRouter()
   const dispatch = useDispatch()
   const classes = useStyles()
+
+  useEffect(() => {
+    if (meditacao) {
+      setNome(meditacao.nome)
+      setData(parse(meditacao?.data, 'dd/MM/yyyy', new Date()))
+    }
+  }, [meditacao])
 
   const onChangeNome = ({ target: { value } }) => {
     setNome(value)

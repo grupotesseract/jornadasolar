@@ -9,7 +9,8 @@ import store from '../redux/store'
 import AuthProvider from '../components/firebase/AuthProvider'
 import StoreProvider from '../components/firebase/FirestoreProvider'
 
-const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
+import AdminBase from '../components/templates/AdminBase'
+const MyApp: FC<AppProps> = ({ Component, pageProps, router }) => {
   useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side')
@@ -17,6 +18,7 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
       jssStyles.parentElement.removeChild(jssStyles)
     }
   }, [])
+  const isAreaAdmin = router.pathname.startsWith('/admin')
 
   return (
     <>
@@ -29,7 +31,13 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
         <AuthProvider>
           <StoreProvider>
             <Provider store={store}>
-              <Component {...pageProps} />
+              {isAreaAdmin ? (
+                <AdminBase>
+                  <Component {...pageProps} />
+                </AdminBase>
+              ) : (
+                <Component {...pageProps} />
+              )}
             </Provider>
           </StoreProvider>
         </AuthProvider>
