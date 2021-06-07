@@ -1,14 +1,19 @@
-import { IGruposDeHabitos } from '../../entities/Registro'
 import RegistrosRepository, {
   IRegistrosRepository
 } from '../../repositories/RegistrosRepository'
+import { IGrupoDeHabitos } from '../../entities/GrupoDeHabitos'
+
+interface IParsedGrupoDeHabitos {
+  nome: string
+  habitos: Array<string>
+}
 
 type Parameters = {
   id?: string
   date: unknown
   userId: string
   sentimentos?: Array<string>
-  gruposDeHabitos?: Array<IGruposDeHabitos>
+  gruposDeHabitos?: Array<IGrupoDeHabitos> | Array<IParsedGrupoDeHabitos>
   anotacoes?: string
 }
 
@@ -24,10 +29,27 @@ export default class CreateOrUpdate implements ICreateOrUpdate {
   }
 
   async call({ id, ...attributes }: Parameters): Promise<boolean> {
-    if (id) {
-      return this.registrosRepository.update({ id, attributes })
+    const parsedAttributes = { ...attributes }
+    if (Object.keys(attributes).includes('gruposDeHabitos')) {
+      parsedAttributes.gruposDeHabitos = []
+      attributes.gruposDeHabitos.forEach(grupoDeHabitos => {
+        const habitos = grupoDeHabitos.habitos.map(
+          habito => habito.id || habito.nome
+        )
+        parsedAttributes.gruposDeHabitos.push({
+          nome: grupoDeHabitos.nome,
+          habitos
+        })
+      })
     }
 
-    return this.registrosRepository.add(attributes)
+    if (id) {
+      return this.registrosRepository.update({
+        id,
+        attributes: parsedAttributes
+      })
+    }
+
+    return this.registrosRepository.add(parsedAttributes)
   }
 }

@@ -1,10 +1,20 @@
-import React, { FC } from 'react'
-import { Box, Checkbox, Grid, Typography, withStyles } from '@material-ui/core'
+/* eslint-disable multiline-ternary */
+import React, { FC, useEffect, useState } from 'react'
+import {
+  Box,
+  Checkbox,
+  Grid,
+  Link,
+  Typography,
+  withStyles
+} from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
-import ArrowBackIcon from '@material-ui/icons/ArrowBack'
-import { IGruposDeHabitos } from '../../entities/Registro'
+import { useRouter } from 'next/router'
 import Emoji from '../Emoji'
-import { gruposDeHabitos } from './Habito'
+import GetGrupoDeHabitosTemplateByUserId from 'src/services/grupoDehabitos/GetGrupoDeHabitosTemplateByUserId'
+import BotaoAdicionarHabito from './RegistroDoDia/BotaoAdicionarHabito'
+import { IGrupoDeHabitos } from 'src/entities/GrupoDeHabitos'
+import Loading from '../Loading'
 
 const StyledCheckbox = withStyles({
   root: {
@@ -29,22 +39,27 @@ const StyledCheckbox = withStyles({
 const useStyles = makeStyles(() =>
   createStyles({
     container: {
+      margin: '0 auto',
       display: 'flex',
-      overflowY: 'hidden',
-      overflowX: 'auto',
-      '&::-webkit-scrollbar': {
-        display: 'none'
-      }
+      flexDirection: 'column'
     },
     grupo: {
-      marginRight: '10px',
-      padding: '0 15px',
+      minWidth: 270,
+      marginBottom: 10,
+      padding: '0 8px',
       maxWidth: '300px',
-      height: '252px',
-      flex: '0 0 auto',
+      height: 260,
       borderRadius: '4px',
       background: '#151515',
       boxShadow: '1px 4px 10px rgba(0, 0, 0, 0.15)'
+    },
+    item: {
+      textAlign: 'center',
+      padding: 0,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      position: 'relative'
     },
     nome: {
       marginTop: 10,
@@ -66,30 +81,29 @@ const useStyles = makeStyles(() =>
     habitoChecked: {
       color: '#FFF'
     },
-    scrollInfo: {
-      marginTop: 18,
-      marginLeft: 4,
-      display: 'flex',
-      alignItems: 'center',
-      color: '#828282',
-      fontSize: '16px'
-    },
-    icone: {
-      marginRight: 6,
-      color: '#BDBDBD'
-    },
     emoji: {
-      '&[aria-label="amigos"]': {
+      '&[aria-label="🧑‍🤝‍🧑"]': {
         fontSize: '0.6em'
       },
-      '&[aria-label="companheiro"]': {
+      '&[aria-label="👩‍❤️‍👨👨‍❤️‍👨"]': {
         fontSize: '0.6em'
       }
+    },
+    linkEditar: {
+      fontSize: 14,
+      cursor: 'pointer',
+      position: 'absolute',
+      right: 5,
+      top: 25
     }
   })
 )
 
 export const valoresIniciais = [
+  {
+    nome: 'Personalizados',
+    habitos: []
+  },
   {
     nome: 'social',
     habitos: []
@@ -132,98 +146,214 @@ export const valoresIniciais = [
   }
 ]
 
+const HabitoLabel = ({ modeDeEdicaoAtivo, href, children }) => {
+  if (modeDeEdicaoAtivo) {
+    return (
+      <Link href={href} underline="none">
+        {children}
+      </Link>
+    )
+  }
+
+  return <>{children}</>
+}
+
 interface IHabitosCheckboxGroupProps {
+  values: Array<IGrupoDeHabitos>
+  userId?: string
+  date?: string
   onChange: (event) => void
-  values: Array<IGruposDeHabitos>
+  onAdicionarHabitoClick?: (event) => void
 }
 
 const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
+  values,
+  userId,
+  date,
   onChange,
-  values
+  onAdicionarHabitoClick
 }) => {
   const classes = useStyles()
+  const [gruposDeHabitosTemplate, setGruposDeHabitosTemplate] = useState([])
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
+  const isCadastro = router.pathname === '/cadastro'
+  const [gruposEmModoEdicao, setGruposEmModoEdicao] = useState([])
 
-  const handleChange = ({ indexGrupo, habito, checked }) => {
-    const newGruposDeHabitos = { ...values[indexGrupo] }
-    let newHabitos
-    if (checked) {
-      newHabitos = [...newGruposDeHabitos.habitos, habito]
-    } else {
-      newHabitos = newGruposDeHabitos.habitos.filter(value => value !== habito)
+  useEffect(() => {
+    setLoading(true)
+    const getGrupoDeHabitosTemplate = async () => {
+      const newGruposDeHabitosTemplate = await new GetGrupoDeHabitosTemplateByUserId().call(
+        {
+          userId,
+          allowPersonalizados: !isCadastro
+        }
+      )
+      setGruposDeHabitosTemplate(newGruposDeHabitosTemplate)
+    }
+    getGrupoDeHabitosTemplate()
+    setLoading(false)
+  }, [])
+
+  const handleChange = ({ nomeDoGrupo, habito, checked }) => {
+    // Clona grupos de hábitos que estão no values para atualizar a referência (imutábilidade)
+    const novosGruposDeHabitos = Array.from(values, value => ({ ...value }))
+
+    const precisaAdicionarGrupoPersonalizado =
+      nomeDoGrupo === 'Personalizados' &&
+      !novosGruposDeHabitos.find(
+        grupoDeHabito => grupoDeHabito.nome === 'Personalizados'
+      )
+
+    if (precisaAdicionarGrupoPersonalizado) {
+      novosGruposDeHabitos.unshift({ nome: 'Personalizados', habitos: [] })
     }
 
-    const newValues = Array.from(values, value => ({ ...value }))
-    newValues[indexGrupo].habitos = newHabitos
-    onChange(newValues)
+    const grupoDeHabitosAlterado = novosGruposDeHabitos.find(
+      value => value.nome === nomeDoGrupo
+    )
+
+    let habitosAlterados
+    if (checked) {
+      habitosAlterados = [...grupoDeHabitosAlterado.habitos, habito]
+    } else {
+      habitosAlterados = grupoDeHabitosAlterado.habitos.filter(
+        value => value.nome !== habito?.nome
+      )
+    }
+
+    grupoDeHabitosAlterado.habitos = habitosAlterados
+    onChange(novosGruposDeHabitos)
+  }
+
+  if (loading) {
+    return <Loading />
+  }
+
+  const handleOnClickEditarGrupo = nomeDoGrupo => {
+    if (gruposEmModoEdicao.includes(nomeDoGrupo)) {
+      const grupoEmModoEdicao = gruposEmModoEdicao.filter(
+        nomeDoGrupoEmEdicao => nomeDoGrupoEmEdicao !== nomeDoGrupo
+      )
+      setGruposEmModoEdicao(grupoEmModoEdicao)
+      return
+    }
+    setGruposEmModoEdicao([...gruposEmModoEdicao, nomeDoGrupo])
   }
 
   return (
     <>
       <Box display="flex">
         <Box className={classes.container}>
-          {gruposDeHabitos.map((grupo, indexGrupo) => (
-            <Box className={classes.grupo} key={`nome-habito-${grupo.nome}`}>
-              <Grid container spacing={2} justify="center">
-                <Grid item xs={12} style={{ textAlign: 'center', padding: 0 }}>
-                  <Typography className={classes.nome}>{grupo.nome}</Typography>
-                </Grid>
-                {grupo.habitos.map(habito => (
-                  <Grid
-                    item
-                    key={`habito-${habito.nome}`}
-                    xs={4}
-                    style={{ textAlign: 'center', padding: 0 }}
-                  >
-                    <StyledCheckbox
-                      icon={
-                        <span>
-                          <Emoji
-                            nome={habito.emoji}
-                            className={classes.emoji}
-                          />
-                        </span>
-                      }
-                      checkedIcon={
-                        <span>
-                          <Emoji
-                            nome={habito.emoji}
-                            className={classes.emoji}
-                          />
-                        </span>
-                      }
-                      color="primary"
-                      onChange={event =>
-                        handleChange({
-                          indexGrupo,
-                          habito: habito.nome,
-                          checked: event.target.checked
-                        })
-                      }
-                      checked={values[indexGrupo]?.habitos.includes(
-                        habito.nome
-                      )}
-                    />
-                    <Typography
-                      className={
-                        values[indexGrupo]?.habitos.includes(habito.nome)
-                          ? `${classes.habito} ${classes.habitoChecked}`
-                          : classes.habito
-                      }
-                    >
-                      {habito.nome}
+          {gruposDeHabitosTemplate.map(grupo => {
+            const isModoDeEdicaoAtivo = gruposEmModoEdicao.includes(grupo.nome)
+            const indexGrupo = values.findIndex(
+              value => value.nome === grupo.nome
+            )
+            return (
+              <Box className={classes.grupo} key={`nome-habito-${grupo.nome}`}>
+                <Grid
+                  container
+                  spacing={1}
+                  direction="row"
+                  justify="flex-start"
+                  alignItems="flex-start"
+                >
+                  <Grid item xs={12} className={classes.item}>
+                    <Typography className={classes.nome}>
+                      {grupo.nome}
                     </Typography>
+
+                    {grupo.nome === 'Personalizados' ? (
+                      <Link
+                        href="#"
+                        component="button"
+                        onClick={() => handleOnClickEditarGrupo(grupo.nome)}
+                        style={{ position: 'initial' }}
+                        underline="none"
+                      >
+                        <Typography
+                          color="primary"
+                          className={classes.linkEditar}
+                        >
+                          {isModoDeEdicaoAtivo ? 'Concluir' : 'Editar'}
+                        </Typography>
+                      </Link>
+                    ) : null}
                   </Grid>
-                ))}
-              </Grid>
-            </Box>
-          ))}
+                  {grupo.habitos?.map(habito => (
+                    <Grid
+                      item
+                      key={`habito-${habito?.nome}`}
+                      xs={4}
+                      style={{ textAlign: 'center', padding: 0 }}
+                    >
+                      <StyledCheckbox
+                        name={habito?.nome}
+                        icon={
+                          <span>
+                            <Emoji
+                              nome={habito.emoji}
+                              className={classes.emoji}
+                            />
+                          </span>
+                        }
+                        checkedIcon={
+                          <span>
+                            <Emoji
+                              nome={habito.emoji}
+                              className={classes.emoji}
+                            />
+                          </span>
+                        }
+                        color="primary"
+                        onChange={event =>
+                          handleChange({
+                            nomeDoGrupo: grupo.nome,
+                            habito: habito,
+                            checked: event.target.checked
+                          })
+                        }
+                        checked={values[indexGrupo]?.habitos
+                          .map(habito => habito?.nome)
+                          .includes(habito?.nome)}
+                      />
+                      <HabitoLabel
+                        modeDeEdicaoAtivo={isModoDeEdicaoAtivo}
+                        href={`/app/diario/${date}/habitos/${habito.id}`}
+                      >
+                        <Typography
+                          className={
+                            values[indexGrupo]?.habitos.includes(habito?.nome)
+                              ? `${classes.habito} ${classes.habitoChecked}`
+                              : classes.habito
+                          }
+                        >
+                          {isModoDeEdicaoAtivo ? <Emoji nome="lapis" /> : null}{' '}
+                          {habito?.nome}
+                        </Typography>
+                      </HabitoLabel>
+                    </Grid>
+                  ))}
+                  {grupo.nome === 'Personalizados' && !isCadastro ? (
+                    <Grid
+                      item
+                      xs={4}
+                      style={{ textAlign: 'center', padding: 0 }}
+                    >
+                      {grupo.habitos?.length < 6 ? (
+                        <BotaoAdicionarHabito
+                          onClick={onAdicionarHabitoClick}
+                        />
+                      ) : null}
+                    </Grid>
+                  ) : null}
+                </Grid>
+              </Box>
+            )
+          })}
         </Box>
       </Box>
-
-      <Typography className={classes.scrollInfo}>
-        <ArrowBackIcon className={classes.icone} />
-        Arraste para a esquerda
-      </Typography>
     </>
   )
 }

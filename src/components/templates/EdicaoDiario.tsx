@@ -33,7 +33,7 @@ const EdicaoDiario: FC<IProps> = ({ children, date, loading, onClick }) => {
     await onClick()
     setSubmit(false)
     createdOrUpdatedDiario()
-    router.push(`/diario/${date}`)
+    router.push(`/app/diario/${date}`)
   }
 
   const TextoBotao = () => {
@@ -56,9 +56,8 @@ const EdicaoDiario: FC<IProps> = ({ children, date, loading, onClick }) => {
   return (
     <Container maxWidth="xs">
       <Box display="flex" flexDirection="column">
-        <Box mb={12}>
-          <LinkVoltar href={`/diario/${date}`} />
-
+        <LinkVoltar href={`/app/diario/${date}`} />
+        <Box mb={12} mr="auto" ml="auto">
           <Box
             mt="23px"
             mb="23px"
@@ -73,7 +72,12 @@ const EdicaoDiario: FC<IProps> = ({ children, date, loading, onClick }) => {
         </Box>
 
         <Box alignSelf="center" position="fixed" bottom="20px" zIndex={1000}>
-          <Button variant="contained" color="primary" onClick={handleOnClick}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleOnClick}
+            data-cy="submit"
+          >
             <TextoBotao />
           </Button>
         </Box>

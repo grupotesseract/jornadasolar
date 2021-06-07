@@ -1,14 +1,14 @@
 import React, { FC, useState } from 'react'
 import { Box, Tab, Tabs } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
-import PageWithBottomNavigation from '../components/templates/PageWithBottomNavigation'
-import MonthNavigator from '../components/MonthNavigator'
-import GraficoSentimentos from '../components/graficos/GraficoSentimentos'
-import GraficoHabitos from '../components/graficos/GraficoHabitos'
-import Loading from '../components/Loading'
-import withAuth from '../components/hocs/withAuth'
-import useRegistrosByMonth from '../hooks/useRegistrosByMonth'
-import theme from '../../theme'
+import PageWithBottomNavigation from '../../components/templates/PageWithBottomNavigation'
+import MonthNavigator from '../../components/MonthNavigator'
+import GraficoSentimentos from '../../components/graficos/GraficoSentimentos'
+import GraficoHabitos from '../../components/graficos/GraficoHabitos'
+import Loading from '../../components/Loading'
+import { withUser } from '../../components/hocs/withAuth'
+import useRegistrosByMonth from '../../hooks/useRegistrosByMonth'
+import theme from '../../../theme'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -106,6 +106,4 @@ const Graficos: FC<IProps> = ({ userId }) => {
   )
 }
 
-const GraficosWithAuth = withAuth(Graficos)
-
-export default GraficosWithAuth
+export default withUser(Graficos)

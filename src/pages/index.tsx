@@ -1,10 +1,11 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC } from 'react'
 import { Box, Container, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import Button from '../components/Button'
 import Link from 'next/link'
-import withAuth from 'src/components/hocs/withAuth'
-import { useRouter } from 'next/router'
+import { withGuest } from 'src/components/hocs/withAuth'
+import { appVersion } from '../utils/appVersion'
+import theme from '../../theme'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -18,22 +19,18 @@ const useStyles = makeStyles(() =>
       fontSize: 20,
       lineHeight: '27px',
       textAlign: 'center'
+    },
+    appVersion: {
+      textAlign: 'center',
+      margin: 0,
+      fontSize: 10,
+      color: theme.palette.primary.main
     }
   })
 )
-interface IHomeProps {
-  isSignedIn: boolean
-}
 
-const Home: FC<IHomeProps> = ({ isSignedIn }) => {
+const Home: FC = () => {
   const classes = useStyles()
-  const router = useRouter()
-
-  useEffect(() => {
-    if (isSignedIn) {
-      router.push('/diario')
-    }
-  }, [isSignedIn])
 
   return (
     <Container maxWidth="xs">
@@ -41,6 +38,9 @@ const Home: FC<IHomeProps> = ({ isSignedIn }) => {
         <Box mt={2} alignSelf="center">
           <Typography color="primary" className={classes.titulo}>
             Jornada Solar
+          </Typography>
+          <Typography className={classes.appVersion}>
+            versão {appVersion}
           </Typography>
         </Box>
 
@@ -80,4 +80,4 @@ const Home: FC<IHomeProps> = ({ isSignedIn }) => {
   )
 }
 
-export default withAuth(Home)
+export default withGuest(Home)

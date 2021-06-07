@@ -13,6 +13,7 @@ import { getMessageFromCode } from '../../utils/firebaseAuth'
 import CreateUser from '../../services/user/CreateUser'
 import SignInUser from '../../services/user/SignInUser'
 import TemLivroOptions from '../../enums/user/TemLivroOptions'
+import { analytics } from '../firebase/firebase.config'
 
 const DadosAutenticacao: FC = () => {
   const [loading, setLoading] = useState(false)
@@ -52,8 +53,9 @@ const DadosAutenticacao: FC = () => {
         sentimentos,
         gruposDeHabitos
       })
-      new SignInUser().call(user)
-      router.push('/diario')
+      await new SignInUser().call(user.email, user.password)
+      analytics?.logEvent('sign_up')
+      router.push('/app/diario')
     } catch (e) {
       setErro(getMessageFromCode(e.code))
     }

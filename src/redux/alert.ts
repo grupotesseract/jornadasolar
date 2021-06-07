@@ -1,6 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { createdOrUpdated as createdOrUpdatedDiario } from './diario'
 import { redefinirSenha } from './auth'
+import {
+  createdOrUpdated as createdOrUpdatedMeditacao,
+  deleteMeditacao
+} from './admin/meditacoes'
 
 export enum AlertSeverity {
   Error = 'error',
@@ -30,13 +34,23 @@ const alertSlice = createSlice({
       .addCase(createdOrUpdatedDiario, state => {
         state.severity = AlertSeverity.Success
         state.message = 'Cadastro realizado com sucesso.'
-        state.only = ['/diario/[date]']
+        state.only = ['/app/diario/[date]']
       })
       .addCase(redefinirSenha, state => {
         state.severity = AlertSeverity.Success
         state.message =
           'Senha alterada com sucesso! Você já pode efetuar o login utilizando sua nova senha.'
         state.only = ['/login']
+      })
+      .addCase(createdOrUpdatedMeditacao, state => {
+        state.severity = AlertSeverity.Success
+        state.message = 'Meditação salva com sucesso.'
+        state.only = ['/admin/meditacoes']
+      })
+      .addCase(deleteMeditacao, state => {
+        state.severity = AlertSeverity.Success
+        state.message = 'Meditação removida com sucesso.'
+        state.only = ['/admin/meditacoes']
       })
   }
 })

@@ -1,11 +1,12 @@
 import React, { FC, useEffect, useState } from 'react'
 import { NextPageContext } from 'next'
 import { parse } from 'date-fns'
-import withAuth from '../../../components/hocs/withAuth'
-import CreateOrUpdateRegistro from '../../../services/registro/CreateOrUpdateRegistro'
-import SentimentosCheckboxGroup from '../../../components/diario/SentimentosCheckboxGroup'
-import EdicaoDiario from '../../../components/templates/EdicaoDiario'
-import useRegistroByDate from '../../../hooks/useRegistroByDate'
+import { withUser } from '../../../../components/hocs/withAuth'
+import CreateOrUpdateRegistro from '../../../../services/registro/CreateOrUpdateRegistro'
+import SentimentosCheckboxGroup from '../../../../components/diario/SentimentosCheckboxGroup'
+import EdicaoDiario from '../../../../components/templates/EdicaoDiario'
+import useRegistroByDate from '../../../../hooks/useRegistroByDate'
+import { analytics } from '../../../../components/firebase/firebase.config'
 
 interface IProps {
   userId?: string
@@ -32,6 +33,7 @@ const Sentimentos: FC<IProps> = ({ userId, date }) => {
       userId,
       sentimentos
     })
+    analytics?.logEvent('add_sentimentos')
   }
 
   return (
@@ -48,7 +50,7 @@ interface ISentimentosWithAuthProps {
   date: string
 }
 
-const SentimentosWithAuth = withAuth(Sentimentos)
+const SentimentosWithAuth = withUser(Sentimentos)
 
 SentimentosWithAuth.getInitialProps = (
   context: NextPageContext

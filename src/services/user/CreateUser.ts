@@ -1,9 +1,9 @@
-import { IGruposDeHabitos } from 'src/entities/Registro'
 import { IUser } from 'src/entities/User'
 import UsersRepository, {
   IUsersRepository
 } from '../../repositories/UsersRepository'
 import TemLivroOptions from '../../enums/user/TemLivroOptions'
+import { IGrupoDeHabitos } from '../../entities/GrupoDeHabitos'
 
 type Parameters = {
   nome: string
@@ -12,7 +12,7 @@ type Parameters = {
   objetivos: Array<string>
   temLivro: TemLivroOptions
   sentimentos: Array<string>
-  gruposDeHabitos: Array<IGruposDeHabitos>
+  gruposDeHabitos: Array<IGrupoDeHabitos>
 }
 
 interface ICreate {
@@ -27,6 +27,6 @@ export default class Create implements ICreate {
   }
 
   async call(params: Parameters): Promise<IUser> {
-    return this.usersRepository.add(params)
+    return await this.usersRepository.add(params)
   }
 }

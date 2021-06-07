@@ -4,6 +4,7 @@ import MuiBottomNavigation from '@material-ui/core/BottomNavigation'
 import MuiBottomNavigationAction from '@material-ui/core/BottomNavigationAction'
 import { useRouter } from 'next/router'
 import { SvgIcon } from '@material-ui/core'
+import SpaIcon from '@material-ui/icons/Spa'
 import IconeRegistros from './IconeRegistros'
 import IconeGraficos from './IconeGraficos'
 
@@ -45,21 +46,6 @@ const BottomNavigation: FC<IBottomNavigationProps> = ({ currentPage }) => {
     router.push(link)
   }
 
-  const requestPermission = () => {
-    console.log('Requesting permission...')
-    Notification.requestPermission().then(permission => {
-      if (permission === 'granted') {
-        console.log('Notification permission granted.')
-        // TODO(developer): Retrieve a registration token for use with FCM.
-        // In many cases once an app has been granted notification permission,
-        // it should update its UI reflecting this.
-        // resetUI()
-      } else {
-        console.log('Unable to get permission to notify.')
-      }
-    })
-  }
-
   return (
     <MuiBottomNavigation
       value={currentPage}
@@ -67,7 +53,7 @@ const BottomNavigation: FC<IBottomNavigationProps> = ({ currentPage }) => {
       className={classes.root}
     >
       <MuiBottomNavigationAction
-        onClick={handleOnClick('/diario')}
+        onClick={handleOnClick('/app/diario')}
         classes={{
           root: classes.button,
           selected: classes.selected
@@ -82,7 +68,7 @@ const BottomNavigation: FC<IBottomNavigationProps> = ({ currentPage }) => {
       />
 
       <MuiBottomNavigationAction
-        onClick={handleOnClick('/graficos')}
+        onClick={handleOnClick('/app/graficos')}
         classes={{
           root: classes.button,
           selected: classes.selected
@@ -97,16 +83,16 @@ const BottomNavigation: FC<IBottomNavigationProps> = ({ currentPage }) => {
       />
 
       <MuiBottomNavigationAction
-        onClick={() => requestPermission()}
+        onClick={handleOnClick('/app/meditacoes')}
         classes={{
           root: classes.button,
           selected: classes.selected
         }}
-        value="graficos"
-        label="Gráficos"
+        value="meditacoes"
+        label="Meditações"
         icon={
           <SvgIcon>
-            <IconeGraficos />
+            <SpaIcon />
           </SvgIcon>
         }
       />

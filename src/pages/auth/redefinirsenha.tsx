@@ -6,9 +6,9 @@ import Layout from 'src/components/templates/Layout'
 import Titulo from 'src/components/Titulo'
 import TextField from 'src/components/TextField'
 import InputLabel from 'src/components/InputLabel'
-import { auth } from 'src/components/firebase/firebase.config'
 import { getMessageFromCode } from 'src/utils/firebaseAuth'
 import { redefinirSenha } from '../../redux/auth'
+import ConfirmPasswordReset from 'src/services/user/ConfirmPasswordReset'
 
 const RedefinirSenha: FC = () => {
   const [senha, setSenha] = useState('')
@@ -38,7 +38,7 @@ const RedefinirSenha: FC = () => {
     if (oobCode && oobCode !== '') {
       setLoading(true)
       try {
-        await auth.confirmPasswordReset(oobCode.toString(), senha)
+        await new ConfirmPasswordReset().call(oobCode.toString(), senha)
         dispatch(redefinirSenha())
         router.push('/login')
       } catch (e) {

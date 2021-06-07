@@ -43,7 +43,10 @@ interface IProps {
 
 const RegistroDoDia: FC<IProps> = ({ diario }) => {
   const classes = useStyles()
-  const habitos = diario.gruposDeHabitos?.map(grupo => grupo.habitos).flat()
+  const habitos = diario.gruposDeHabitos?.some(grupo => grupo.habitos.length)
+    ? diario.gruposDeHabitos?.map(grupo => grupo.habitos).flat()
+    : null
+  const sentimentos = diario.sentimentos?.length ? diario.sentimentos : null
   const dataFormatada = format(diario.date, 'd-M-yyyy')
 
   if (!diario) {
@@ -51,7 +54,13 @@ const RegistroDoDia: FC<IProps> = ({ diario }) => {
   }
 
   return (
-    <Grid container className={classes.diario} spacing={3} key={diario.id}>
+    <Grid
+      container
+      className={classes.diario}
+      spacing={3}
+      key={diario.id}
+      data-cy="box-diario"
+    >
       <Grid
         item
         xs={12}
@@ -62,44 +71,45 @@ const RegistroDoDia: FC<IProps> = ({ diario }) => {
             locale: ptBR
           })}
         </Typography>
-        <Link href={`/diario/${dataFormatada}`}>
-          <Typography color="primary" className={classes.textoLink}>
+        <Link href={`/app/diario/${dataFormatada}`}>
+          <Typography
+            color="primary"
+            className={classes.textoLink}
+            data-cy="ver-mais"
+          >
             Ver mais
           </Typography>
         </Link>
       </Grid>
-
       <Categoria
         key="registro-do-dia-sentimentos"
         nome="sentimentos"
-        conteudo={diario.sentimentos?.map((nomeSentimento, index) => {
+        conteudo={sentimentos?.map((nomeSentimento, index) => {
           return (
             <Fragment key={`sentimento-${index}`}>
               <Sentimento nome={nomeSentimento} />
-              {index === diario.sentimentos.length - 1 ? null : ', '}
+              {index === sentimentos.length - 1 ? null : ', '}
             </Fragment>
           )
         })}
-        linkHref={`/diario/${dataFormatada}/sentimentos`}
+        linkHref={`/app/diario/${dataFormatada}/sentimentos`}
       />
       <Categoria
         key="registro-do-dia-habitos"
         nome="hábitos"
-        conteudo={habitos?.map((nomeHabito, index) => {
-          return (
-            <Fragment key={`habito-${index}`}>
-              <Habito nome={nomeHabito} />
-              {index === habitos.length - 1 ? null : ', '}
-            </Fragment>
-          )
-        })}
-        linkHref={`/diario/${dataFormatada}/habitos`}
+        conteudo={habitos?.map((habito, index) => (
+          <Fragment key={`habito-${index}`}>
+            <Habito habito={habito} />
+            {index === habitos.length - 1 ? null : ', '}
+          </Fragment>
+        ))}
+        linkHref={`/app/diario/${dataFormatada}/habitos`}
       />
       <Categoria
         key="registro-do-dia-anotacoes"
         nome="anotações"
         conteudo={diario.anotacoes}
-        linkHref={`/diario/${dataFormatada}/anotacoes`}
+        linkHref={`/app/diario/${dataFormatada}/anotacoes`}
       />
     </Grid>
   )

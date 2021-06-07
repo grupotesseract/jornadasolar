@@ -3,14 +3,14 @@ import { NextPageContext } from 'next'
 import { Box, Container, Typography } from '@material-ui/core'
 import { addDays, isToday, parse, format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import DetalheDaCategoria from '../../../components/diario/Detalhe/DetalheDaCategoria'
-import Sentimento from '../../../components/diario/Sentimento'
-import LinkVoltar from '../../../components/LinkVoltar'
-import withAuth from '../../../components/hocs/withAuth'
-import RegistroDoDiaNavigator from '../../../components/RegistroDoDiaNavigator'
-import useRegistroByDate from '../../../hooks/useRegistroByDate'
-import Habito from '../../../components/diario/Habito'
-import Loading from '../../../components/Loading'
+import DetalheDaCategoria from '../../../../components/diario/Detalhe/DetalheDaCategoria'
+import Sentimento from '../../../../components/diario/Sentimento'
+import LinkVoltar from '../../../../components/LinkVoltar'
+import { withUser } from '../../../../components/hocs/withAuth'
+import RegistroDoDiaNavigator from '../../../../components/RegistroDoDiaNavigator'
+import useRegistroByDate from '../../../../hooks/useRegistroByDate'
+import Habito from '../../../../components/diario/Habito'
+import Loading from '../../../../components/Loading'
 
 interface IProps {
   userId?: string
@@ -41,7 +41,7 @@ const Detalhe: FC<IProps> = ({ userId, date }) => {
             </Fragment>
           )
         })}
-        linkHref={`/diario/${date}/sentimentos`}
+        linkHref={`/app/diario/${date}/sentimentos`}
       />
 
       <DetalheDaCategoria
@@ -53,25 +53,25 @@ const Detalhe: FC<IProps> = ({ userId, date }) => {
                 style={{ flexGrow: 1, width: '50%' }}
                 key={`habito-${index}`}
               >
-                <Habito nome={habito} key={`habito-${index}`} />
+                <Habito habito={habito} key={`habito-${index}`} />
               </Box>
             ))}
           </Box>
         }
-        linkHref={`/diario/${date}/habitos`}
+        linkHref={`/app/diario/${date}/habitos`}
       />
 
       <DetalheDaCategoria
         nome="Anotações"
         conteudo={<Typography>{registroDoDia?.anotacoes}</Typography>}
-        linkHref={`/diario/${date}/anotacoes`}
+        linkHref={`/app/diario/${date}/anotacoes`}
       />
     </>
   )
 
   return (
     <Container maxWidth="xs">
-      <LinkVoltar href="/diario" />
+      <LinkVoltar href="/app/diario" />
 
       <Box mt={3} mr={1} ml={1}>
         <RegistroDoDiaNavigator
@@ -93,7 +93,7 @@ interface IDetalheWithAuthProps {
   date: string
 }
 
-const DetalheWithAuth = withAuth(Detalhe)
+const DetalheWithAuth = withUser(Detalhe)
 
 DetalheWithAuth.getInitialProps = (
   context: NextPageContext

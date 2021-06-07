@@ -1,13 +1,14 @@
 import React, { FC, useEffect, useState } from 'react'
 import { NextPageContext } from 'next'
-import { Box, Typography } from '@material-ui/core'
+import { Box } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { parse } from 'date-fns'
-import withAuth from '../../../components/hocs/withAuth'
-import CreateOrUpdateRegistro from '../../../services/registro/CreateOrUpdateRegistro'
-import TextArea from '../../../components/TextArea'
-import EdicaoDiario from '../../../components/templates/EdicaoDiario'
-import useRegistroByDate from '../../../hooks/useRegistroByDate'
+import { withUser } from '../../../../components/hocs/withAuth'
+import CreateOrUpdateRegistro from '../../../../services/registro/CreateOrUpdateRegistro'
+import TextArea from '../../../../components/TextArea'
+import EdicaoDiario from '../../../../components/templates/EdicaoDiario'
+import useRegistroByDate from '../../../../hooks/useRegistroByDate'
+import { analytics } from '../../../../components/firebase/firebase.config'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -18,6 +19,10 @@ const useStyles = makeStyles(() =>
       borderRadius: '4px',
       background: '#222222',
       boxShadow: '1px 3px 8px rgba(255, 255, 255, 0.15)'
+    },
+    label: {
+      fontSize: 16,
+      color: '#E0E0E0'
     }
   })
 )
@@ -38,7 +43,7 @@ const Anotacoes: FC<IProps> = ({ userId, date }) => {
   })
 
   useEffect(() => {
-    setAnotacoes(registroDoDia?.anotacoes)
+    setAnotacoes(registroDoDia?.anotacoes || '')
   }, [registroDoDia])
 
   const onChangeAnotacoes = ({ target: { value } }) => {
@@ -52,13 +57,16 @@ const Anotacoes: FC<IProps> = ({ userId, date }) => {
       userId,
       anotacoes
     })
+    analytics?.logEvent('add_anotacoes')
   }
 
   return (
     <EdicaoDiario date={date} onClick={onSalvarClick} loading={loading}>
       <Box className={classes.containerRegistro}>
-        <Box display="flex" justifyContent="space-between" p={2} pb={0}>
-          <Typography color="textSecondary">Anotações:</Typography>
+        <Box display="flex" justifyContent="space-between" p={2} pb={0} clone>
+          <label htmlFor="anotacoes" className={classes.label}>
+            Anotações:
+          </label>
         </Box>
 
         <Box p={2}>
@@ -77,7 +85,7 @@ interface IAnotacoesWithAuthProps {
   date: string
 }
 
-const AnotacoesWithAuth = withAuth(Anotacoes)
+const AnotacoesWithAuth = withUser(Anotacoes)
 
 AnotacoesWithAuth.getInitialProps = (
   context: NextPageContext

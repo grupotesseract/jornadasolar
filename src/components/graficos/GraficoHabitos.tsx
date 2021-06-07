@@ -1,6 +1,5 @@
 import React, { FC } from 'react'
 import { IRegistro } from '../../entities/Registro'
-import { gruposDeHabitos } from '../diario/Habito'
 import BaseGraficos from './GraficoBase'
 
 interface IProps {
@@ -16,13 +15,15 @@ const GraficoHabitos: FC<IProps> = ({ diarios, mesAtual }) => {
     .flat()
     .filter(habito => Boolean(habito))
 
-  const listaDeHabitosComEmojis = gruposDeHabitos
-    .map(grupo => grupo.habitos)
+  const listaDeHabitosComEmojis = habitosDoMes
+    .map(habito => ({ nome: habito.nome, emoji: habito.emoji }))
     .flat()
+
+  const habitosDoMesAsStrings = habitosDoMes.map(habito => habito.nome)
 
   return (
     <BaseGraficos
-      registrosDoMes={habitosDoMes}
+      registrosDoMes={habitosDoMesAsStrings}
       mesAtual={mesAtual}
       listaComEmojis={listaDeHabitosComEmojis}
       titulo="Esses hábitos tiveram o maior impacto em sua vida neste mês:"

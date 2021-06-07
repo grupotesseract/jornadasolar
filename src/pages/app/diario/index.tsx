@@ -1,7 +1,6 @@
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { Box, Container, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
-import { useRouter } from 'next/dist/client/router'
 import {
   isThisMonth,
   startOfMonth,
@@ -11,16 +10,18 @@ import {
   eachDayOfInterval,
   compareDesc
 } from 'date-fns'
-import RegistroDoDia from '../../components/diario/RegistroDoDia'
-import Saudacao from '../../components/Saudacao'
-import MonthNavigator from '../../components/MonthNavigator'
-import withAuth from '../../components/hocs/withAuth'
-import PageWithBottomNavigation from '../../components/templates/PageWithBottomNavigation'
-import useRegistrosByMonth from '../../hooks/useRegistrosByMonth'
-import Loading from '../../components/Loading'
-import getFaseDaLua from '../../utils/getFaseDaLua'
-import getSigno from '../../utils/getSigno'
-import theme from '../../../theme'
+import RegistroDoDia from '../../../components/diario/RegistroDoDia'
+import Saudacao from '../../../components/Saudacao'
+import MonthNavigator from '../../../components/MonthNavigator'
+import { withUser } from '../../../components/hocs/withAuth'
+import PageWithBottomNavigation from '../../../components/templates/PageWithBottomNavigation'
+import useRegistrosByMonth from '../../../hooks/useRegistrosByMonth'
+import Loading from '../../../components/Loading'
+import getFaseDaLua from '../../../utils/getFaseDaLua'
+import getSigno from '../../../utils/getSigno'
+import theme from '../../../../theme'
+import { appVersion } from '../../../utils/appVersion'
+import Link from 'next/link'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -59,6 +60,12 @@ const useStyles = makeStyles(() =>
       '& span': {
         fontWeight: 700
       }
+    },
+    appVersion: {
+      textAlign: 'right',
+      margin: '8px 8px 0px 8px',
+      fontSize: 10,
+      color: theme.palette.secondary.main
     }
   })
 )
@@ -66,13 +73,11 @@ const useStyles = makeStyles(() =>
 interface IDiarioProps {
   userId: string
   userName: string
-  isSignedIn: boolean
 }
 
-const Diario: FC<IDiarioProps> = ({ userId, userName, isSignedIn }) => {
+const Diario: FC<IDiarioProps> = ({ userId, userName }) => {
   const [mes, setMes] = useState(new Date())
   const classes = useStyles()
-  const router = useRouter()
   const dias = eachDayOfInterval({
     start: startOfMonth(mes),
     end: isThisMonth(mes) ? new Date() : lastDayOfMonth(mes)
@@ -82,12 +87,6 @@ const Diario: FC<IDiarioProps> = ({ userId, userName, isSignedIn }) => {
     userId,
     mes
   })
-
-  useEffect(() => {
-    if (!isSignedIn) {
-      router.replace('/login')
-    }
-  }, [isSignedIn])
 
   const registros = dias.sort(compareDesc).map((dia, index) => {
     let diario = diarios?.find(diario =>
@@ -116,6 +115,11 @@ const Diario: FC<IDiarioProps> = ({ userId, userName, isSignedIn }) => {
           <Box className={classes.background}></Box>
         </Box>
         <Box>
+          <Link href="/app/configuracoes" passHref>
+            <Typography className={classes.appVersion}>
+              versão {appVersion}
+            </Typography>
+          </Link>
           <Saudacao className={classes.nome} nome={userName} />
           <Typography className={classes.mensagem}>
             Hoje o <span>Sol</span>{' '}
@@ -133,6 +137,4 @@ const Diario: FC<IDiarioProps> = ({ userId, userName, isSignedIn }) => {
   )
 }
 
-const DiarioWithAuth = withAuth(Diario)
-
-export default DiarioWithAuth
+export default withUser(Diario)

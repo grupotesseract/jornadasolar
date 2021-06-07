@@ -2,8 +2,9 @@ import { firestore, auth } from '../components/firebase/firebase.config'
 import firebase from 'firebase/app'
 import CreateOrUpdateRegistro from '../services/registro/CreateOrUpdateRegistro'
 import User, { IUser } from '../entities/User'
-import { IGruposDeHabitos } from 'src/entities/Registro'
+import { IGrupoDeHabitos } from '../entities/GrupoDeHabitos'
 import TemLivroOptions from '../enums/user/TemLivroOptions'
+import UserFactory, { IUserFactory } from '../factories/UserFactory'
 
 interface ICreateParameters {
   nome: string
@@ -12,18 +13,27 @@ interface ICreateParameters {
   objetivos: Array<string>
   temLivro: TemLivroOptions
   sentimentos: Array<string>
-  gruposDeHabitos: Array<IGruposDeHabitos>
+  gruposDeHabitos: Array<IGrupoDeHabitos>
+}
+
+interface IUpdateParameters {
+  id: string
+  attributes: string
 }
 
 export interface IUsersRepository {
   add(params): Promise<IUser>
+  getById(id: string): Promise<IUser>
+  update(params): boolean
 }
 
 export default class UsersRepository implements IUsersRepository {
   private collection
+  private factory: IUserFactory
 
   constructor() {
     this.collection = firestore.collection('user')
+    this.factory = new UserFactory()
   }
 
   async add({
@@ -48,7 +58,7 @@ export default class UsersRepository implements IUsersRepository {
       created_at: now,
       updated_at: now
     }
-    this.collection.doc(user.uid).set(data)
+    await this.collection.doc(user.uid).set(data)
     await new CreateOrUpdateRegistro().call({
       date: now,
       userId: user.uid,
@@ -63,5 +73,25 @@ export default class UsersRepository implements IUsersRepository {
       temLivro,
       objetivos
     })
+  }
+
+  async getById(id: string): Promise<IUser> {
+    try {
+      const userSnapshot = await this.collection.doc(id).get()
+      const user = this.factory.build(userSnapshot)
+
+      return user
+    } catch (e) {
+      throw new Error('Ocorreu um erro inesperado ao buscar o usuário:' + e)
+    }
+  }
+
+  update({ id, attributes }: IUpdateParameters): boolean {
+    try {
+      this.collection.doc(id).update(attributes)
+      return true
+    } catch (e) {
+      throw new Error('Ocorreu um erro inesperado ao atualizar usuário.' + e)
+    }
   }
 }

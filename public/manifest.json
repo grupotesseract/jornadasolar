@@ -6,6 +6,7 @@
   "theme_color": "#F7C92A",
   "background_color": "#000000",
   "start_url": "/",
+  "scope": "/app",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
