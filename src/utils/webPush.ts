@@ -1,6 +1,6 @@
 import localforage from 'localforage'
 import 'firebase/messaging'
-import { messaging } from '../components/firebase/firebase.config'
+import { setupMessaging } from '../components/firebase/firebase.config'
 
 const firebaseCloudMessaging = {
   // checking whether token is available in indexed DB
@@ -24,7 +24,7 @@ const firebaseCloudMessaging = {
       console.log('NOtification status', status)
       if (status && status === 'granted') {
         // getting token from FCM
-        const fcmToken = await messaging.getToken({
+        const fcmToken = await setupMessaging().getToken({
           vapidKey:
             'BPS78lJ69bDC3d2hoiY3IWCF00E_PMNxLoxMviV_WwndY9gyC8BcRH44f7cmGFGiqMK7wiw97cvw6JvSeWpokWo'
         })
