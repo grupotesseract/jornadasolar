@@ -8,10 +8,9 @@ import { AppProps } from 'next/app'
 import store from '../redux/store'
 import AuthProvider from '../components/firebase/AuthProvider'
 import StoreProvider from '../components/firebase/FirestoreProvider'
-import { firebaseCloudMessaging } from '../webPush'
+import { firebaseCloudMessaging } from '../utils/webPush'
 import firebase from 'firebase/app'
 import 'firebase/messaging'
-import { config } from 'src/components/firebase/firebase.config'
 
 declare const self: any
 
@@ -26,23 +25,21 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
 
   useEffect(() => {
     console.log('load app')
+
     function getMessage() {
-      if (!firebase.apps.length) {
-        console.log('config', config)
-        firebase.initializeApp(config)
-      }
       const messaging = firebase.messaging()
       console.log('set messaging', messaging)
       messaging.onMessage(message => {
-        console.log('on message ativado')
+        console.log('on message ativado, message:', message)
         const { title, body } = JSON.parse(message.data.notification)
         const options = {
           body
         }
         console.log('message', title, options)
-        self.registration.showNotification(title, options)
+        // self.registration.showNotification(title, options)
       })
     }
+
     async function setToken() {
       try {
         console.log('init token')

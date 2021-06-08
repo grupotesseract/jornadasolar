@@ -27,9 +27,10 @@ if (!firebase.apps.length) {
 const auth = firebase.auth()
 const firestore = firebase.firestore()
 const storage = firebase.storage()
+const messaging = firebase.messaging()
 
 if (process.browser) {
   firestore.enablePersistence()
 }
 
-export { config, auth, firestore, analytics, storage }
+export { config, auth, firestore, analytics, storage, messaging }
