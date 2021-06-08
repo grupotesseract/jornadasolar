@@ -1,6 +1,9 @@
 importScripts('https://www.gstatic.com/firebasejs/7.9.1/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/7.9.1/firebase-messaging.js');
 
+if(!self) {
+  var self  
+}
 if (!firebase.apps.length) {
   firebase.initializeApp({
     projectId: 'jornadasolar-dev',

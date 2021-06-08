@@ -12,8 +12,6 @@ import { firebaseCloudMessaging } from '../utils/webPush'
 import firebase from 'firebase/app'
 import 'firebase/messaging'
 
-declare const self: any
-
 const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
   useEffect(() => {
     // Remove the server-side injected CSS.
