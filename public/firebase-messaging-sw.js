@@ -12,7 +12,7 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 //background notifications will be received here
 messaging.onBackgroundMessage((payload) => {
-  const notification = JSON.parse(payload.data.notification)
+  const notification = payload.notification
   const notificationTitle = notification.title;
   const notificationOptions = {
     body: notification.body,

@@ -12,7 +12,7 @@ type Props = {
   userName?: string
 }
 
-const Notificacao = () => {
+const PushNotification = () => {
   const [permission, setPermission] = useState('')
   const requestPermission = () => {
     console.log('Requesting permission...')
@@ -79,7 +79,7 @@ const Configuracoes: FC<Props> = ({ userName }) => {
           </ul>
         </Box>
 
-        <Notificacao />
+        <PushNotification />
       </Container>
     </PageWithBottomNavigation>
   )

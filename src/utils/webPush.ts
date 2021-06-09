@@ -19,7 +19,7 @@ const firebaseCloudMessaging = {
 
       // requesting notification permission from browser
       const status = await Notification.requestPermission()
-      console.log('NOtification status', status)
+      console.log('Notification status', status)
       if (status && status === 'granted') {
         // getting token from FCM
         const fcmToken = await setupMessaging().getToken()
