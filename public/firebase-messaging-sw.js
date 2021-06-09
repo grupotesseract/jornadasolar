@@ -1,5 +1,5 @@
-importScripts('https://www.gstatic.com/firebasejs/7.9.1/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/7.9.1/firebase-messaging.js');
+importScripts('https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/8.2.1/firebase-messaging.js');
 
 firebase.initializeApp({
   projectId: 'jornadasolar-dev',
@@ -18,6 +18,10 @@ messaging.onBackgroundMessage((payload) => {
     body: payload.notification.body,
   };
 
-  registration.showNotification(notificationTitle,
-    notificationOptions);
+  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+    for(let registration of registrations) {
+      console.log('registration', registration)
+      registration.showNotification(notificationTitle, notificationOptions);
+    }
+  })
 });
