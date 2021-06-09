@@ -19,4 +19,10 @@ messaging.onBackgroundMessage((payload) => {
   };
 
   // self.registration.showNotification(notificationTitle, notificationOptions);
+  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+    for(let registration of registrations) {
+      console.log('registration', registration)
+      registration.showNotification(notificationTitle, notificationOptions);
+    }
+  })
 });
