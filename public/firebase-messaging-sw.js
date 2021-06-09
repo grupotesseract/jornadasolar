@@ -1,7 +1,6 @@
 importScripts('https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/8.2.1/firebase-messaging.js');
 
-if (!firebase.apps.length && process.browser) {
 firebase.initializeApp({
   projectId: 'jornadasolar-dev',
   authDomain: 'jornadasolar-dev.firebasedev.com',
@@ -21,4 +20,3 @@ messaging.onBackgroundMessage((payload) => {
 
   // self.registration.showNotification(notificationTitle, notificationOptions);
 });
-}
