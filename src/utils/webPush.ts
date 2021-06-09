@@ -11,10 +11,7 @@ const firebaseCloudMessaging = {
   // initializing firebase app
   init: async function () {
     try {
-      console.log('init webPush')
       const tokenInLocalForage = await this.tokenInlocalforage()
-
-      console.log('tokenInLocalForage', tokenInLocalForage)
       // if FCM token is already there just return the token
       if (tokenInLocalForage !== null) {
         return tokenInLocalForage
@@ -25,11 +22,7 @@ const firebaseCloudMessaging = {
       console.log('NOtification status', status)
       if (status && status === 'granted') {
         // getting token from FCM
-        const fcmToken = await setupMessaging().getToken({
-          vapidKey:
-            'BPS78lJ69bDC3d2hoiY3IWCF00E_PMNxLoxMviV_WwndY9gyC8BcRH44f7cmGFGiqMK7wiw97cvw6JvSeWpokWo'
-        })
-        console.log('fcmToken', fcmToken)
+        const fcmToken = await setupMessaging().getToken()
         if (fcmToken) {
           // setting FCM token in indexed db using localforage
           localforage.setItem('fcmToken', fcmToken)

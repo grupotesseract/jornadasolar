@@ -22,11 +22,8 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
   }, [])
 
   useEffect(() => {
-    console.log('load app')
-
     function getMessage() {
       const messaging = firebase.messaging()
-      console.log('set messaging', messaging)
       messaging.onMessage(message => {
         console.log('on message ativado, message:', message)
         const { title, body } = JSON.parse(message.data.notification)
@@ -40,14 +37,12 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
 
     async function setToken() {
       try {
-        console.log('init token')
         const token = await firebaseCloudMessaging.init()
-        console.log('token', token)
         if (token) {
           getMessage()
         }
       } catch (error) {
-        console.log(error)
+        console.log('setToken error', error)
       }
     }
     setToken()
