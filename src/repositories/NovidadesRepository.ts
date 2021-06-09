@@ -5,11 +5,10 @@ import NovidadeFactory from 'src/factories/NovidadeFactory'
 export interface ICreateParameters {
   titulo: string
   descricao: string
-  slug: string
   path: string
-  dataInicio?: Date
-  dataFinal?: Date
-  autoDispensar?: boolean
+  dataInicio: Date
+  dataFinal: Date
+  autoDispensar: boolean
 }
 
 export interface INovidadesRepository {
@@ -71,8 +70,8 @@ export default class NovidadesRepository implements INovidadesRepository {
     const novidadesNoPeriodo = []
     try {
       const novidadeSnapshot = await this.collection
-        .where('startDate', '<=', date)
-        .where('endDate', '>=', date)
+        .where('dataInicio', '<=', date)
+        .where('dataFinal', '>=', date)
         .get()
       novidadeSnapshot.forEach(registroSnapshot => {
         novidadesNoPeriodo.push(this.factory.build(registroSnapshot))
@@ -89,7 +88,7 @@ export default class NovidadesRepository implements INovidadesRepository {
     const novidadesNoPeriodo = []
     try {
       const novidadeSnapshot = await this.collection
-        .orderBy('startDate', 'desc')
+        .orderBy('dataInicio', 'desc')
         .get()
       novidadeSnapshot.forEach(registroSnapshot => {
         novidadesNoPeriodo.push(this.factory.build(registroSnapshot))

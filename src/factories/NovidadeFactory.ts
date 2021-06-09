@@ -7,21 +7,15 @@ export interface INovidadeFactory {
 export default class NovidadeFactory {
   build(novidadeSnapshot: any): INovidade {
     const { id } = novidadeSnapshot
-    const {
-      titulo,
-      descricao,
-      slug,
-      path,
-      autoDispensar
-    } = novidadeSnapshot.data()
-    const dataInicio = novidadeSnapshot.data().dataInicio.toDate()
-    const dataFinal = novidadeSnapshot.data().dataFinal.toDate()
+    const dados = novidadeSnapshot.data()
+    const { titulo, descricao, path, autoDispensar } = dados
+    const dataInicio = dados.dataInicio.toDate()
+    const dataFinal = dados.dataFinal.toDate()
 
     return new Novidade({
       id,
       titulo,
       descricao,
-      slug,
       path,
       dataInicio,
       dataFinal,
