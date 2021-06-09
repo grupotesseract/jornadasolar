@@ -11,9 +11,10 @@ const firebaseCloudMessaging = {
   // initializing firebase app
   init: async function () {
     try {
-      console.log('init')
+      console.log('init webPush')
       const tokenInLocalForage = await this.tokenInlocalforage()
 
+      console.log('tokenInLocalForage', tokenInLocalForage)
       // if FCM token is already there just return the token
       if (tokenInLocalForage !== null) {
         return tokenInLocalForage

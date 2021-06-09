@@ -13,16 +13,18 @@ const messaging = firebase.messaging();
 //background notifications will be received here
 messaging.onBackgroundMessage((payload) => {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
-  const notificationTitle = payload.notification.title + ' - in';
+  const notification = JSON.parse(payload.data.notification)
+  console.log('[firebase-messaging-sw.js] notification', notification);
+  const notificationTitle = notification.title + ' - in';
   const notificationOptions = {
-    body: payload.notification.body,
+    body: notification.body,
   };
 
-  // self.registration.showNotification(notificationTitle, notificationOptions);
-  navigator.serviceWorker.getRegistrations().then(function(registrations) {
-    for(let registration of registrations) {
-      console.log('registration', registration)
-      registration.showNotification(notificationTitle, notificationOptions);
-    }
-  })
+  self.registration.showNotification(notificationTitle, notificationOptions);
+  // navigator.serviceWorker.getRegistrations().then(function(registrations) {
+  //   for(let registration of registrations) {
+  //     console.log('registration', registration)
+  //     registration.showNotification(notificationTitle, notificationOptions);
+  //   }
+  // })
 });
