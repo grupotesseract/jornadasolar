@@ -34,16 +34,12 @@ const DetalheDaMeditacao: FC<IProps> = ({ id }) => {
   }, [])
 
   return (
-    <AdminBase>
-      <Container>
-        <Box className={classes.tituloContainer}>
-          <Typography className={classes.titulo}>
-            Detalhe da meditação
-          </Typography>
-        </Box>
-        <MeditacoesForm meditacao={meditacao} />
-      </Container>
-    </AdminBase>
+    <Container>
+      <Box className={classes.tituloContainer}>
+        <Typography className={classes.titulo}>Detalhe da meditação</Typography>
+      </Box>
+      <MeditacoesForm meditacao={meditacao} />
+    </Container>
   )
 }
 
