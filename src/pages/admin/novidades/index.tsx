@@ -3,7 +3,6 @@ import Button from 'src/components/Button'
 import Link from 'next/link'
 import React, { FC, useEffect, useState } from 'react'
 import { withAdmin } from 'src/components/hocs/withAuth'
-import AdminBase from 'src/components/templates/AdminBase'
 import IconButtonConfirmacao from 'src/components/IconButtonConfirmacao'
 import DeleteIcon from '@material-ui/icons/Delete'
 import { useRouter } from 'next/router'
@@ -86,23 +85,21 @@ const Novidades: FC = () => {
     }
   }))
   return (
-    <AdminBase>
-      <Grid item xs={12}>
-        <Box className={classes.tituloContainer}>
-          <Typography className={classes.titulo}>Novidades</Typography>
-          <Link href="/admin/novidades/nova">
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-            >
-              Incluir novidade
-            </Button>
-          </Link>
-        </Box>
-        <Table headCells={headCells} bodyCells={bodyCells} />
-      </Grid>
-    </AdminBase>
+    <Grid item xs={12}>
+      <Box className={classes.tituloContainer}>
+        <Typography className={classes.titulo}>Novidades</Typography>
+        <Link href="/admin/novidades/nova">
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+          >
+            Incluir novidade
+          </Button>
+        </Link>
+      </Box>
+      <Table headCells={headCells} bodyCells={bodyCells} />
+    </Grid>
   )
 }
 

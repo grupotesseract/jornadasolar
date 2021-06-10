@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useState } from 'react'
 import { Container, Box, Typography, makeStyles } from '@material-ui/core'
-import AdminBase from 'src/components/templates/AdminBase'
 import { NextPageContext } from 'next'
 import { withAdmin } from '../../../components/hocs/withAuth'
 import GetNovidadeById from 'src/services/novidades/GetNovidadeById'
@@ -34,16 +33,12 @@ const DetalheDaNovidade: FC<IProps> = ({ id }) => {
   }, [])
 
   return (
-    <AdminBase>
-      <Container>
-        <Box className={classes.tituloContainer}>
-          <Typography className={classes.titulo}>
-            Detalhe da novidade
-          </Typography>
-        </Box>
-        <NovidadesForm novidade={novidade} />
-      </Container>
-    </AdminBase>
+    <Container>
+      <Box className={classes.tituloContainer}>
+        <Typography className={classes.titulo}>Detalhe da novidade</Typography>
+      </Box>
+      <NovidadesForm novidade={novidade} />
+    </Container>
   )
 }
 

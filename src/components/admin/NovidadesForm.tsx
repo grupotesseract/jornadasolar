@@ -10,7 +10,7 @@ import {
   Radio,
   RadioGroup
 } from '@material-ui/core'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { INovidade } from 'src/entities/Novidade'
 import InputLabel from '../InputLabel'
 import TextField from '../TextField'
@@ -62,6 +62,15 @@ const NovidadesForm = ({ novidade }: IProps) => {
   const [permanencia, setPermanencia] = useState(
     novidade?.autoDispensar ? 'uma vez' : 'sempre' || 'sempre'
   )
+
+  useEffect(() => {
+    setTitulo(novidade?.titulo)
+    setDescricao(novidade?.descricao)
+    setPath(novidade?.path)
+    setDataInicio(novidade?.dataInicio)
+    setDataFinal(novidade?.dataFinal)
+    setPermanencia(novidade?.autoDispensar ? 'uma vez' : 'sempre')
+  }, [novidade])
 
   const [errors, setErrors] = useState({
     titulo: '',
