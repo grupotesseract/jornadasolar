@@ -59,13 +59,12 @@ const alertSlice = createSlice({
       .addCase(createdOrUpdatedNovidade, state => {
         state.severity = AlertSeverity.Success
         state.message = 'Novidade salva com sucesso.'
-        state.only = ['admin/novidades']
+        state.only = ['/admin/novidades']
       })
       .addCase(deleteNovidade, state => {
-        console.log('teste')
         state.severity = AlertSeverity.Success
         state.message = 'Novidade removida com sucesso.'
-        state.only = ['admin/novidades']
+        state.only = ['/admin/novidades']
       })
   }
 })

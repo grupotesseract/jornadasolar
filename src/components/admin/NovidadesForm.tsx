@@ -136,9 +136,7 @@ const NovidadesForm = ({ novidade }: IProps) => {
     const CreateOrUpdateNovidadeParams = buildParams()
     setLoading(true)
     await new CreateOrUpdateNovidade().call(CreateOrUpdateNovidadeParams)
-    console.log('antes do dispatch')
     dispatch(createdOrUpdatedNovidadeAction())
-    console.log('depois do dispatch')
     router.push('/admin/novidades')
     setLoading(false)
     setErrors({
