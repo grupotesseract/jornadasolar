@@ -2,6 +2,7 @@ import { Box, Grid, makeStyles, Typography } from '@material-ui/core'
 import Button from 'src/components/Button'
 import Link from 'next/link'
 import React, { FC, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { withAdmin } from 'src/components/hocs/withAuth'
 import IconButtonConfirmacao from 'src/components/IconButtonConfirmacao'
 import DeleteIcon from '@material-ui/icons/Delete'
@@ -10,6 +11,7 @@ import Table from 'src/components/admin/Table'
 import GetAllNovidades from 'src/services/novidades/GetAllNovidades'
 import { getLabel } from 'src/utils/paginasDoApp'
 import DeleteNovidade from 'src/services/novidades/DeleteNovidade'
+import { deleteNovidade as deleteNovidadeAction } from 'src/redux/admin/novidades'
 
 const useStyles = makeStyles({
   tituloContainer: {
@@ -35,6 +37,7 @@ const Novidades: FC = () => {
   const [arrayNovidades, setArrayNovidades] = useState([])
   const router = useRouter()
   const classes = useStyles()
+  const dispatch = useDispatch()
 
   const buscarNovidades = async () => {
     const fakenews = await new GetAllNovidades().call()
@@ -47,6 +50,7 @@ const Novidades: FC = () => {
 
   const handleDelete = id => {
     new DeleteNovidade().call(id).then(() => {
+      dispatch(deleteNovidadeAction())
       buscarNovidades()
     })
   }

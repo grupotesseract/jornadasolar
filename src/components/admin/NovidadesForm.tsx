@@ -20,6 +20,9 @@ import SelectionField from '../SelectionField'
 import { getPaginasDoApp } from 'src/utils/paginasDoApp'
 import CreateOrUpdateNovidade from 'src/services/novidades/CreateOrUpdateNovidade'
 import { useRouter } from 'next/router'
+import { useDispatch } from 'react-redux'
+import { createdOrUpdated as createdOrUpdatedNovidadeAction } from '../../redux/admin/novidades'
+
 const useStyles = makeStyles(() => ({
   paper: {
     padding: '1.5rem 2rem'
@@ -50,11 +53,12 @@ const NovidadesForm = ({ novidade }: IProps) => {
   const classes = useStyles()
   const router = useRouter()
   const paginasDoApp = getPaginasDoApp()
+  const dispatch = useDispatch()
 
   const [loading, setLoading] = useState(false)
   const [titulo, setTitulo] = useState(novidade?.titulo || '')
   const [descricao, setDescricao] = useState(novidade?.descricao || '')
-  const [path, setPath] = useState(novidade?.path || '')
+  const [path, setPath] = useState(novidade?.path || 'diario')
   const [dataInicio, setDataInicio] = useState(
     novidade?.dataInicio || new Date()
   )
@@ -62,21 +66,20 @@ const NovidadesForm = ({ novidade }: IProps) => {
   const [permanencia, setPermanencia] = useState(
     novidade?.autoDispensar ? 'uma vez' : 'sempre' || 'sempre'
   )
-
-  useEffect(() => {
-    setTitulo(novidade?.titulo)
-    setDescricao(novidade?.descricao)
-    setPath(novidade?.path)
-    setDataInicio(novidade?.dataInicio)
-    setDataFinal(novidade?.dataFinal)
-    setPermanencia(novidade?.autoDispensar ? 'uma vez' : 'sempre')
-  }, [novidade])
-
   const [errors, setErrors] = useState({
     titulo: '',
     descricao: '',
     dataFinal: ''
   })
+
+  useEffect(() => {
+    setTitulo(novidade?.titulo)
+    setDescricao(novidade?.descricao)
+    setPath(novidade?.path || 'diario')
+    setDataInicio(novidade?.dataInicio || new Date())
+    setDataFinal(novidade?.dataFinal || new Date())
+    setPermanencia(novidade?.autoDispensar ? 'uma vez' : 'sempre')
+  }, [novidade])
 
   const handleSelectpath = event => {
     setPath(event.target.value)
@@ -90,7 +93,6 @@ const NovidadesForm = ({ novidade }: IProps) => {
     if (loading) {
       return <CircularProgress color="secondary" size={20} />
     }
-
     return 'Salvar'
   }
 
@@ -134,6 +136,9 @@ const NovidadesForm = ({ novidade }: IProps) => {
     const CreateOrUpdateNovidadeParams = buildParams()
     setLoading(true)
     await new CreateOrUpdateNovidade().call(CreateOrUpdateNovidadeParams)
+    console.log('antes do dispatch')
+    dispatch(createdOrUpdatedNovidadeAction())
+    console.log('depois do dispatch')
     router.push('/admin/novidades')
     setLoading(false)
     setErrors({
