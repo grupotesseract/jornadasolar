@@ -8,6 +8,9 @@ import { AppProps } from 'next/app'
 import store from '../redux/store'
 import AuthProvider from '../components/firebase/AuthProvider'
 import StoreProvider from '../components/firebase/FirestoreProvider'
+import { firebaseCloudMessaging } from '../utils/webPush'
+import firebase from 'firebase/app'
+import 'firebase/messaging'
 import AdminBase from '../components/templates/AdminBase'
 
 const MyApp: FC<AppProps> = ({ Component, pageProps, router }) => {
@@ -21,6 +24,33 @@ const MyApp: FC<AppProps> = ({ Component, pageProps, router }) => {
   const isAreaAdmin = router.pathname.startsWith('/admin')
 
   const ComponentWrapper = isAreaAdmin ? AdminBase : Fragment
+
+  useEffect(() => {
+    function getMessage() {
+      const messaging = firebase.messaging()
+      messaging.onMessage(message => {
+        console.log('on message ativado, message:', message)
+        const { title, body } = message.notification
+        const options = {
+          body
+        }
+        console.log('message', title, options)
+        // self.registration.showNotification(title, options)
+      })
+    }
+
+    async function setToken() {
+      try {
+        const token = await firebaseCloudMessaging.init()
+        if (token) {
+          getMessage()
+        }
+      } catch (error) {
+        console.log('setToken error', error)
+      }
+    }
+    setToken()
+  }, [])
 
   return (
     <>

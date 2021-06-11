@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { Box, Container } from '@material-ui/core'
 import Titulo from 'src/components/Titulo'
 import PageWithBottomNavigation from '../../components/templates/PageWithBottomNavigation'
@@ -10,6 +10,37 @@ import { appVersion } from '../../utils/appVersion'
 
 type Props = {
   userName?: string
+}
+
+const PushNotification = () => {
+  const [permission, setPermission] = useState('')
+  const requestPermission = () => {
+    console.log('Requesting permission...')
+    Notification.requestPermission().then(permission => {
+      setPermission(permission)
+      if (permission === 'granted') {
+        console.log('Notification permission granted.')
+        // TODO(developer): Retrieve a registration token for use with FCM.
+        // In many cases once an app has been granted notification permission,
+        // it should update its UI reflecting this.
+        // resetUI()
+      } else {
+        console.log('Unable to get permission to notify.')
+      }
+    })
+  }
+
+  return (
+    <div>
+      <span> Permissão: {permission}</span>
+      <Button
+        onClick={() => requestPermission()}
+        style={{ width: 'auto', height: 'auto', fontSize: 10, margin: 10 }}
+      >
+        pedir permissao
+      </Button>
+    </div>
+  )
 }
 
 const Configuracoes: FC<Props> = ({ userName }) => {
@@ -48,6 +79,7 @@ const Configuracoes: FC<Props> = ({ userName }) => {
           </ul>
         </Box>
 
+        <PushNotification />
       </Container>
     </PageWithBottomNavigation>
   )
