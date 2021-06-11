@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react'
+import React, { FC, Fragment, useEffect } from 'react'
 import Head from 'next/head'
 import { Provider } from 'react-redux'
 import { ThemeProvider } from '@material-ui/core/styles'
@@ -11,8 +11,9 @@ import StoreProvider from '../components/firebase/FirestoreProvider'
 import { firebaseCloudMessaging } from '../utils/webPush'
 import firebase from 'firebase/app'
 import 'firebase/messaging'
+import AdminBase from '../components/templates/AdminBase'
 
-const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
+const MyApp: FC<AppProps> = ({ Component, pageProps, router }) => {
   useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side')
@@ -20,6 +21,9 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
       jssStyles.parentElement.removeChild(jssStyles)
     }
   }, [])
+  const isAreaAdmin = router.pathname.startsWith('/admin')
+
+  const ComponentWrapper = isAreaAdmin ? AdminBase : Fragment
 
   useEffect(() => {
     function getMessage() {
@@ -59,7 +63,9 @@ const MyApp: FC<AppProps> = ({ Component, pageProps }) => {
         <AuthProvider>
           <StoreProvider>
             <Provider store={store}>
-              <Component {...pageProps} />
+              <ComponentWrapper>
+                <Component {...pageProps} />
+              </ComponentWrapper>
             </Provider>
           </StoreProvider>
         </AuthProvider>

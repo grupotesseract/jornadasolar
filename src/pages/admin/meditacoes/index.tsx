@@ -8,7 +8,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import DeleteIcon from '@material-ui/icons/Delete'
 import DeleteMeditacao from 'src/services/meditacoes/DeleteMeditacao'
-import AdminBase from 'src/components/templates/AdminBase'
 import { useDispatch } from 'react-redux'
 import { deleteMeditacao as deleteMeditacaoAction } from '../../../redux/admin/meditacoes'
 import { withAdmin } from 'src/components/hocs/withAuth'
@@ -81,23 +80,21 @@ const Meditacoes: FC = () => {
     }
   }))
   return (
-    <AdminBase>
-      <Grid item xs={12}>
-        <Box className={classes.tituloContainer}>
-          <Typography className={classes.titulo}>Meditações</Typography>
-          <Link href="/admin/meditacoes/nova">
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-            >
-              Nova meditação
-            </Button>
-          </Link>
-        </Box>
-        <Table headCells={headCells} bodyCells={bodyCells} />
-      </Grid>
-    </AdminBase>
+    <Grid item xs={12}>
+      <Box className={classes.tituloContainer}>
+        <Typography className={classes.titulo}>Meditações</Typography>
+        <Link href="/admin/meditacoes/nova">
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+          >
+            Nova meditação
+          </Button>
+        </Link>
+      </Box>
+      <Table headCells={headCells} bodyCells={bodyCells} />
+    </Grid>
   )
 }
 
