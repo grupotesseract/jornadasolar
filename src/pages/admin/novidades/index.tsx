@@ -12,6 +12,7 @@ import GetAllNovidades from 'src/services/novidades/GetAllNovidades'
 import { getLabel } from 'src/utils/paginasDoApp'
 import DeleteNovidade from 'src/services/novidades/DeleteNovidade'
 import { deleteNovidade as deleteNovidadeAction } from 'src/redux/admin/novidades'
+import PermanenciaOptions from 'src/enums/admin/PermanenciaOptions'
 
 const useStyles = makeStyles({
   tituloContainer: {
@@ -58,23 +59,23 @@ const Novidades: FC = () => {
   const headCells = [
     { id: 'titulo', label: 'Título' },
     { id: 'descricao', label: 'Descrição' },
-    { id: 'dataInicio', label: 'Início exibição' },
-    { id: 'dataFinal', label: 'Final exibição' },
-    { id: 'permanencia', label: 'Permanência' },
     { id: 'path', label: 'Exibir em' },
-    { id: 'actions', label: 'Excluir' }
+    { id: 'dataInicio', label: 'Início da exibição' },
+    { id: 'dataFinal', label: 'Final da exibição' },
+    { id: 'permanencia', label: 'Permanência' },
+    { id: 'actions', label: 'Ações' }
   ]
 
   const bodyCells = arrayNovidades.map(novidade => ({
     id: novidade.id,
     titulo: novidade.titulo,
+    path: getLabel(novidade.path),
     descricao: novidade.descricao,
     dataInicio: novidade.dataInicio.toLocaleDateString('pt-BR'),
     dataFinal: novidade.dataFinal.toLocaleDateString('pt-BR'),
-    path: getLabel(novidade.path),
     permanencia: novidade.autoDispensar
-      ? 'Aparece uma vez'
-      : 'Até usuário dispensar',
+      ? PermanenciaOptions.umaVez
+      : PermanenciaOptions.ateDispensar,
     actions: (
       <IconButtonConfirmacao
         icone={<DeleteIcon />}
@@ -98,7 +99,7 @@ const Novidades: FC = () => {
             color="primary"
             className={classes.button}
           >
-            Incluir novidade
+            Nova novidade
           </Button>
         </Link>
       </Box>

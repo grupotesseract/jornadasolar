@@ -1,16 +1,11 @@
 import {
   Box,
   CircularProgress,
-  FormControlLabel,
-  FormHelperText,
   Grid,
   makeStyles,
-  MenuItem,
-  Paper,
-  Radio,
-  RadioGroup
+  Paper
 } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { INovidade } from 'src/entities/Novidade'
 import InputLabel from '../InputLabel'
 import TextField from '../TextField'
@@ -22,19 +17,12 @@ import CreateOrUpdateNovidade from 'src/services/novidades/CreateOrUpdateNovidad
 import { useRouter } from 'next/router'
 import { useDispatch } from 'react-redux'
 import { createdOrUpdated as createdOrUpdatedNovidadeAction } from '../../redux/admin/novidades'
+import PermanenciaOptions from 'src/enums/admin/PermanenciaOptions'
+import RadioGroup from '../RadioGroup'
 
 const useStyles = makeStyles(() => ({
   paper: {
     padding: '1.5rem 2rem'
-  },
-  audioPlayer: {
-    width: '100%',
-    '&:focus': {
-      outline: 'none'
-    }
-  },
-  helperText: {
-    marginTop: 14
   },
   button: {
     marginRight: 16,
@@ -64,7 +52,9 @@ const NovidadesForm = ({ novidade }: IProps) => {
   )
   const [dataFinal, setDataFinal] = useState(novidade?.dataFinal || new Date())
   const [permanencia, setPermanencia] = useState(
-    novidade?.autoDispensar ? 'uma vez' : 'sempre' || 'sempre'
+    novidade?.autoDispensar
+      ? PermanenciaOptions.umaVez
+      : PermanenciaOptions.ateDispensar
   )
   const [errors, setErrors] = useState({
     titulo: '',
@@ -78,7 +68,11 @@ const NovidadesForm = ({ novidade }: IProps) => {
     setPath(novidade?.path || 'diario')
     setDataInicio(novidade?.dataInicio || new Date())
     setDataFinal(novidade?.dataFinal || new Date())
-    setPermanencia(novidade?.autoDispensar ? 'uma vez' : 'sempre')
+    setPermanencia(
+      novidade?.autoDispensar
+        ? PermanenciaOptions.umaVez
+        : PermanenciaOptions.ateDispensar
+    )
   }, [novidade])
 
   const handleSelectpath = event => {
@@ -89,6 +83,22 @@ const NovidadesForm = ({ novidade }: IProps) => {
     setPermanencia(event.target.value)
   }
 
+  const handleChangeTitulo = ({ target: { value } }) => {
+    setTitulo(value)
+  }
+
+  const handleChangeDescricao = ({ target: { value } }) => {
+    setDescricao(value)
+  }
+
+  const handleChangeDataInicio = (date: Date) => {
+    setDataInicio(date)
+  }
+
+  const handleChangeDataFinal = (date: Date) => {
+    setDataFinal(date)
+  }
+
   const textoBotao = () => {
     if (loading) {
       return <CircularProgress color="secondary" size={20} />
@@ -97,7 +107,7 @@ const NovidadesForm = ({ novidade }: IProps) => {
   }
 
   const buildParams = () => {
-    const autoDispensar = permanencia === 'uma vez'
+    const autoDispensar = permanencia === PermanenciaOptions.umaVez
     if (novidade?.id) {
       const id = novidade.id
       return {
@@ -146,6 +156,17 @@ const NovidadesForm = ({ novidade }: IProps) => {
     })
   }
 
+  const radioOptions = [
+    {
+      value: PermanenciaOptions.ateDispensar,
+      label: PermanenciaOptions.ateDispensar
+    },
+    {
+      value: PermanenciaOptions.umaVez,
+      label: PermanenciaOptions.umaVez
+    }
+  ]
+
   return (
     <Paper className={classes.paper}>
       <Grid container direction="row" spacing={2}>
@@ -154,7 +175,7 @@ const NovidadesForm = ({ novidade }: IProps) => {
           <TextField
             disabled={loading}
             value={titulo}
-            onChange={event => setTitulo(event.target.value)}
+            onChange={handleChangeTitulo}
             error={!!errors.titulo}
             helperText={errors.titulo}
           />
@@ -164,66 +185,44 @@ const NovidadesForm = ({ novidade }: IProps) => {
           <TextField
             disabled={loading}
             value={descricao}
-            onChange={event => setDescricao(event.target.value)}
+            onChange={handleChangeDescricao}
             error={!!errors.descricao}
             helperText={errors.descricao}
           />
         </Grid>
         <Grid item xs={12} lg={4}>
-          <InputLabel>Exibir em</InputLabel>
-
           <SelectionField
+            titulo="Exibir em"
             value={path}
             onChange={handleSelectpath}
             disabled={loading}
-          >
-            {paginasDoApp.map(pagina => (
-              <MenuItem key={pagina.path} value={pagina.path}>
-                {pagina.label}
-              </MenuItem>
-            ))}
-          </SelectionField>
+            options={paginasDoApp}
+          />
         </Grid>
         <Grid item xs={12} lg={4}>
-          <InputLabel>Início da Exibição</InputLabel>
+          <InputLabel>Início da exibição</InputLabel>
           <DateInput
             disabled={loading}
             value={dataInicio}
-            onChange={setDataInicio}
+            onChange={handleChangeDataInicio}
           />
         </Grid>
         <Grid item xs={12} lg={4}>
-          <InputLabel>Final da Exibição</InputLabel>
+          <InputLabel>Final da exibição</InputLabel>
           <DateInput
             disabled={loading}
             value={dataFinal}
-            onChange={setDataFinal}
+            onChange={handleChangeDataFinal}
+            error={errors.dataFinal}
           />
-          <FormHelperText
-            error={!!errors.dataFinal}
-            className={classes.helperText}
-          >
-            {errors.dataFinal}
-          </FormHelperText>
         </Grid>
         <Grid item xs={12} lg={4}>
-          <InputLabel>Permanência</InputLabel>
           <RadioGroup
-            name="permanencia"
-            value={permanencia}
+            titulo="Permanência"
+            options={radioOptions}
+            currentValue={permanencia}
             onChange={handleChangePermanencia}
-          >
-            <FormControlLabel
-              value="sempre"
-              control={<Radio />}
-              label="Até o usuário dispensar"
-            />
-            <FormControlLabel
-              value="uma vez"
-              control={<Radio />}
-              label="Aparece só uma vez"
-            />
-          </RadioGroup>
+          />
         </Grid>
       </Grid>
 

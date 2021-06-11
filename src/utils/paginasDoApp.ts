@@ -1,17 +1,17 @@
 interface IPagina {
-  path: string
+  value: string
   label: string
 }
 
 const paginasDoApp: IPagina[] = [
-  { path: 'diario', label: 'Diário' },
-  { path: 'date', label: 'Detalhe de um dia' },
-  { path: 'sentimentos', label: 'Preencher sentimentos' },
-  { path: 'habitos', label: 'Preencher hábitos' },
-  { path: 'anotacoes', label: 'Preencher anotações' },
-  { path: 'graficos ', label: 'Gráficos' },
-  { path: 'meditacoes ', label: 'Meditações' },
-  { path: 'configuracoes ', label: 'Configurações' }
+  { value: 'diario', label: 'Diário' },
+  { value: 'date', label: 'Detalhe de um dia' },
+  { value: 'sentimentos', label: 'Preencher sentimentos' },
+  { value: 'habitos', label: 'Preencher hábitos' },
+  { value: 'anotacoes', label: 'Preencher anotações' },
+  { value: 'graficos ', label: 'Gráficos' },
+  { value: 'meditacoes ', label: 'Meditações' },
+  { value: 'configuracoes ', label: 'Configurações' }
 ]
 
 export const getPaginasDoApp = (): IPagina[] => {
@@ -19,5 +19,5 @@ export const getPaginasDoApp = (): IPagina[] => {
 }
 
 export const getLabel = (path: string): string => {
-  return paginasDoApp.find(pagina => pagina.path === path).label
+  return paginasDoApp.find(pagina => pagina.value === path).label
 }
