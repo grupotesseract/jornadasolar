@@ -13,7 +13,7 @@ interface ISelectProps {
   titulo: string
   options: Array<options>
   value: string
-  onChange: (e: ChangeEvent) => void
+  onChange: (e: ChangeEvent<{ name: string; value: unknown }>) => void
   disabled: boolean
 }
 

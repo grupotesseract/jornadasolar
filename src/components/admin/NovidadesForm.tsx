@@ -5,7 +5,7 @@ import {
   makeStyles,
   Paper
 } from '@material-ui/core'
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { INovidade } from 'src/entities/Novidade'
 import InputLabel from '../InputLabel'
 import TextField from '../TextField'
@@ -75,8 +75,8 @@ const NovidadesForm = ({ novidade }: IProps) => {
     )
   }, [novidade])
 
-  const handleSelectpath = event => {
-    setPath(event.target.value)
+  const handleSelectpath = ({ target: { value } }) => {
+    setPath(value)
   }
 
   const handleChangePermanencia = event => {
