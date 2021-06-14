@@ -19,7 +19,7 @@ const NovaNovidade = () => {
   return (
     <Container>
       <Box className={classes.tituloContainer}>
-        <Typography className={classes.titulo}>Incluir Novidade</Typography>
+        <Typography className={classes.titulo}>Nova novidade</Typography>
       </Box>
       <NovidadesForm />
     </Container>
