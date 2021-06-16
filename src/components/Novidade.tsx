@@ -71,11 +71,13 @@ const Novidade: FC<IProps> = ({ user, path }) => {
       const novidade = await new GetNovidadeValida().call(user, path)
       setNovidade(novidade)
       setVisivel(!!novidade)
+    }
+    verificarNovidade()
+    return () => {
       if (novidade?.autoDispensar) {
         dispensarNovidade()
       }
     }
-    verificarNovidade()
   }, [])
 
   const handleOnClose = () => {
