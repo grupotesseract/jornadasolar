@@ -1,3 +1,2 @@
-/* eslint-disable max-len */
-import createGruposDeHabitosModelos = require("./createGruposDeHabitosModelos");
-exports.createGruposDeHabitosModelos = createGruposDeHabitosModelos.createGruposDeHabitosModelos;
+import {createGruposDeHabitosModelos} from "./createGruposDeHabitosModelos";
+exports.createGruposDeHabitosModelos = createGruposDeHabitosModelos;
