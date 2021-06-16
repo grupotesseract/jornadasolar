@@ -11,9 +11,10 @@ interface Props {
   value: Date
   disabled?: boolean
   onChange: (Date) => void
+  error?: string
 }
 
-const DateInput = ({ value, disabled = false, onChange }: Props) => (
+const DateInput = ({ value, disabled = false, onChange, error }: Props) => (
   <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptBR}>
     <DatePicker
       cancelLabel="Cancelar"
@@ -23,6 +24,8 @@ const DateInput = ({ value, disabled = false, onChange }: Props) => (
       disabled={disabled}
       value={value}
       onChange={onChange}
+      error={!!error}
+      helperText={error}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">

@@ -2,6 +2,7 @@ import React, { FC } from 'react'
 import { Box, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import SpaIcon from '@material-ui/icons/Spa'
+import AnnouncementIcon from '@material-ui/icons/Announcement'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
@@ -23,6 +24,14 @@ const MenuListItems: FC = () => {
             <SpaIcon />
           </ListItemIcon>
           <ListItemText primary="Meditações" />
+        </ListItem>
+      </Link>
+      <Link href="/admin/novidades">
+        <ListItem button selected={paginaAtual.startsWith('/admin/novidades')}>
+          <ListItemIcon>
+            <AnnouncementIcon />
+          </ListItemIcon>
+          <ListItemText primary="Novidades" />
         </ListItem>
       </Link>
     </Box>

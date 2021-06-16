@@ -5,6 +5,10 @@ import {
   createdOrUpdated as createdOrUpdatedMeditacao,
   deleteMeditacao
 } from './admin/meditacoes'
+import {
+  createdOrUpdated as createdOrUpdatedNovidade,
+  deleteNovidade
+} from './admin/novidades'
 
 export enum AlertSeverity {
   Error = 'error',
@@ -51,6 +55,16 @@ const alertSlice = createSlice({
         state.severity = AlertSeverity.Success
         state.message = 'Meditação removida com sucesso.'
         state.only = ['/admin/meditacoes']
+      })
+      .addCase(createdOrUpdatedNovidade, state => {
+        state.severity = AlertSeverity.Success
+        state.message = 'Novidade salva com sucesso.'
+        state.only = ['/admin/novidades']
+      })
+      .addCase(deleteNovidade, state => {
+        state.severity = AlertSeverity.Success
+        state.message = 'Novidade removida com sucesso.'
+        state.only = ['/admin/novidades']
       })
   }
 })
