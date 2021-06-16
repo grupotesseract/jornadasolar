@@ -6,6 +6,8 @@ import { Collapse } from '@material-ui/core'
 import DispensarNovidade from 'src/services/user/DispensarNovidade'
 import theme from '../../theme'
 import { IUser } from 'src/entities/User'
+import GetNovidadeValida from 'src/services/novidades/GetNovidadeValida'
+import { INovidade } from 'src/entities/Novidade'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -43,35 +45,44 @@ const useStyles = makeStyles(() =>
     },
     action: {
       alignItems: 'flex-start'
+    },
+    message: {
+      flex: 1
     }
   })
 )
 
 interface IProps {
-  slug: string
+  path: string
   user: IUser
 }
 
-const Novidade: FC<IProps> = ({ user, slug }) => {
+const Novidade: FC<IProps> = ({ user, path }) => {
   const classes = useStyles()
   const [visivel, setVisivel] = useState(false)
-  const titulo = 'Crie hábitos personalizados!'
-  const descricao =
-    'Arraste até o final da lista para criar novos hábitos de sua preferência 🙌'
+  const [novidade, setNovidade] = useState<INovidade>()
+
+  const dispensarNovidade = () => {
+    new DispensarNovidade().call(novidade.id, user)
+  }
 
   useEffect(() => {
     const verificarNovidade = async () => {
-      const novidadeNaoDispensada = !user.novidadeDispensada(slug)
-      setVisivel(novidadeNaoDispensada)
-      if (novidadeNaoDispensada) {
-        await new DispensarNovidade().call(slug, user)
+      const novidade = await new GetNovidadeValida().call(user, path)
+      setNovidade(novidade)
+      setVisivel(!!novidade)
+      if (novidade?.autoDispensar) {
+        dispensarNovidade()
       }
     }
     verificarNovidade()
   }, [])
 
-  const handleOnClose = async () => {
+  const handleOnClose = () => {
     setVisivel(false)
+    if (!novidade?.autoDispensar) {
+      dispensarNovidade()
+    }
   }
 
   return (
@@ -84,14 +95,15 @@ const Novidade: FC<IProps> = ({ user, slug }) => {
         icon={<></>}
         classes={{
           root: classes.root,
-          action: classes.action
+          action: classes.action,
+          message: classes.message
         }}
       >
         <AlertTitle className={classes.alertTitle}>
-          {titulo}
+          {novidade?.titulo}
           <div className={classes.destaque}>Novo</div>
         </AlertTitle>
-        {descricao}
+        {novidade?.descricao}
       </Alert>
     </Collapse>
   )
