@@ -1,4 +1,3 @@
-/* eslint-disable multiline-ternary */
 import {
   Box,
   Container,
@@ -113,7 +112,7 @@ const PlayerMeditacao: FC<IProps> = ({ id }) => {
   const setupProgressListener = () => {
     audioRef.current.currentTime = 0
     audioRef.current.addEventListener('timeupdate', () => {
-      setProgress(Math.floor(audioRef.current.currentTime))
+      setProgress(Math.floor(audioRef.current?.currentTime))
     })
 
     setDuracao(audioRef.current.duration)
@@ -134,20 +133,15 @@ const PlayerMeditacao: FC<IProps> = ({ id }) => {
     setIsPlaying(true)
   }
 
-  const IconePlayPause = () => {
-    return isPlaying ? (
-      <PauseCircleFilledIcon style={{ fontSize: 90 }} />
-    ) : (
-      <PlayCircleFilledIcon style={{ fontSize: 90 }} />
-    )
-  }
+  const IconePlayPause = isPlaying
+    ? PauseCircleFilledIcon
+    : PlayCircleFilledIcon
 
   const EmptyPlayer = () => {
     return (
       <Container maxWidth="xs">
         <LinkVoltar href="/app/meditacoes" />
         <Box className={classes.titulo}>
-          <Titulo>Carregando</Titulo>
           <Loading />
         </Box>
       </Container>
@@ -162,7 +156,7 @@ const PlayerMeditacao: FC<IProps> = ({ id }) => {
     <Container maxWidth="xs">
       <LinkVoltar href="/app/meditacoes" />
       <Box className={classes.titulo}>
-        <Titulo>{meditacao ? meditacao.nome : 'loading'}</Titulo>
+        <Titulo>{meditacao.nome}</Titulo>
       </Box>
       <Box mt={3} className={classes.player}>
         <Image
@@ -173,7 +167,7 @@ const PlayerMeditacao: FC<IProps> = ({ id }) => {
         />
         <Container className={classes.controles} maxWidth="xs">
           <IconButton className={classes.botaoPlay} onClick={handlePlayPause}>
-            <IconePlayPause />
+            <IconePlayPause style={{ fontSize: 90 }} />
           </IconButton>
           {meditacao && (
             <audio

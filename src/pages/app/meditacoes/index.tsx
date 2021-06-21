@@ -10,7 +10,7 @@ import {
 import Titulo from 'src/components/Titulo'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import GetAllMeditacoes from 'src/services/meditacoes/GetAllMeditacoes'
-import PageWithBottomNavigation from '../../components/templates/PageWithBottomNavigation'
+import PageWithBottomNavigation from '../../../components/templates/PageWithBottomNavigation'
 import Loading from 'src/components/Loading'
 import { withUser } from 'src/components/hocs/withAuth'
 import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'
