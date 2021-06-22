@@ -5,6 +5,8 @@ import User, { IUser } from '../entities/User'
 import { IGrupoDeHabitos } from '../entities/GrupoDeHabitos'
 import TemLivroOptions from '../enums/user/TemLivroOptions'
 import UserFactory, { IUserFactory } from '../factories/UserFactory'
+import GetAllGruposDeHabitosModelos from 'src/services/grupoDehabitos/GetAllGruposDeHabitosModelos'
+import CreateUserGrupoDeHabitos from 'src/services/user/CreateUserGrupoDeHabitos'
 
 interface ICreateParameters {
   nome: string
@@ -46,10 +48,14 @@ export default class UsersRepository implements IUsersRepository {
     gruposDeHabitos
   }: ICreateParameters): Promise<IUser> {
     const now = firebase.firestore.FieldValue.serverTimestamp()
+
+    // Cria usuário no firebase auth
     const { user } = await auth.createUserWithEmailAndPassword(email, password)
     await user.updateProfile({
       displayName: nome
     })
+
+    // Cria usuário na collection user
     const data = {
       nome,
       email,
@@ -59,12 +65,24 @@ export default class UsersRepository implements IUsersRepository {
       updated_at: now
     }
     await this.collection.doc(user.uid).set(data)
+
+    // Cria subcollection de gruposDeHabitos com subcollection de habitos na collection user
+    const gruposDeHabitosModelos = await new GetAllGruposDeHabitosModelos().call()
+    gruposDeHabitosModelos.forEach(async grupoDeHabitoModelo => {
+      await CreateUserGrupoDeHabitos({
+        userId: user.uid,
+        grupoDeHabitos: grupoDeHabitoModelo
+      })
+    })
+
+    // Cria o primeiro registro do usuário no diário
     await new CreateOrUpdateRegistro().call({
       date: now,
       userId: user.uid,
       sentimentos,
       gruposDeHabitos
     })
+
     return new User({
       id: user.uid,
       nome,
