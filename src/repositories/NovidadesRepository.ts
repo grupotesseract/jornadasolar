@@ -77,7 +77,7 @@ export default class NovidadesRepository implements INovidadesRepository {
       novidadeSnapshot.forEach(registroSnapshot => {
         novidadesNoPeriodo.push(this.factory.build(registroSnapshot))
       })
-      return novidadesNoPeriodo
+      return novidadesNoPeriodo.filter(novidade => novidade.dataFinal >= date)
     } catch (error) {
       throw new Error(
         'Ocorreu um erro inesperado ao buscar as novidades: ' + error

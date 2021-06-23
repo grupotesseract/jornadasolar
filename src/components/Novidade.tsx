@@ -27,6 +27,7 @@ const useStyles = makeStyles(() =>
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
+      overflowWrap: 'anywhere',
       fontWeight: 700
     },
     destaque: {
@@ -35,6 +36,9 @@ const useStyles = makeStyles(() =>
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+      minWidth: 46,
+      alignSelf: 'flex-start',
+      marginTop: 8,
       borderRadius: 10,
       background: theme.palette.primary.main,
       color: theme.palette.secondary.main,
@@ -70,15 +74,16 @@ const Novidade: FC<IProps> = ({ user, path }) => {
     const verificarNovidade = async () => {
       const novidade = await new GetNovidadeValida().call(user, path)
       setNovidade(novidade)
-      setVisivel(!!novidade)
     }
     verificarNovidade()
-    return () => {
-      if (novidade?.autoDispensar) {
-        dispensarNovidade()
-      }
-    }
   }, [])
+
+  useEffect(() => {
+    setVisivel(!!novidade)
+    if (novidade?.autoDispensar) {
+      dispensarNovidade()
+    }
+  }, [novidade])
 
   const handleOnClose = () => {
     setVisivel(false)

@@ -11,7 +11,7 @@ const paginasDoApp: IPagina[] = [
   { value: 'anotacoes', label: 'Preencher anotações' },
   { value: 'graficos', label: 'Gráficos' },
   { value: 'meditacoes', label: 'Meditações' },
-  { value: 'configuracoes ', label: 'Configurações' }
+  { value: 'configuracoes', label: 'Configurações' }
 ]
 
 export const getPaginasDoApp = (): IPagina[] => {

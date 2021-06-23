@@ -19,6 +19,7 @@ import { useDispatch } from 'react-redux'
 import { createdOrUpdated as createdOrUpdatedNovidadeAction } from '../../redux/admin/novidades'
 import PermanenciaOptions from 'src/enums/admin/PermanenciaOptions'
 import RadioGroup from '../RadioGroup'
+import { endOfDay, startOfDay } from 'date-fns'
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -48,9 +49,11 @@ const NovidadesForm = ({ novidade }: IProps) => {
   const [descricao, setDescricao] = useState(novidade?.descricao || '')
   const [path, setPath] = useState(novidade?.path || 'diario')
   const [dataInicio, setDataInicio] = useState(
-    novidade?.dataInicio || new Date()
+    startOfDay(novidade?.dataInicio || new Date())
   )
-  const [dataFinal, setDataFinal] = useState(novidade?.dataFinal || new Date())
+  const [dataFinal, setDataFinal] = useState(
+    endOfDay(novidade?.dataFinal || new Date())
+  )
   const [permanencia, setPermanencia] = useState(
     novidade?.autoDispensar
       ? PermanenciaOptions.umaVez
@@ -66,8 +69,8 @@ const NovidadesForm = ({ novidade }: IProps) => {
     setTitulo(novidade?.titulo)
     setDescricao(novidade?.descricao)
     setPath(novidade?.path || 'diario')
-    setDataInicio(novidade?.dataInicio || new Date())
-    setDataFinal(novidade?.dataFinal || new Date())
+    setDataInicio(startOfDay(novidade?.dataInicio || new Date()))
+    setDataFinal(endOfDay(novidade?.dataFinal || new Date()))
     setPermanencia(
       novidade?.autoDispensar
         ? PermanenciaOptions.umaVez
@@ -92,11 +95,11 @@ const NovidadesForm = ({ novidade }: IProps) => {
   }
 
   const handleChangeDataInicio = (date: Date) => {
-    setDataInicio(date)
+    setDataInicio(startOfDay(date))
   }
 
   const handleChangeDataFinal = (date: Date) => {
-    setDataFinal(date)
+    setDataFinal(endOfDay(date))
   }
 
   const textoBotao = () => {

@@ -4,11 +4,11 @@ import NovidadesRepository, {
   INovidadesRepository
 } from 'src/repositories/NovidadesRepository'
 
-interface IGetNovidadesValida {
+interface IGetNovidadeValida {
   call(user: IUser, path: string): Promise<INovidade>
 }
 
-export default class GetNovidadesValida implements IGetNovidadesValida {
+export default class GetNovidadeValida implements IGetNovidadeValida {
   private novidadesRepository: INovidadesRepository
 
   constructor() {
@@ -21,10 +21,9 @@ export default class GetNovidadesValida implements IGetNovidadesValida {
       date,
       path
     )
-    const novidadesValida = novidadesHoje.find(
-      novidade =>
-        !user.novidadeDispensada(novidade.id) && novidade.dataFinal >= date
+    const novidadeValida = novidadesHoje.find(
+      novidade => !user.novidadeDispensada(novidade.id)
     )
-    return novidadesValida
+    return novidadeValida
   }
 }
