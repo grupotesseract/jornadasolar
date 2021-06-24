@@ -351,7 +351,6 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
                       style={{ textAlign: 'center', padding: 0 }}
                     >
                       {grupo.habitos?.length < 6 ? (
-                        // posicao length mais 1
                         <BotaoAdicionarHabito
                           href={{
                             pathname: `/app/diario/${date}/habitos/novo`,
