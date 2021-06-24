@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React from 'react'
 import {
   createStyles,
   IconButton,
@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import theme from '../../../../theme'
+import Link from 'next/link'
 
 const StyledButton = withStyles({
   root: {
@@ -36,20 +37,22 @@ const useStyles = makeStyles(() =>
 )
 
 interface IBotaoAdicionarHabitoProps {
-  onClick: (event) => void
+  href: any
   classname?: string
 }
 
-const BotaoAdicionarHabito: FC<IBotaoAdicionarHabitoProps> = ({ onClick }) => {
+const BotaoAdicionarHabito = ({ href }: IBotaoAdicionarHabitoProps) => {
   const classes = useStyles()
 
   return (
-    <>
-      <StyledButton onClick={onClick}>
-        <AddIcon color="secondary" fontSize="large" />
-      </StyledButton>
-      <Typography className={classes.labelBotao}>Novo hábito</Typography>
-    </>
+    <Link href={href} passHref>
+      <div>
+        <StyledButton>
+          <AddIcon color="secondary" fontSize="large" />
+        </StyledButton>
+        <Typography className={classes.labelBotao}>Novo hábito</Typography>
+      </div>
+    </Link>
   )
 }
 
