@@ -14,6 +14,7 @@ const firebaseCloudMessaging = {
       const tokenInLocalForage = await this.tokenInlocalforage()
       // if FCM token is already there just return the token
       if (tokenInLocalForage !== null) {
+        console.log('tokenInLocalForage', tokenInLocalForage)
         return tokenInLocalForage
       }
 
@@ -27,6 +28,7 @@ const firebaseCloudMessaging = {
           // setting FCM token in indexed db using localforage
           localforage.setItem('fcmToken', fcmToken)
           // return the FCM token after saving it
+          console.log('fcmToken', fcmToken)
           return fcmToken
         }
       }
