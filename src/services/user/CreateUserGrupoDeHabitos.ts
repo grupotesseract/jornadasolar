@@ -19,16 +19,18 @@ const CreateUserGrupoDeHabitos = async ({
       posicao
     })
     .then(docRef => {
-      habitos.forEach(habito =>
-        firestore
-          .collection(`user/${userId}/gruposDeHabitos/${docRef.id}/habitos`)
-          .add({
-            idDoHabitoModelo: habito.id,
-            nome: habito.nome,
-            emojiUnicode: habito.emojiUnicode,
-            posicao: habito.posicao
-          })
-      )
+      if (habitos.length > 0) {
+        habitos.forEach(habito =>
+          firestore
+            .collection(`user/${userId}/gruposDeHabitos/${docRef.id}/habitos`)
+            .add({
+              idDoHabitoModelo: habito.id,
+              nome: habito.nome,
+              emojiUnicode: habito.emojiUnicode,
+              posicao: habito.posicao
+            })
+        )
+      }
     })
     .catch(error => {
       throw new Error(
