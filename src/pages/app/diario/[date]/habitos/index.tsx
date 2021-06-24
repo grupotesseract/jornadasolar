@@ -47,10 +47,6 @@ const Habitos: FC<IProps> = ({ date, user }) => {
     analytics?.logEvent('add_habitos')
   }
 
-  const handleAdicionarHabito = () => {
-    router.push(`/app/diario/${date}/habitos/novo`)
-  }
-
   return (
     <EdicaoDiario date={date} onClick={onSalvarClick} loading={loading}>
       <Novidade slug="habitos-personalizados" user={user} />
@@ -58,7 +54,6 @@ const Habitos: FC<IProps> = ({ date, user }) => {
         <HabitosCheckboxGroup
           onChange={setGruposDeHabitos}
           values={gruposDeHabitos}
-          onAdicionarHabitoClick={handleAdicionarHabito}
           userId={userId}
           date={date}
         />
