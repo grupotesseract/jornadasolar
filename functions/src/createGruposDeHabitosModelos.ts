@@ -6,8 +6,12 @@ admin.initializeApp();
 
 const gruposDeHabitosTemplate = [
   {
-    nome: "social",
+    nome: "Personalizados",
     posicao: 1,
+  },
+  {
+    nome: "social",
+    posicao: 2,
     habitos: [
       {
         emojiUnicode: [
@@ -52,7 +56,7 @@ const gruposDeHabitosTemplate = [
   },
   {
     nome: "Lazer",
-    posicao: 2,
+    posicao: 3,
     habitos: [
       {emojiUnicode: ["2708", "FE0F"], nome: "Viagem", posicao: 1},
       {emojiUnicode: ["1F3A5"], nome: "Fimes/séries", posicao: 2},
@@ -64,7 +68,7 @@ const gruposDeHabitosTemplate = [
   },
   {
     nome: "Atividade física",
-    posicao: 3,
+    posicao: 4,
     habitos: [
       {emojiUnicode: ["1F636"], nome: "Nada", posicao: 1},
       {emojiUnicode: ["1F6B6"], nome: "Caminhada", posicao: 2},
@@ -80,7 +84,7 @@ const gruposDeHabitosTemplate = [
   },
   {
     nome: "sono",
-    posicao: 4,
+    posicao: 5,
     habitos: [
       {emojiUnicode: ["1F634"], nome: "Dormi cedo", posicao: 1},
       {emojiUnicode: ["1F62A"], nome: "Dormi tarde", posicao: 2},
@@ -92,7 +96,7 @@ const gruposDeHabitosTemplate = [
   },
   {
     nome: "Alimentação",
-    posicao: 4,
+    posicao: 6,
     habitos: [
       {emojiUnicode: ["1F951"], nome: "Caseira", posicao: 1},
       {emojiUnicode: ["1F35F"], nome: "Fast food", posicao: 2},
@@ -104,7 +108,7 @@ const gruposDeHabitosTemplate = [
   },
   {
     nome: "Saúde",
-    posicao: 5,
+    posicao: 7,
     habitos: [
       {
         emojiUnicode: ["1F468", "200D", "2695", "FE0F"],
@@ -120,7 +124,7 @@ const gruposDeHabitosTemplate = [
   },
   {
     nome: "Profissional",
-    posicao: 6,
+    posicao: 8,
     habitos: [
       {emojiUnicode: ["1F4D3"], nome: "Estudos", posicao: 1},
       {emojiUnicode: ["1F642"], nome: "Trabalho leve", posicao: 2},
@@ -140,7 +144,7 @@ const gruposDeHabitosTemplate = [
   },
   {
     nome: "Tarefa",
-    posicao: 7,
+    posicao: 9,
     habitos: [
       {emojiUnicode: ["1F9F9"], nome: "Faxina", posicao: 1},
       {emojiUnicode: ["1F6A7"], nome: "Reforma", posicao: 2},
@@ -152,7 +156,7 @@ const gruposDeHabitosTemplate = [
   },
   {
     nome: "Sexo",
-    posicao: 8,
+    posicao: 10,
     habitos: [
       {emojiUnicode: ["1F590", "FE0F"], nome: "Masturbação", posicao: 1},
       {emojiUnicode: ["1F34C"], nome: "Usei proteção", posicao: 2},
@@ -181,7 +185,7 @@ const gruposDeHabitosTemplate = [
   },
   {
     nome: "Vício",
-    posicao: 9,
+    posicao: 11,
     habitos: [
       {emojiUnicode: ["1F6AC"], nome: "Cigarro", posicao: 1},
       {emojiUnicode: ["1F377"], nome: "Álcool", posicao: 2},
@@ -222,7 +226,7 @@ export const createGruposDeHabitosModelos = functions.https.onRequest((request, 
           }, {merge: true});
     }
 
-    habitos.forEach(async (habito) => {
+    habitos?.forEach(async (habito) => {
       const habitoQuerySnapchot = await admin.firestore()
           .collection(`gruposDeHabitosModelos/${grupoId}/habitosModelos`)
           .where("nome", "==", habito.nome)
