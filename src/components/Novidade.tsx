@@ -25,9 +25,6 @@ const useStyles = makeStyles(() =>
     },
     alertTitle: {
       display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      overflowWrap: 'anywhere',
       fontWeight: 700
     },
     destaque: {
@@ -38,7 +35,8 @@ const useStyles = makeStyles(() =>
       justifyContent: 'center',
       minWidth: 46,
       alignSelf: 'flex-start',
-      marginTop: 8,
+      marginTop: 4,
+      marginLeft: 8,
       borderRadius: 10,
       background: theme.palette.primary.main,
       color: theme.palette.secondary.main,
