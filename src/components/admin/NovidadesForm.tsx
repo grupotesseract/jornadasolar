@@ -44,6 +44,8 @@ const NovidadesForm = ({ novidade }: IProps) => {
   const paginasDoApp = getPaginasDoApp()
   const dispatch = useDispatch()
 
+  const limiteTitulo = 25
+
   const [loading, setLoading] = useState(false)
   const [titulo, setTitulo] = useState(novidade?.titulo || '')
   const [descricao, setDescricao] = useState(novidade?.descricao || '')
@@ -87,11 +89,21 @@ const NovidadesForm = ({ novidade }: IProps) => {
   }
 
   const handleChangeTitulo = ({ target: { value } }) => {
-    setTitulo(value)
+    if (value.length <= limiteTitulo) {
+      setTitulo(value)
+    }
+    setErrors({
+      ...errors,
+      titulo: ''
+    })
   }
 
   const handleChangeDescricao = ({ target: { value } }) => {
     setDescricao(value)
+    setErrors({
+      ...errors,
+      descricao: ''
+    })
   }
 
   const handleChangeDataInicio = (date: Date) => {
@@ -132,6 +144,8 @@ const NovidadesForm = ({ novidade }: IProps) => {
       autoDispensar
     }
   }
+
+  const caracteresTitulo = `${titulo?.length} / ${limiteTitulo}`
 
   const handleClick = async () => {
     const isPeriodoInvalido = dataFinal < dataInicio
@@ -180,7 +194,7 @@ const NovidadesForm = ({ novidade }: IProps) => {
             value={titulo}
             onChange={handleChangeTitulo}
             error={!!errors.titulo}
-            helperText={errors.titulo}
+            helperText={errors.titulo || caracteresTitulo}
           />
         </Grid>
         <Grid item xs={12} lg={4}>
