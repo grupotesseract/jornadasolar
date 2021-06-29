@@ -145,7 +145,7 @@ const NovidadesForm = ({ novidade }: IProps) => {
     }
   }
 
-  const caracteresTitulo = `${titulo?.length} / ${limiteTitulo}`
+  const caracteresTitulo = `${titulo?.length || 0} / ${limiteTitulo}`
 
   const handleClick = async () => {
     const isPeriodoInvalido = dataFinal < dataInicio
