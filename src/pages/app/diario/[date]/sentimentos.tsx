@@ -7,13 +7,16 @@ import SentimentosCheckboxGroup from '../../../../components/diario/SentimentosC
 import EdicaoDiario from '../../../../components/templates/EdicaoDiario'
 import useRegistroByDate from '../../../../hooks/useRegistroByDate'
 import { analytics } from '../../../../components/firebase/firebase.config'
+import Novidade from 'src/components/Novidade'
+import { IUser } from 'src/entities/User'
 
 interface IProps {
+  user?: IUser
   userId?: string
   date: string
 }
 
-const Sentimentos: FC<IProps> = ({ userId, date }) => {
+const Sentimentos: FC<IProps> = ({ user, userId, date }) => {
   const [sentimentos, setSentimentos] = useState<string[]>([])
   const dia = parse(date, 'd-M-yyyy', new Date())
 
@@ -38,6 +41,7 @@ const Sentimentos: FC<IProps> = ({ userId, date }) => {
 
   return (
     <EdicaoDiario date={date} onClick={onSalvarClick} loading={loading}>
+      <Novidade path="sentimentos" user={user} />
       <SentimentosCheckboxGroup
         values={sentimentos}
         onChange={setSentimentos}

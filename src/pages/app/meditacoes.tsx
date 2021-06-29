@@ -7,6 +7,8 @@ import PageWithBottomNavigation from '../../components/templates/PageWithBottomN
 import Loading from 'src/components/Loading'
 import { analytics } from '../../components/firebase/firebase.config'
 import { withUser } from 'src/components/hocs/withAuth'
+import Novidade from 'src/components/Novidade'
+import { IUser } from 'src/entities/User'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -28,7 +30,11 @@ const useStyles = makeStyles(() =>
   })
 )
 
-const Meditacoes: FC = () => {
+interface IProps {
+  user?: IUser
+}
+
+const Meditacoes: FC<IProps> = ({ user }) => {
   const [meditacoes, setMeditacoes] = useState([])
   const [loading, setLoading] = useState(false)
   const classes = useStyles()
@@ -63,6 +69,7 @@ const Meditacoes: FC = () => {
         <Box mt={4} mb={2} ml={2} alignSelf="center" flexGrow="1">
           <Titulo>Meditações</Titulo>
         </Box>
+        <Novidade path="meditacoes" user={user} />
 
         <List>{loading ? <Loading /> : listaDeMeditacoes}</List>
       </Container>

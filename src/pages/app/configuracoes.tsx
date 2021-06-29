@@ -7,9 +7,12 @@ import SignOutUser from 'src/services/user/SignOutUser'
 import Button from 'src/components/Button'
 import { useRouter } from 'next/router'
 import { appVersion } from '../../utils/appVersion'
+import Novidade from 'src/components/Novidade'
+import { IUser } from 'src/entities/User'
 
 type Props = {
   userName?: string
+  user?: IUser
 }
 
 const PushNotification = () => {
@@ -43,7 +46,7 @@ const PushNotification = () => {
   )
 }
 
-const Configuracoes: FC<Props> = ({ userName }) => {
+const Configuracoes: FC<Props> = ({ userName, user }) => {
   const router = useRouter()
 
   return (
@@ -53,6 +56,7 @@ const Configuracoes: FC<Props> = ({ userName }) => {
           <Titulo>Configurações</Titulo>
         </Box>
         <Box>
+          <Novidade path="configuracoes" user={user} />
           <span>
             Você entrou no app com o usuário <b>{userName}</b>
           </span>
