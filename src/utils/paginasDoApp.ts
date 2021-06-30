@@ -9,9 +9,9 @@ const paginasDoApp: IPagina[] = [
   { value: 'sentimentos', label: 'Preencher sentimentos' },
   { value: 'habitos', label: 'Preencher hábitos' },
   { value: 'anotacoes', label: 'Preencher anotações' },
-  { value: 'graficos ', label: 'Gráficos' },
-  { value: 'meditacoes ', label: 'Meditações' },
-  { value: 'configuracoes ', label: 'Configurações' }
+  { value: 'graficos', label: 'Gráficos' },
+  { value: 'meditacoes', label: 'Meditações' },
+  { value: 'configuracoes', label: 'Configurações' }
 ]
 
 export const getPaginasDoApp = (): IPagina[] => {
@@ -19,5 +19,6 @@ export const getPaginasDoApp = (): IPagina[] => {
 }
 
 export const getLabel = (path: string): string => {
-  return paginasDoApp.find(pagina => pagina.value === path).label
+  const pagina = paginasDoApp.find(pagina => pagina.value === path)
+  return pagina?.label || 'Não encontrado'
 }

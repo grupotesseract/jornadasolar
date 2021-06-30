@@ -16,7 +16,7 @@ export interface INovidadesRepository {
   update(attributes: INovidade): Promise<INovidade>
   delete(id: string): Promise<boolean>
   getById(id: string): Promise<INovidade>
-  getByDateInRange(date: Date): Promise<Array<INovidade>>
+  getByDateAndPath(date: Date, path: string): Promise<Array<INovidade>>
   getAll(): Promise<Array<INovidade>>
 }
 
@@ -66,17 +66,18 @@ export default class NovidadesRepository implements INovidadesRepository {
     }
   }
 
-  async getByDateInRange(date: Date): Promise<Array<INovidade>> {
+  async getByDateAndPath(date: Date, path: string): Promise<Array<INovidade>> {
     const novidadesNoPeriodo = []
     try {
       const novidadeSnapshot = await this.collection
+        .where('path', '==', path)
         .where('dataInicio', '<=', date)
-        .where('dataFinal', '>=', date)
+        .orderBy('dataInicio', 'desc')
         .get()
       novidadeSnapshot.forEach(registroSnapshot => {
         novidadesNoPeriodo.push(this.factory.build(registroSnapshot))
       })
-      return novidadesNoPeriodo
+      return novidadesNoPeriodo.filter(novidade => novidade.dataFinal >= date)
     } catch (error) {
       throw new Error(
         'Ocorreu um erro inesperado ao buscar as novidades: ' + error

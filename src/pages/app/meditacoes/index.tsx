@@ -1,21 +1,28 @@
 import React, { FC, useEffect, useState } from 'react'
-import { Box, Container, List, ListItem, ListItemText } from '@material-ui/core'
+import {
+  Box,
+  Container,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText
+} from '@material-ui/core'
 import Titulo from 'src/components/Titulo'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import GetAllMeditacoes from 'src/services/meditacoes/GetAllMeditacoes'
-import PageWithBottomNavigation from '../../components/templates/PageWithBottomNavigation'
+import PageWithBottomNavigation from '../../../components/templates/PageWithBottomNavigation'
 import Loading from 'src/components/Loading'
-import { analytics } from '../../components/firebase/firebase.config'
 import { withUser } from 'src/components/hocs/withAuth'
+import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled'
+import { useRouter } from 'next/router'
+import Novidade from 'src/components/Novidade'
+import { IUser } from 'src/entities/User'
 
 const useStyles = makeStyles(() =>
   createStyles({
     listItem: {
-      width: 332,
-      minHeight: 150,
       margin: '20px auto',
       paddingBottom: '14px',
-      flexWrap: 'wrap',
       background: '#222222',
       boxShadow: '1px 3px 8px rgba(255, 255, 255, 0.15)',
       borderRadius: '4px',
@@ -27,11 +34,15 @@ const useStyles = makeStyles(() =>
     }
   })
 )
+interface IProps {
+  user?: IUser
+}
 
-const Meditacoes: FC = () => {
+const Meditacoes: FC<IProps> = ({ user }) => {
   const [meditacoes, setMeditacoes] = useState([])
   const [loading, setLoading] = useState(false)
   const classes = useStyles()
+  const router = useRouter()
 
   useEffect(() => {
     const buscarMeditacoes = async () => {
@@ -43,17 +54,20 @@ const Meditacoes: FC = () => {
     buscarMeditacoes()
   }, [])
 
+  const handleClick = (id: string) => {
+    router.push(`/app/meditacoes/${id}`)
+  }
+
   const listaDeMeditacoes = meditacoes.map(meditacao => (
-    <ListItem key={`meditacao-${meditacao.nome}`} className={classes.listItem}>
+    <ListItem
+      key={meditacao.id}
+      className={classes.listItem}
+      onClick={() => handleClick(meditacao.id)}
+    >
       <ListItemText primary={meditacao.nome} secondary={meditacao.data} />
-      <audio
-        controls
-        src={meditacao.url}
-        className={classes.player}
-        onPlay={() => {
-          analytics?.logEvent('play_meditacao', { nome: meditacao.nome })
-        }}
-      />
+      <IconButton edge="end" aria-label="play">
+        <PlayCircleFilledIcon fontSize="large" />
+      </IconButton>
     </ListItem>
   ))
 
@@ -63,6 +77,7 @@ const Meditacoes: FC = () => {
         <Box mt={4} mb={2} ml={2} alignSelf="center" flexGrow="1">
           <Titulo>Meditações</Titulo>
         </Box>
+        <Novidade path="meditacoes" user={user} />
 
         <List>{loading ? <Loading /> : listaDeMeditacoes}</List>
       </Container>

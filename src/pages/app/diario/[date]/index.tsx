@@ -11,13 +11,16 @@ import RegistroDoDiaNavigator from '../../../../components/RegistroDoDiaNavigato
 import useRegistroByDate from '../../../../hooks/useRegistroByDate'
 import Habito from '../../../../components/diario/Habito'
 import Loading from '../../../../components/Loading'
+import { IUser } from 'src/entities/User'
+import Novidade from 'src/components/Novidade'
 
 interface IProps {
+  user?: IUser
   userId?: string
   date: string
 }
 
-const Detalhe: FC<IProps> = ({ userId, date }) => {
+const Detalhe: FC<IProps> = ({ user, userId, date }) => {
   const dia = parse(date, 'd-M-yyyy', new Date())
 
   const { loading, registroDoDia } = useRegistroByDate({
@@ -83,6 +86,7 @@ const Detalhe: FC<IProps> = ({ userId, date }) => {
           proximoDisabled={isToday(dia)}
         />
       </Box>
+      <Novidade path="date" user={user} />
 
       {loading ? <Loading /> : detalhesdaCategoria}
     </Container>

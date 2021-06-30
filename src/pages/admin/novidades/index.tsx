@@ -41,8 +41,8 @@ const Novidades: FC = () => {
   const dispatch = useDispatch()
 
   const buscarNovidades = async () => {
-    const fakenews = await new GetAllNovidades().call()
-    setArrayNovidades(fakenews)
+    const novidades = await new GetAllNovidades().call()
+    setArrayNovidades(novidades)
   }
 
   useEffect(() => {
