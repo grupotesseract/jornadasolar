@@ -81,7 +81,12 @@ const Emoji: FC<IEmojiProps> = ({ nome, className }) => {
     cigarro: '\u{1F6AC}',
     alcool: '\u{1F377}',
     entorpecente: '\u{1F489}',
-    pornografia: '\u{1F51E}'
+    pornografia: '\u{1F51E}',
+    perfil: '\u{1F464}',
+    sino: '\u{1F514}',
+    mundo: '\u{1F30E}',
+    duvida: '\u{1F914}',
+    sair: '\u{1F6AA}'
   }
 
   return (
