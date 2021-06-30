@@ -175,13 +175,11 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
 }) => {
   const classes = useStyles()
   const [gruposDeHabitosTemplate, setGruposDeHabitosTemplate] = useState([])
-  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const isCadastro = router.pathname === '/cadastro'
   const [gruposEmModoEdicao, setGruposEmModoEdicao] = useState([])
 
   useEffect(() => {
-    setLoading(true)
     const getGrupoDeHabitosTemplate = async () => {
       const newGruposDeHabitosTemplate = await new GetGrupoDeHabitosTemplateByUserId().call(
         {
@@ -192,7 +190,6 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
       setGruposDeHabitosTemplate(newGruposDeHabitosTemplate)
     }
     getGrupoDeHabitosTemplate()
-    setLoading(false)
   }, [])
 
   const handleChange = ({ nomeDoGrupo, habito, checked }) => {
@@ -226,7 +223,7 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
     onChange(novosGruposDeHabitos)
   }
 
-  if (loading) {
+  if (gruposDeHabitosTemplate.length === 0) {
     return <Loading />
   }
 

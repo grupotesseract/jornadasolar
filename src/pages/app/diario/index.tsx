@@ -22,6 +22,8 @@ import getSigno from '../../../utils/getSigno'
 import theme from '../../../../theme'
 import { appVersion } from '../../../utils/appVersion'
 import Link from 'next/link'
+import { IUser } from 'src/entities/User'
+import Novidade from 'src/components/Novidade'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -71,11 +73,12 @@ const useStyles = makeStyles(() =>
 )
 
 interface IDiarioProps {
+  user: IUser
   userId: string
   userName: string
 }
 
-const Diario: FC<IDiarioProps> = ({ userId, userName }) => {
+const Diario: FC<IDiarioProps> = ({ user, userId, userName }) => {
   const [mes, setMes] = useState(new Date())
   const classes = useStyles()
   const dias = eachDayOfInterval({
@@ -130,7 +133,7 @@ const Diario: FC<IDiarioProps> = ({ userId, userName }) => {
         <Box mt={8} mr={2} ml={2}>
           <MonthNavigator mes={mes} onClick={setMes} />
         </Box>
-
+        <Novidade path="diario" user={user} />
         {loading ? <Loading /> : registros}
       </Container>
     </PageWithBottomNavigation>

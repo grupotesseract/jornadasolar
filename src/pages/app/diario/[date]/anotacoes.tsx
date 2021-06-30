@@ -9,11 +9,13 @@ import TextArea from '../../../../components/TextArea'
 import EdicaoDiario from '../../../../components/templates/EdicaoDiario'
 import useRegistroByDate from '../../../../hooks/useRegistroByDate'
 import { analytics } from '../../../../components/firebase/firebase.config'
+import Novidade from 'src/components/Novidade'
+import { IUser } from 'src/entities/User'
 
 const useStyles = makeStyles(() =>
   createStyles({
     containerRegistro: {
-      margin: '0 auto',
+      margin: '16px auto',
       width: 332,
       minHeight: 100,
       borderRadius: '4px',
@@ -28,11 +30,12 @@ const useStyles = makeStyles(() =>
 )
 
 interface IProps {
+  user?: IUser
   userId?: string
   date: string
 }
 
-const Anotacoes: FC<IProps> = ({ userId, date }) => {
+const Anotacoes: FC<IProps> = ({ user, userId, date }) => {
   const classes = useStyles()
   const [anotacoes, setAnotacoes] = useState<string>('')
   const dia = parse(date, 'd-M-yyyy', new Date())
@@ -62,6 +65,7 @@ const Anotacoes: FC<IProps> = ({ userId, date }) => {
 
   return (
     <EdicaoDiario date={date} onClick={onSalvarClick} loading={loading}>
+      <Novidade path="anotacoes" user={user} />
       <Box className={classes.containerRegistro}>
         <Box display="flex" justifyContent="space-between" p={2} pb={0} clone>
           <label htmlFor="anotacoes" className={classes.label}>
