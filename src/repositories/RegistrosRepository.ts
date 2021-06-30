@@ -103,7 +103,9 @@ export default class RegistrosRepository implements IRegistrosRepository {
           const habitos = grupoDehabito.habitos.map(habito => {
             return (
               grupoDeHabitoDoUsuario.habitos.find(
-                habitoDoUsuario => habitoDoUsuario.nome === habito
+                habitoDoUsuario =>
+                  habitoDoUsuario.id === habito ||
+                  habitoDoUsuario.nome === habito
               ) ||
               habitosPersonalizadosDoUsuario.find(
                 habitoPersonalizado => habitoPersonalizado.id === habito

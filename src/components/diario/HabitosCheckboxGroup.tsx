@@ -4,7 +4,7 @@ import {
   Box,
   Checkbox,
   Grid,
-  Link,
+  Link as MaterialUiLink,
   Typography,
   withStyles
 } from '@material-ui/core'
@@ -15,6 +15,7 @@ import GetGrupoDeHabitosTemplateByUserId from 'src/services/grupoDehabitos/GetGr
 import BotaoAdicionarHabito from './RegistroDoDia/BotaoAdicionarHabito'
 import { IGrupoDeHabitos } from 'src/entities/GrupoDeHabitos'
 import Loading from '../Loading'
+import Link from 'next/link'
 
 const StyledCheckbox = withStyles({
   root: {
@@ -148,11 +149,7 @@ export const valoresIniciais = [
 
 const HabitoLabel = ({ modeDeEdicaoAtivo, href, children }) => {
   if (modeDeEdicaoAtivo) {
-    return (
-      <Link href={href} underline="none">
-        {children}
-      </Link>
-    )
+    return <Link href={href}>{children}</Link>
   }
 
   return <>{children}</>
@@ -163,15 +160,13 @@ interface IHabitosCheckboxGroupProps {
   userId?: string
   date?: string
   onChange: (event) => void
-  onAdicionarHabitoClick?: (event) => void
 }
 
 const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
   values,
   userId,
   date,
-  onChange,
-  onAdicionarHabitoClick
+  onChange
 }) => {
   const classes = useStyles()
   const [gruposDeHabitosTemplate, setGruposDeHabitosTemplate] = useState([])
@@ -187,7 +182,16 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
           allowPersonalizados: !isCadastro
         }
       )
-      setGruposDeHabitosTemplate(newGruposDeHabitosTemplate)
+      if (isCadastro) {
+        const gruposDeHabitosSemPersonalizados = Array.from(
+          newGruposDeHabitosTemplate,
+          grupo => ({ ...grupo })
+        )
+        delete gruposDeHabitosSemPersonalizados[0]
+        setGruposDeHabitosTemplate(gruposDeHabitosSemPersonalizados)
+      } else {
+        setGruposDeHabitosTemplate(newGruposDeHabitosTemplate)
+      }
     }
     getGrupoDeHabitosTemplate()
   }, [])
@@ -262,7 +266,7 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
                     </Typography>
 
                     {grupo.nome === 'Personalizados' ? (
-                      <Link
+                      <MaterialUiLink
                         href="#"
                         component="button"
                         onClick={() => handleOnClickEditarGrupo(grupo.nome)}
@@ -275,7 +279,7 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
                         >
                           {isModoDeEdicaoAtivo ? 'Concluir' : 'Editar'}
                         </Typography>
-                      </Link>
+                      </MaterialUiLink>
                     ) : null}
                   </Grid>
                   {grupo.habitos?.map(habito => (
@@ -317,7 +321,15 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
                       />
                       <HabitoLabel
                         modeDeEdicaoAtivo={isModoDeEdicaoAtivo}
-                        href={`/app/diario/${date}/habitos/${habito.id}`}
+                        href={{
+                          pathname: `/app/diario/${date}/habitos/${habito.id}`,
+                          query: {
+                            grupoId: grupo.id,
+                            date: date,
+                            id: habito.id,
+                            idDoGrupoModelo: grupo.idDoGrupoModelo
+                          }
+                        }}
                       >
                         <Typography
                           className={
@@ -340,7 +352,15 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
                     >
                       {grupo.habitos?.length < 6 ? (
                         <BotaoAdicionarHabito
-                          onClick={onAdicionarHabitoClick}
+                          href={{
+                            pathname: `/app/diario/${date}/habitos/novo`,
+                            query: {
+                              grupoId: grupo.id,
+                              date: date,
+                              idDoGrupoModelo: grupo.idDoGrupoModelo,
+                              posicaoDohabito: grupo.habitos?.length + 1
+                            }
+                          }}
                         />
                       ) : null}
                     </Grid>
