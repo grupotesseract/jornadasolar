@@ -1,23 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Box, makeStyles, Typography } from '@material-ui/core'
-import LinkVoltar from 'src/components/LinkVoltar'
+import { Box, Container } from '@material-ui/core'
 import { withUser } from 'src/components/hocs/withAuth'
 import TextField from 'src/components/TextField'
 import InputLabel from 'src/components/InputLabel'
 import Layout from 'src/components/templates/Layout'
 import UpdateNome from 'src/services/user/UpdateNome'
 import { useRouter } from 'next/router'
-const useStyles = makeStyles({
-  tituloContainer: {
-    display: 'flex',
-    alignItems: 'flex-end',
-    marginBottom: 48
-  },
-  titulo: {
-    flex: 1,
-    textAlign: 'center'
-  }
-})
+import TituloConfig from 'src/components/TituloConfig'
 
 type Props = {
   userName?: string
@@ -46,25 +35,21 @@ const AlteraNome = ({ userName, userId }: Props) => {
     }
   }
 
-  const classes = useStyles()
   return (
-    <Layout textoBotao="Salvar" onButtonClick={handleSalvar}>
-      <Box className={classes.tituloContainer}>
-        <LinkVoltar href="/app/perfil/dados" />
-        <Typography variant="button" className={classes.titulo}>
-          Nome
-        </Typography>
-      </Box>
-      <Box>
-        <InputLabel>Nome</InputLabel>
-        <TextField
-          value={nome}
-          onChange={handleChangeNome}
-          error={!!erro}
-          helperText={erro}
-        />
-      </Box>
-    </Layout>
+    <Container maxWidth="xs">
+      <TituloConfig link="/app/perfil/dados" titulo="Nome" />
+      <Layout textoBotao="Salvar" onButtonClick={handleSalvar}>
+        <Box>
+          <InputLabel>Nome</InputLabel>
+          <TextField
+            value={nome}
+            onChange={handleChangeNome}
+            error={!!erro}
+            helperText={erro}
+          />
+        </Box>
+      </Layout>
+    </Container>
   )
 }
 
