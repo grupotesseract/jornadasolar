@@ -12,6 +12,9 @@ const MeusDados = () => {
   const handleAlterarNome = () => {
     router.push('/app/perfil/nome')
   }
+  const handleAlterarSenha = () => {
+    router.push('/app/perfil/senha')
+  }
 
   const itens = [
     {
@@ -21,13 +24,14 @@ const MeusDados = () => {
     },
     {
       texto: 'Alterar senha',
+      onClick: handleAlterarSenha,
       iconeSecundario: <ChevronRight />
     }
   ]
 
   return (
     <Container maxWidth="xs">
-      <TituloConfig link="/app/perfil/dados" titulo="Meus dados" />
+      <TituloConfig link="/app/perfil" titulo="Meus dados" />
       <NavigationList itens={itens} />
     </Container>
   )
