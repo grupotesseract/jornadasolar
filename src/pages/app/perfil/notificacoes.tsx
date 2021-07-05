@@ -1,22 +1,8 @@
 import React, { useState } from 'react'
-import { Container, makeStyles, Switch } from '@material-ui/core'
-import Button from 'src/components/Button'
+import { Container, Switch } from '@material-ui/core'
 import { withUser } from 'src/components/hocs/withAuth'
 import TituloConfig from 'src/components/TituloConfig'
 import NavigationList from 'src/components/NavigationList'
-
-const useStyles = makeStyles({
-  tituloContainer: {
-    display: 'flex',
-    alignItems: 'flex-end',
-    marginBottom: 48
-  },
-  titulo: {
-    flex: 1,
-    textAlign: 'center',
-    fontWeight: 'bold'
-  }
-})
 
 const Notificacoes = () => {
   const [permission, setPermission] = useState(Notification.permission)

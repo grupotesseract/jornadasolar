@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useState } from 'react'
 import { Box, Container, Typography, makeStyles } from '@material-ui/core'
 import Titulo from 'src/components/Titulo'
 import { withUser } from 'src/components/hocs/withAuth'
@@ -10,6 +10,7 @@ import NavigationList from 'src/components/NavigationList'
 import LinkVoltar from 'src/components/LinkVoltar'
 import { IUser } from 'src/entities/User'
 import Novidade from 'src/components/Novidade'
+import Dialogo from 'src/components/Dialogo'
 
 const useStyles = makeStyles({
   versao: {
@@ -27,6 +28,15 @@ type Props = {
 const Perfil: FC<Props> = ({ user }) => {
   const router = useRouter()
   const classes = useStyles()
+  const [isDialogoOpen, setIsDialogoOpen] = useState(false)
+
+  const abrirDialogo = () => {
+    setIsDialogoOpen(true)
+  }
+
+  const fecharDialogo = () => {
+    setIsDialogoOpen(false)
+  }
 
   const handleMeusDados = () => {
     router.push('/app/perfil/dados')
@@ -54,7 +64,8 @@ const Perfil: FC<Props> = ({ user }) => {
     },
     {
       icone: <Emoji nome="duvida" />,
-      texto: 'Ajuda'
+      texto: 'Ajuda',
+      onClick: abrirDialogo
     },
     {
       icone: <Emoji nome="sair" />,
@@ -74,6 +85,16 @@ const Perfil: FC<Props> = ({ user }) => {
       <Container maxWidth="xs" className={classes.versao}>
         <Typography>Versão {appVersion}</Typography>
       </Container>
+      <Dialogo
+        isOpen={isDialogoOpen}
+        onFechar={fecharDialogo}
+        onConfirmar={fecharDialogo}
+        titulo="Ajuda"
+        labelCancelar=""
+        labelConfirmar="Ok"
+      >
+        Precisa de ajuda? Envie um e-mail para jornadasolar@gmail.com
+      </Dialogo>
     </Container>
   )
 }
