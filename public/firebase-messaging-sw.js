@@ -11,56 +11,12 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-//user clicked / tapped a push notification
-self.addEventListener('notificationclick', function (event) {
-  const clickedNotification = event.notification;
-  clickedNotification.close();
-
-  //get url from event
-  let url = clickedNotification.data.FCM_MSG.data.link
-
-  //exit if the url could not be found
-  if (!url)
-    return;
-
-  url = 'app/' + url
-
-  const promiseChain = clients.matchAll({
-    type: 'window',
-    includeUncontrolled: true
-  }).then((windowClients) => {
-
-    let matchingClient = null;
-    console.log('windowClients', windowClients)
-
-    if (windowClients.length > 0)
-      matchingClient = windowClients[0]
-    console.log('matchingClient', matchingClient)
-
-
-    if (matchingClient) {
-      matchingClient.focus()
-      return;
-    } else {
-      return clients.openWindow(url);
-    }
-  });
-
-  event.waitUntil(promiseChain);
-  clickedNotification.close();
-
-});
-
-
-
 //background notifications will be received here
 messaging.onBackgroundMessage((payload) => {
   const notification = payload.notification
   const notificationTitle = notification.title;
   const notificationOptions = {
-    body: notification.body,
-    icon: '/icons/icon-192x192.png',
-    requireInteration: true
+    body: notification.body
   };
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
