@@ -24,6 +24,7 @@ import { appVersion } from '../../../utils/appVersion'
 import Link from 'next/link'
 import { IUser } from 'src/entities/User'
 import Novidade from 'src/components/Novidade'
+import NovidadeNotificacao from 'src/components/NovidadeNotificacao'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -111,6 +112,10 @@ const Diario: FC<IDiarioProps> = ({ user, userId, userName }) => {
   const signo = getSigno(new Date())
   const faseDaLua = getFaseDaLua(new Date())
 
+  const podePedirNotificacao = Notification.permission === 'default'
+  const pedeNotificacao = <NovidadeNotificacao />
+  const mostraNovidades = <Novidade path="diario" user={user} />
+
   return (
     <PageWithBottomNavigation currentPage="registro">
       <Container maxWidth="xs" className={classes.container}>
@@ -133,7 +138,9 @@ const Diario: FC<IDiarioProps> = ({ user, userId, userName }) => {
         <Box mt={8} mr={2} ml={2}>
           <MonthNavigator mes={mes} onClick={setMes} />
         </Box>
-        <Novidade path="diario" user={user} />
+
+        {podePedirNotificacao ? pedeNotificacao : mostraNovidades}
+
         {loading ? <Loading /> : registros}
       </Container>
     </PageWithBottomNavigation>
