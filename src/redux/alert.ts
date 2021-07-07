@@ -9,6 +9,7 @@ import {
   createdOrUpdated as createdOrUpdatedNovidade,
   deleteNovidade
 } from './admin/novidades'
+import { nameUpdated, passwordUpdated } from './perfil'
 
 export enum AlertSeverity {
   Error = 'error',
@@ -65,6 +66,16 @@ const alertSlice = createSlice({
         state.severity = AlertSeverity.Success
         state.message = 'Novidade removida com sucesso.'
         state.only = ['/admin/novidades']
+      })
+      .addCase(nameUpdated, state => {
+        state.severity = AlertSeverity.Success
+        state.message = 'Nome alterado com sucesso.'
+        state.only = ['/app/perfil/dados']
+      })
+      .addCase(passwordUpdated, state => {
+        state.severity = AlertSeverity.Success
+        state.message = 'Senha alterada com sucesso.'
+        state.only = ['/app/perfil/dados']
       })
   }
 })

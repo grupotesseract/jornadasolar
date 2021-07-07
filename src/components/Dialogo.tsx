@@ -63,9 +63,11 @@ const Dialogo: FC<IDialogoProps> = ({
       </DialogTitle>
       <DialogContent>{children}</DialogContent>
       <DialogActions>
-        <Button onClick={onFechar} color="primary">
-          {labelCancelar}
-        </Button>
+        {labelCancelar !== '' && (
+          <Button onClick={onFechar} color="primary">
+            {labelCancelar}
+          </Button>
+        )}
         <Button onClick={handleConfirmar} color="primary">
           {labelConfirmar}
         </Button>

@@ -35,4 +35,14 @@ if (process.browser) {
   firestore.enablePersistence()
 }
 
-export { config, auth, firestore, analytics, storage, setupMessaging }
+const emailAuthProvider = firebase.auth.EmailAuthProvider
+
+export {
+  config,
+  auth,
+  firestore,
+  analytics,
+  storage,
+  setupMessaging,
+  emailAuthProvider
+}
