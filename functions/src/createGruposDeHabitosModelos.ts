@@ -2,8 +2,6 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
-admin.initializeApp();
-
 const gruposDeHabitosTemplate = [
   {
     nome: "Personalizados",
@@ -200,14 +198,14 @@ const gruposDeHabitosTemplate = [
 export const createGruposDeHabitosModelos = functions.https.onRequest((request, response) => {
   gruposDeHabitosTemplate.forEach(async (element) => {
     const {nome, posicao, habitos} = element;
-    const querySnapchot = await admin.firestore()
+      const querySnapshot = await admin
         .collection("gruposDeHabitosModelos")
         .where("nome", "==", nome)
         .limit(1)
         .get();
     let grupoId: string | null = null;
 
-    if (querySnapchot.empty) {
+      if (querySnapshot.empty) {
       const docRef = await admin.firestore()
           .collection("gruposDeHabitosModelos")
           .add({
@@ -216,7 +214,7 @@ export const createGruposDeHabitosModelos = functions.https.onRequest((request, 
           });
       grupoId = docRef.id;
     } else {
-      grupoId = querySnapchot.docs[0].id;
+        grupoId = querySnapshot.docs[0].id;
       await admin.firestore()
           .collection("gruposDeHabitosModelos")
           .doc(grupoId)
@@ -227,13 +225,13 @@ export const createGruposDeHabitosModelos = functions.https.onRequest((request, 
     }
 
     habitos?.forEach(async (habito) => {
-      const habitoQuerySnapchot = await admin.firestore()
+        const habitoQuerySnapshot = await admin
           .collection(`gruposDeHabitosModelos/${grupoId}/habitosModelos`)
           .where("nome", "==", habito.nome)
           .limit(1)
           .get();
 
-      if (habitoQuerySnapchot.empty) {
+        if (habitoQuerySnapshot.empty) {
         admin.firestore()
             .collection(`gruposDeHabitosModelos/${grupoId}/habitosModelos`)
             .add({
@@ -244,7 +242,7 @@ export const createGruposDeHabitosModelos = functions.https.onRequest((request, 
       } else {
         admin.firestore()
             .collection(`gruposDeHabitosModelos/${grupoId}/habitosModelos`)
-            .doc(habitoQuerySnapchot.docs[0].id)
+            .doc(habitoQuerySnapshot.docs[0].id)
             .set({
               nome: habito.nome,
               emojiUnicode: habito.emojiUnicode,
