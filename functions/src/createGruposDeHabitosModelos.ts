@@ -195,63 +195,79 @@ const gruposDeHabitosTemplate = [
   },
 ];
 
-export const createGruposDeHabitosModelos = functions.https.onRequest((request, response) => {
-  gruposDeHabitosTemplate.forEach(async (element) => {
-    const {nome, posicao, habitos} = element;
+export const createGruposDeHabitosModelos = functions.https.onRequest(
+  (request, response) => {
+    gruposDeHabitosTemplate.forEach(async element => {
+      const {nome, posicao, habitos} = element;
       const querySnapshot = await admin
+        .firestore()
         .collection("gruposDeHabitosModelos")
         .where("nome", "==", nome)
         .limit(1)
         .get();
-    let grupoId: string | null = null;
+      let grupoId: string | null = null;
 
       if (querySnapshot.empty) {
-      const docRef = await admin.firestore()
+        const docRef = await admin
+          .firestore()
           .collection("gruposDeHabitosModelos")
           .add({
             nome,
             posicao,
           });
-      grupoId = docRef.id;
-    } else {
+        grupoId = docRef.id;
+      } else {
         grupoId = querySnapshot.docs[0].id;
-      await admin.firestore()
+        await admin
+          .firestore()
           .collection("gruposDeHabitosModelos")
           .doc(grupoId)
-          .set({
-            nome,
-            posicao,
-          }, {merge: true});
-    }
+          .set(
+            {
+              nome,
+              posicao,
+            },
+            {merge: true}
+          );
+      }
 
-    habitos?.forEach(async (habito) => {
+      habitos?.forEach(async habito => {
         const habitoQuerySnapshot = await admin
+          .firestore()
           .collection(`gruposDeHabitosModelos/${grupoId}/habitosModelos`)
           .where("nome", "==", habito.nome)
           .limit(1)
           .get();
 
         if (habitoQuerySnapshot.empty) {
-        admin.firestore()
+          admin
+            .firestore()
             .collection(`gruposDeHabitosModelos/${grupoId}/habitosModelos`)
             .add({
               nome: habito.nome,
               emojiUnicode: habito.emojiUnicode,
               posicao: habito.posicao,
             });
-      } else {
-        admin.firestore()
+        } else {
+          admin
+            .firestore()
             .collection(`gruposDeHabitosModelos/${grupoId}/habitosModelos`)
             .doc(habitoQuerySnapshot.docs[0].id)
-            .set({
-              nome: habito.nome,
-              emojiUnicode: habito.emojiUnicode,
-              posicao: habito.posicao,
-            }, {merge: true});
-      }
+            .set(
+              {
+                nome: habito.nome,
+                emojiUnicode: habito.emojiUnicode,
+                posicao: habito.posicao,
+              },
+              {merge: true}
+            );
+        }
+      });
     });
-  });
 
-  functions.logger.info("createGruposDeHabitosModelos", {structuredData: true});
-  response.send("createGruposDeHabitosModelos");
-});
+    functions.logger.info("createGruposDeHabitosModelos", {
+      structuredData: true,
+    });
+    response.send("createGruposDeHabitosModelos");
+  }
+);
