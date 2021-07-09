@@ -3,11 +3,16 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
 type Habito = {
+  id?: string;
   nome: string;
   emojiUnicode: string | Array<string>;
   posicao: number;
 }
 
+/**
+ * Função para copiar todos os hábitos da collection `gruposDeHabitosModelos`
+ * para uma collection `gruposDeHabitos` dentro do document do `user`
+ */
 export const preencheGruposDeHabitosUsers = functions.https.onRequest(async (request, response) => {
 
   const snapshotGruposModelo = await admin.firestore().collection("gruposDeHabitosModelos").get();
@@ -34,7 +39,7 @@ export const preencheGruposDeHabitosUsers = functions.https.onRequest(async (req
       .get()
     snapshotHabitosModelo.forEach(habitoModeloSnap => {
       const habitoModelo = habitoModeloSnap.data()
-      grupoModelo.habitos.push(habitoModelo)
+      grupoModelo.habitos.push({ ...habitoModelo, id: habitoModeloSnap.id })
     })
   }
 
@@ -51,13 +56,13 @@ export const preencheGruposDeHabitosUsers = functions.https.onRequest(async (req
       const user = userSnap.data()
       functions.logger.info("user sem grupos", { user })
       gruposDeHabitos.forEach(async grupo => {
-        const { habitos, ...grupoProps } = grupo
-        const grupoRef = await usersCollection.doc(userId).collection("gruposDeHabitos").add(grupoProps)
+        const { habitos, id, ...grupoProps } = grupo
+        const grupoRef = await usersCollection.doc(userId).collection("gruposDeHabitos").add({ ...grupoProps, idDoGrupoModelo: id })
         habitos.forEach((habito: Habito) => {
           admin
             .firestore()
             .collection(`users/${userId}/gruposDeHabitos/${grupoRef.id}/habitos`)
-            .add(habito)
+            .add({ ...habito, idDoHabitoModelo: habito.id })
         })
       })
     }
