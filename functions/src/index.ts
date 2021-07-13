@@ -1,10 +1,14 @@
 /* eslint-disable quotes */
 
-import {createGruposDeHabitosModelos} from "./createGruposDeHabitosModelos";
-import {createSentimentosModelos} from "./createSentimentosModelos";
-import * as admin from "firebase-admin";
+import { createGruposDeHabitosModelos } from "./createGruposDeHabitosModelos"
+import { createSentimentosModelos } from "./createSentimentosModelos"
+import * as admin from "firebase-admin"
+import { preencheSentimentosUsuarios } from "./preencheSentimentosUsuarios"
 
-admin.initializeApp();
+admin.initializeApp()
 
-exports.createGruposDeHabitosModelos = createGruposDeHabitosModelos;
-exports.createSentimentosModelos = createSentimentosModelos;
+export {
+  createSentimentosModelos,
+  createGruposDeHabitosModelos,
+  preencheSentimentosUsuarios
+}
