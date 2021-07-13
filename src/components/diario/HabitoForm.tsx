@@ -5,10 +5,8 @@ import Titulo from '../Titulo'
 import InputLabel from '../InputLabel'
 import { useRouter } from 'next/dist/client/router'
 import Layout from '../templates/Layout'
-import CreateHabito from '../../services/habito/CreateHabito'
 import EmojiToUnicode from 'src/services/EmojiToUnicode'
 import { IHabito } from 'src/entities/Habito'
-import UpdateHabito from 'src/services/habito/UpdateHabito'
 import LinkVoltar from '../LinkVoltar'
 import CreateUserHabito from 'src/services/user/CreateUserHabito'
 import UpdateUserHabito from 'src/services/user/UpdateUserHabito'
@@ -28,7 +26,6 @@ const HabitoForm: FC<IProps> = ({
   habito,
   formTitulo,
   grupoDeHabitoId,
-  idDoGrupoModelo,
   posicaoDohabito
 }) => {
   const [emoji, setEmoji] = useState(habito?.emoji || '')
@@ -58,40 +55,19 @@ const HabitoForm: FC<IProps> = ({
   }
 
   const handleCreateOrUpdate = async () => {
-    // TODO: remover as chamadas pra collection habitos e verificaçao de idDoGrupoModelo após migração
-
     if (habito?.id) {
-      // Faz update na collection habitos
-      await new UpdateHabito().call({ id: habito.id, nome, emojiUnicode })
-
-      // Se for grupos de hábitos do usuário, faz updade na collection do user
-      if (idDoGrupoModelo) {
-        await UpdateUserHabito({
-          userId,
-          habito: { nome, emojiUnicode },
-          grupoDeHabitoId,
-          id: habito.id
-        })
-      }
-    } else {
-      // Adiciona na collection habitos
-      const habitoId = await new CreateHabito().call({
+      await UpdateUserHabito({
         userId,
-        nome,
-        emojiUnicode
+        habito: { nome, emojiUnicode },
+        grupoDeHabitoId,
+        id: habito.id
       })
-
-      console.log('habitoId', habitoId)
-
-      // Se for grupos de hábitos do usuário, adiciona na collection do user
-      if (idDoGrupoModelo) {
-        await CreateUserHabito({
-          userId,
-          habito: { nome, emojiUnicode, posicao: Number(posicaoDohabito) },
-          grupoDeHabitoId,
-          idDoHabitoPersonalizado: habitoId
-        })
-      }
+    } else {
+      await CreateUserHabito({
+        userId,
+        habito: { nome, emojiUnicode, posicao: Number(posicaoDohabito) },
+        grupoDeHabitoId
+      })
     }
     router.push(`/app/diario/${date}/habitos`)
   }

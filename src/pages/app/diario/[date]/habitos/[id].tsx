@@ -1,8 +1,8 @@
 import React, { FC, useState, useEffect } from 'react'
 import { withUser } from 'src/components/hocs/withAuth'
 import { NextPageContext } from 'next'
-import GetHabitoById from 'src/services/habito/GetHabitoById'
 import HabitoForm from 'src/components/diario/HabitoForm'
+import GetUserHabitoById from 'src/services/user/GetUserHabitoById'
 interface IProps {
   userId: string
   date: string
@@ -22,7 +22,11 @@ const EdicaoDoHabito: FC<IProps> = ({
 
   useEffect(() => {
     const buscarHabito = async () => {
-      const novoHabito = await new GetHabitoById().call(id)
+      const novoHabito = await GetUserHabitoById({
+        userId,
+        grupoDeHabitosId: grupoId,
+        id
+      })
       setHabito(novoHabito)
     }
     buscarHabito()

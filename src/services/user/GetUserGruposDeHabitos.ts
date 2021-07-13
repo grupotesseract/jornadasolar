@@ -12,11 +12,11 @@ const GetUserGruposDeHabitos = async (
 
     const gruposDeHabitos = []
 
-    querySnapshot.forEach(grupoDeHabitoModelo => {
-      const grupoDeHabitosData = grupoDeHabitoModelo.data()
+    querySnapshot.forEach(grupoDeHabitoSnapshot => {
+      const grupoDeHabitosData = grupoDeHabitoSnapshot.data()
 
       const grupoDeHabitos = {
-        id: grupoDeHabitoModelo.id,
+        id: grupoDeHabitoSnapshot.id,
         idDoGrupoModelo: grupoDeHabitosData.idDoGrupoModelo,
         nome: grupoDeHabitosData.nome,
         posicao: grupoDeHabitosData.posicao
@@ -34,15 +34,15 @@ const GetUserGruposDeHabitos = async (
         .orderBy('posicao', 'asc')
         .get()
       const habitos = []
-      habitosSnapshot.forEach(habitoModelo => {
-        const habitoData = habitoModelo.data()
+      habitosSnapshot.forEach(habitoSnapshot => {
+        const habitoData = habitoSnapshot.data()
         const habito = {
-          id: habitoModelo.id,
+          id: habitoSnapshot.id,
+          idDoHabitoModelo: habitoData.idDoHabitoModelo || null,
           nome: habitoData.nome,
           emojiUnicode: habitoData.emojiUnicode,
           posicao: habitoData.posicao
         }
-
         habitos.push(habito)
       })
       grupoDeHabitos.habitos = habitos
