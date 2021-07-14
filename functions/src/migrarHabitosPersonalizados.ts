@@ -19,7 +19,7 @@ export const migrarHabitosPersonalizados = functions.https.onRequest(async (requ
   let updatedHabitos = 0 // Contador para exibir no retorno
 
   // Passa por todos os usuários 
-  const usersCollection = admin.firestore().collection("users")
+  const usersCollection = admin.firestore().collection("user")
   const snapshotUsers = await usersCollection.get()
   const usersId: Array<string> = []
   snapshotUsers.forEach(userSnap => {
@@ -37,7 +37,7 @@ export const migrarHabitosPersonalizados = functions.https.onRequest(async (requ
     // Busca o grupo Personalizados
     const snapshotGrupoPersonalizado = await admin
       .firestore()
-      .collection(`users/${userId}/gruposDeHabitos`)
+      .collection(`user/${userId}/gruposDeHabitos`)
       .where("nome", "==", "Personalizados")
       .limit(1)
       .get()
@@ -45,7 +45,7 @@ export const migrarHabitosPersonalizados = functions.https.onRequest(async (requ
     if (snapshotGrupoPersonalizado.empty) {
       const grupoRef = await admin
       .firestore()
-      .collection(`users/${userId}/gruposDeHabitos`)
+      .collection(`user/${userId}/gruposDeHabitos`)
       .add({ nome: "Personalizados", posicao: 1 })
       grupoPersonalizadoId = grupoRef.id
       functions.logger.info("personalizado adicionado", { grupoPersonalizadoId });
@@ -57,13 +57,14 @@ export const migrarHabitosPersonalizados = functions.https.onRequest(async (requ
     const habitos: Array<Habito> = []
     snapshotHabitosPersonalizados.forEach(habitoPersonalizadoSnap => {
       const habitoPersonalizado = habitoPersonalizadoSnap.data() as Habito
+      habitoPersonalizado.id = habitoPersonalizadoSnap.id
       habitos.push(habitoPersonalizado)
     })
     for (const habitoPersonalizado of habitos) {
-      const { userId, ...habitoData } = habitoPersonalizado
+      const { userId, id, ...habitoData } = habitoPersonalizado
       const habitoQuerySnapshot = await admin
           .firestore()
-          .collection(`users/${userId}/gruposDeHabitos/${grupoPersonalizadoId}/habitos`)
+          .collection(`user/${userId}/gruposDeHabitos/${grupoPersonalizadoId}/habitos`)
           .where("nome", "==", habitoPersonalizado.nome)
           .limit(1)
           .get();
@@ -71,14 +72,15 @@ export const migrarHabitosPersonalizados = functions.https.onRequest(async (requ
         if (habitoQuerySnapshot.empty) {
           admin
             .firestore()
-            .collection(`users/${userId}/gruposDeHabitos/${grupoPersonalizadoId}/habitos`)
-            .add(habitoData);
+            .collection(`user/${userId}/gruposDeHabitos/${grupoPersonalizadoId}/habitos`)
+            .doc(String(id))
+            .set(habitoData);
             functions.logger.info("habito adicionado", { habitoPersonalizado, userId, grupoPersonalizadoId });
             updatedHabitos++
         } else {
           admin
             .firestore()
-            .collection(`users/${userId}/gruposDeHabitos/${grupoPersonalizadoId}/habitos`)
+            .collection(`user/${userId}/gruposDeHabitos/${grupoPersonalizadoId}/habitos`)
             .doc(habitoQuerySnapshot.docs[0].id)
             .set(
               habitoData,
