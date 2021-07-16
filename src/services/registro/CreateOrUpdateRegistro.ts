@@ -37,6 +37,7 @@ export default class CreateOrUpdate implements ICreateOrUpdate {
           habito => habito.id || habito.nome
         )
         parsedAttributes.gruposDeHabitos.push({
+          id: grupoDeHabitos.id || '',
           nome: grupoDeHabitos.nome,
           habitos
         })
