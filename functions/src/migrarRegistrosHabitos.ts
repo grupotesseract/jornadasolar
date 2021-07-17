@@ -1,6 +1,6 @@
-import * as functions from 'firebase-functions'
-import * as admin from 'firebase-admin'
-import { GrupoDeHabitos } from './types/GrupoDeHabitos'
+import * as functions from "firebase-functions"
+import * as admin from "firebase-admin"
+import { GrupoDeHabitos } from "./types/GrupoDeHabitos"
 
 /**
  * Função para alterar os registros do diário trocando
@@ -14,7 +14,7 @@ export const migrarRegistrosHabitos = functions.https.onRequest(
     let updatedDiarios = 0 // Contador para exibir no retorno
 
     // Passa por todos os usuários
-    const usersCollection = admin.firestore().collection('user')
+    const usersCollection = admin.firestore().collection("user")
     const snapshotUsers = await usersCollection.get()
     const usersId: Array<string> = []
     snapshotUsers.forEach(userSnap => {
@@ -32,7 +32,7 @@ export const migrarRegistrosHabitos = functions.https.onRequest(
         .get()
 
       if (snapshotGrupos.empty) {
-        functions.logger.info('sem gruposDeHabitos', { snapshotGrupos })
+        functions.logger.info("sem gruposDeHabitos", { snapshotGrupos })
         return
       }
 
@@ -41,7 +41,7 @@ export const migrarRegistrosHabitos = functions.https.onRequest(
         const grupoHabito = grupoHabitoSnap.data() as GrupoDeHabitos
         gruposIdByNome.set(grupoHabito.nome.toLowerCase(), grupoHabitoSnap.id)
       })
-      functions.logger.info('gruposIdByNome', gruposIdByNome)
+      functions.logger.info("gruposIdByNome", gruposIdByNome)
 
       // monta array de habitos com base nos grupos
       for (const grupoHabitoId of gruposIdByNome.values()) {
@@ -57,12 +57,12 @@ export const migrarRegistrosHabitos = functions.https.onRequest(
           )
         })
       }
-      functions.logger.info('habitosIdByNome', habitosIdByNome)
+      functions.logger.info("habitosIdByNome", habitosIdByNome)
 
       // Passa por todos os registros desse usuario
-      const diarioCollection = admin.firestore().collection('diario')
+      const diarioCollection = admin.firestore().collection("diario")
       const snapshotDiario = await diarioCollection
-        .where('userId', '==', userId)
+        .where("userId", "==", userId)
         .get()
       snapshotDiario.forEach(diarioSnap => {
         const { id } = diarioSnap
@@ -71,7 +71,7 @@ export const migrarRegistrosHabitos = functions.https.onRequest(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const novoGrupoDeHabitos = gruposDeHabitos.map((grupo: any) => {
           const { nome, habitos } = grupo
-          const idGrupo = gruposIdByNome.get(nome.toLowerCase()) || ''
+          const idGrupo = gruposIdByNome.get(nome.toLowerCase()) || ""
           if (!habitos || habitos.length === 0) {
             return {
               nome,
@@ -87,7 +87,7 @@ export const migrarRegistrosHabitos = functions.https.onRequest(
             habitos: novosHabitos
           }
         })
-        functions.logger.info('novoGrupoDeHabitos', novoGrupoDeHabitos)
+        functions.logger.info("novoGrupoDeHabitos", novoGrupoDeHabitos)
         // Atualiza no banco
         admin
         diarioCollection
