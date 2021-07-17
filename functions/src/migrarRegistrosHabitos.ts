@@ -8,6 +8,7 @@ import { GrupoDeHabitos } from "./types/GrupoDeHabitos"
  * de habitos pertencente ao usuário, isso tanto para os
  * hábitos como para os grupos de hábitos
  */
+
 export const migrarRegistrosHabitos = functions.https.onRequest(
   async (request, response) => {
     let updatedUsers = 0 // Contador para exibir no retorno
@@ -22,6 +23,10 @@ export const migrarRegistrosHabitos = functions.https.onRequest(
     })
 
     for (const userId of usersId) {
+      functions.logger.info(`iniciando Migração de registros para o user ${userId}`)
+      if(!userId) {
+        return
+      }
       // Monta um array indexado pelo nome dos grupos e habitos
       // eslint-disable-next-line prefer-const
       let gruposIdByNome: Map<string, string> = new Map<string, string>()
@@ -49,13 +54,19 @@ export const migrarRegistrosHabitos = functions.https.onRequest(
           .firestore()
           .collection(`user/${userId}/gruposDeHabitos/${grupoHabitoId}/habitos`)
           .get()
-        snapshotHabitosUsuario.forEach(habitoUsuarioSnap => {
-          const habitoUsuario = habitoUsuarioSnap.data()
-          habitosIdByNome.set(
-            habitoUsuario.nome.toLowerCase(),
-            habitoUsuarioSnap.id
-          )
-        })
+        if (snapshotHabitosUsuario.empty) {
+          functions.logger.info(`user/${userId}/gruposDeHabitos/${grupoHabitoId}/habitos: sem hábitos registrados`);
+        } else {
+          functions.logger.info(`user/${userId}/gruposDeHabitos/${grupoHabitoId}/habitos: iniciando map`);
+          snapshotHabitosUsuario.forEach(habitoUsuarioSnap => {
+            const habitoUsuario = habitoUsuarioSnap.data()
+            functions.logger.info("map habito", habitoUsuario);
+            habitosIdByNome.set(
+              habitoUsuario.nome.toLowerCase(),
+              habitoUsuarioSnap.id
+            )
+          })
+        } 
       }
       functions.logger.info("habitosIdByNome", habitosIdByNome)
 
@@ -64,38 +75,50 @@ export const migrarRegistrosHabitos = functions.https.onRequest(
       const snapshotDiario = await diarioCollection
         .where("userId", "==", userId)
         .get()
-      snapshotDiario.forEach(diarioSnap => {
-        const { id } = diarioSnap
-        const diario = diarioSnap.data()
-        const { gruposDeHabitos } = diario
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const novoGrupoDeHabitos = gruposDeHabitos.map((grupo: any) => {
-          const { nome, habitos } = grupo
-          const idGrupo = gruposIdByNome.get(nome.toLowerCase()) || ""
-          if (!habitos || habitos.length === 0) {
+      if (snapshotDiario.empty) {
+        functions.logger.info(`user ${userId} sem registros no diario`);
+      } else {
+        snapshotDiario.forEach(diarioSnap => {
+          const { id } = diarioSnap
+          const diario = diarioSnap.data()
+          const { gruposDeHabitos } = diario
+          functions.logger.info(`user ${userId}, grupo de habitos antigo`, gruposDeHabitos);
+          if (!gruposDeHabitos) {
+            return
+          }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const novoGrupoDeHabitos = gruposDeHabitos?.map((grupo: any) => {
+            const { nome, habitos } = grupo
+            const idGrupo = gruposIdByNome.get(nome.toLowerCase()) || ""
+            if (!habitos || habitos.length === 0) {
+              return {
+                nome,
+                id: idGrupo
+              }
+            }
+            const novosHabitos: string[] = []
+            habitos?.forEach((habitoNome: string) => {
+              const habitoId = habitosIdByNome.get(habitoNome.toLowerCase())
+              if (habitoId) {
+                novosHabitos.push(habitoId)
+              }
+            })
             return {
               nome,
-              id: idGrupo
+              id: idGrupo,
+              habitos: novosHabitos
             }
-          }
-          const novosHabitos = habitos?.map((habitoNome: string) =>
-            habitosIdByNome.get(habitoNome.toLowerCase())
-          )
-          return {
-            nome,
-            id: idGrupo,
-            habitos: novosHabitos
-          }
+          })
+          functions.logger.info("novoGrupoDeHabitos", novoGrupoDeHabitos)
+          // Atualiza no banco
+          admin
+          diarioCollection
+            .doc(id)
+            .set({ gruposDeHabitos: novoGrupoDeHabitos }, { merge: true })
+          updatedDiarios++
         })
-        functions.logger.info("novoGrupoDeHabitos", novoGrupoDeHabitos)
-        // Atualiza no banco
-        admin
-        diarioCollection
-          .doc(id)
-          .set({ gruposDeHabitos: novoGrupoDeHabitos }, { merge: true })
-        updatedDiarios++
-      })
-      updatedUsers++
+        updatedUsers++
+      } 
     }
     response.send({
       message: `Foram alterado ${updatedDiarios} registros de diário de ${updatedUsers} usuários`
