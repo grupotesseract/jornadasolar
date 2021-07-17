@@ -7,6 +7,7 @@ import TemLivroOptions from '../enums/user/TemLivroOptions'
 import UserFactory, { IUserFactory } from '../factories/UserFactory'
 import GetAllGruposDeHabitosModelos from 'src/services/grupoDehabitos/GetAllGruposDeHabitosModelos'
 import CreateUserGrupoDeHabitos from 'src/services/user/CreateUserGrupoDeHabitos'
+import GetUserGruposDeHabitos from 'src/services/user/GetUserGruposDeHabitos'
 
 interface ICreateParameters {
   nome: string
@@ -75,12 +76,38 @@ export default class UsersRepository implements IUsersRepository {
       })
     })
 
+    // Busca grupos de hábitos do usuário e atualiza o gruposDeHabitos do registro com os ids
+    const gruposDeHabitosDoUsuario = await GetUserGruposDeHabitos(user.uid)
+    const gruposDeHabitosAtualizados = gruposDeHabitos.map(grupoDeHabito => {
+      const grupoDoUsuario = gruposDeHabitosDoUsuario.find(
+        grupoDeHabitosDoUsuario =>
+          grupoDeHabitosDoUsuario.nome.toLowerCase() ===
+          grupoDeHabito.nome.toLowerCase()
+      )
+      const habitosDoUsuario = grupoDeHabito.habitos.map(habito => {
+        const habitoDoUsuario = grupoDoUsuario.habitos.find(
+          habitoDoUsuario =>
+            habitoDoUsuario.nome.toLowerCase() === habito.nome.toLowerCase()
+        )
+        return {
+          ...habito,
+          id: habitoDoUsuario.id
+        }
+      })
+
+      return {
+        ...grupoDeHabito,
+        id: grupoDoUsuario.id,
+        habitos: habitosDoUsuario
+      }
+    })
+
     // Cria o primeiro registro do usuário no diário
     await new CreateOrUpdateRegistro().call({
       date: now,
       userId: user.uid,
       sentimentos,
-      gruposDeHabitos
+      gruposDeHabitos: gruposDeHabitosAtualizados
     })
 
     return new User({
