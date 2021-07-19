@@ -1,14 +1,7 @@
 
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-
-type Habito = {
-  id?: string;
-  userId?: string;
-  nome: string;
-  emojiUnicode: string | Array<string>;
-  posicao: number;
-}
+import { Habito } from "./types/Habito";
 
 /**
  * Função para migrar os hábitos da collection `habitos`
