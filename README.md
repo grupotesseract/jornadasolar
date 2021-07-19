@@ -49,7 +49,7 @@ Instalar CLI do Firebase
 Acessar pasta das funcions
 
 ```shell
- cd funcions/
+ cd functions/
 ```
 
 Para testar local

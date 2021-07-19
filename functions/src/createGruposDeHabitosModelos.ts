@@ -8,7 +8,7 @@ const gruposDeHabitosTemplate = [
     posicao: 1,
   },
   {
-    nome: "social",
+    nome: "Social",
     posicao: 2,
     habitos: [
       {
@@ -81,7 +81,7 @@ const gruposDeHabitosTemplate = [
     ],
   },
   {
-    nome: "sono",
+    nome: "Sono",
     posicao: 5,
     habitos: [
       {emojiUnicode: ["1F634"], nome: "Dormi cedo", posicao: 1},
