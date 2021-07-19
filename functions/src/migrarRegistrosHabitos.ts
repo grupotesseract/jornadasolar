@@ -14,62 +14,31 @@ export const migrarRegistrosHabitos = functions.https.onRequest(
     let updatedUsers = 0 // Contador para exibir no retorno
     let updatedDiarios = 0 // Contador para exibir no retorno
 
-    // Passa por todos os usuários
+    const userIdParam = request.query?.userid;
     const usersCollection = admin.firestore().collection("user")
-    const snapshotUsers = await usersCollection.get()
     const usersId: Array<string> = []
-    snapshotUsers.forEach(userSnap => {
-      usersId.push(userSnap.id)
-    })
+    if (userIdParam) {
+      // Filtro por usuário
+      functions.logger.info(`Iniciando migração para único usuário ${userIdParam}`)
+      usersId.push(String(userIdParam))
+    } else {
+      // Passa por todos os usuários, e adiciona os que 
+      // ainda não foram migrados ao array usersId
+      const snapshotUsers = await usersCollection.get() 
+      snapshotUsers.forEach(userSnap => {
+        const { registroMigrado } = userSnap.data()
+        if (!registroMigrado) {
+          usersId.push(userSnap.id)
+        }
+      })
+    }
 
+    functions.logger.info("migração dos usuários", usersId)
     for (const userId of usersId) {
       functions.logger.info(`iniciando Migração de registros para o user ${userId}`)
       if(!userId) {
-        return
+        continue
       }
-      // Monta um array indexado pelo nome dos grupos e habitos
-      // eslint-disable-next-line prefer-const
-      let gruposIdByNome: Map<string, string> = new Map<string, string>()
-      const habitosIdByNome: Map<string, string> = new Map<string, string>()
-      const snapshotGrupos = await admin
-        .firestore()
-        .collection(`user/${userId}/gruposDeHabitos`)
-        .get()
-
-      if (snapshotGrupos.empty) {
-        functions.logger.info("sem gruposDeHabitos", { snapshotGrupos })
-        return
-      }
-
-      // monta aray de grupos
-      snapshotGrupos.forEach(grupoHabitoSnap => {
-        const grupoHabito = grupoHabitoSnap.data() as GrupoDeHabitos
-        gruposIdByNome.set(grupoHabito.nome.toLowerCase(), grupoHabitoSnap.id)
-      })
-      functions.logger.info("gruposIdByNome", gruposIdByNome)
-
-      // monta array de habitos com base nos grupos
-      for (const grupoHabitoId of gruposIdByNome.values()) {
-        const snapshotHabitosUsuario = await admin
-          .firestore()
-          .collection(`user/${userId}/gruposDeHabitos/${grupoHabitoId}/habitos`)
-          .get()
-        if (snapshotHabitosUsuario.empty) {
-          functions.logger.info(`user/${userId}/gruposDeHabitos/${grupoHabitoId}/habitos: sem hábitos registrados`);
-        } else {
-          functions.logger.info(`user/${userId}/gruposDeHabitos/${grupoHabitoId}/habitos: iniciando map`);
-          snapshotHabitosUsuario.forEach(habitoUsuarioSnap => {
-            const habitoUsuario = habitoUsuarioSnap.data()
-            functions.logger.info("map habito", habitoUsuario);
-            habitosIdByNome.set(
-              habitoUsuario.nome.toLowerCase(),
-              habitoUsuarioSnap.id
-            )
-          })
-        } 
-      }
-      functions.logger.info("habitosIdByNome", habitosIdByNome)
-
       // Passa por todos os registros desse usuario
       const diarioCollection = admin.firestore().collection("diario")
       const snapshotDiario = await diarioCollection
@@ -78,12 +47,52 @@ export const migrarRegistrosHabitos = functions.https.onRequest(
       if (snapshotDiario.empty) {
         functions.logger.info(`user ${userId} sem registros no diario`);
       } else {
+        // Monta um array indexado pelo nome dos grupos e habitos
+        // eslint-disable-next-line prefer-const
+        let gruposIdByNome: Map<string, string> = new Map<string, string>()
+        const habitosIdByNome: Map<string, string> = new Map<string, string>()
+        const snapshotGrupos = await admin
+          .firestore()
+          .collection(`user/${userId}/gruposDeHabitos`)
+          .get()
+
+        if (snapshotGrupos.empty) {
+          functions.logger.info(`user ${userId} sem gruposDeHabitos`);
+          continue
+        }
+
+        // monta aray de grupos
+        snapshotGrupos.forEach(grupoHabitoSnap => {
+          const grupoHabito = grupoHabitoSnap.data() as GrupoDeHabitos
+          gruposIdByNome.set(grupoHabito.nome.toLowerCase(), grupoHabitoSnap.id)
+        })
+        functions.logger.info("gruposIdByNome", gruposIdByNome)
+
+        // monta array de habitos com base nos grupos
+        for (const grupoHabitoId of gruposIdByNome.values()) {
+          const snapshotHabitosUsuario = await admin
+            .firestore()
+            .collection(`user/${userId}/gruposDeHabitos/${grupoHabitoId}/habitos`)
+            .get()
+          if (snapshotHabitosUsuario.empty) {
+            functions.logger.info(`user/${userId}/gruposDeHabitos/${grupoHabitoId}/habitos: sem hábitos registrados`);
+          } else {
+            snapshotHabitosUsuario.forEach(habitoUsuarioSnap => {
+              const habitoUsuario = habitoUsuarioSnap.data()
+              habitosIdByNome.set(
+                habitoUsuario.nome.toLowerCase(),
+                habitoUsuarioSnap.id
+              )
+            })
+          } 
+        }
+        functions.logger.info("habitosIdByNome", habitosIdByNome)
+
         snapshotDiario.forEach(diarioSnap => {
           const { id } = diarioSnap
           const diario = diarioSnap.data()
-          const { gruposDeHabitos } = diario
-          functions.logger.info(`user ${userId}, grupo de habitos antigo`, gruposDeHabitos);
-          if (!gruposDeHabitos) {
+          const { gruposDeHabitos, registroMigrado } = diario
+          if (!gruposDeHabitos || registroMigrado) {
             return
           }
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -109,14 +118,15 @@ export const migrarRegistrosHabitos = functions.https.onRequest(
               habitos: novosHabitos
             }
           })
-          functions.logger.info("novoGrupoDeHabitos", novoGrupoDeHabitos)
           // Atualiza no banco
-          admin
           diarioCollection
             .doc(id)
-            .set({ gruposDeHabitos: novoGrupoDeHabitos }, { merge: true })
+            .set({ gruposDeHabitos: novoGrupoDeHabitos, registroMigrado: true }, { merge: true })
           updatedDiarios++
         })
+        usersCollection
+          .doc(userId)
+          .set({ registrosMigrados: true }, { merge: true })
         updatedUsers++
       } 
     }
