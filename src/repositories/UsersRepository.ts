@@ -8,7 +8,7 @@ import UserFactory, { IUserFactory } from '../factories/UserFactory'
 import GetAllGruposDeHabitosModelos from 'src/services/grupoDehabitos/GetAllGruposDeHabitosModelos'
 import CreateUserGrupoDeHabitos from 'src/services/user/CreateUserGrupoDeHabitos'
 import GetAllSentimentosModelos from 'src/services/sentimentosModelos/GetAllSentimentosModelos'
-import { ISentimento } from 'src/entities/Sentimento'
+import CreateUserSentimentos from 'src/services/sentimentos/CreateUserSentimento'
 
 interface ICreateParameters {
   nome: string
@@ -38,23 +38,6 @@ export default class UsersRepository implements IUsersRepository {
   constructor() {
     this.collection = firestore.collection('user')
     this.factory = new UserFactory()
-  }
-
-  // Cria subcollection de sentimentos na collection user
-  private async createUserSentimentos(userId: string): Promise<void> {
-    const sentimentosModelos = await new GetAllSentimentosModelos().call()
-    const sentimentosUsuario = firestore.collection(
-      `user/${userId}/sentimentos`
-    )
-
-    sentimentosModelos.forEach(sentimento => {
-      const { id, nome, emojiUnicode } = sentimento
-      sentimentosUsuario.add({
-        idSentimentoModelo: id,
-        nome,
-        emojiUnicode
-      })
-    })
   }
 
   async add({
@@ -94,8 +77,18 @@ export default class UsersRepository implements IUsersRepository {
       })
     })
 
-    await this.createUserSentimentos(user.uid)
+    // Cria subcollection de sentimentos na collection user
+    const sentimentosModelos = await new GetAllSentimentosModelos().call()
+    const serviceCreateSentimento = new CreateUserSentimentos(user.uid)
 
+    sentimentosModelos.forEach(async sentimento => {
+      const { id, nome, emojiUnicode } = sentimento
+      await serviceCreateSentimento.call({
+        idSentimentoModelo: id,
+        nome,
+        emojiUnicode
+      })
+    })
     // Cria o primeiro registro do usuário no diário
     await new CreateOrUpdateRegistro().call({
       date: now,
