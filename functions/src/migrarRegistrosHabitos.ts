@@ -69,7 +69,7 @@ export const migrarRegistrosHabitos = functions.https.onRequest(
         functions.logger.info("gruposIdByNome", gruposIdByNome)
 
         // monta array de habitos com base nos grupos
-        for (const grupoHabitoId of gruposIdByNome.values()) {
+        for (const [grupoHabitoNome, grupoHabitoId] of gruposIdByNome) {
           const snapshotHabitosUsuario = await admin
             .firestore()
             .collection(`user/${userId}/gruposDeHabitos/${grupoHabitoId}/habitos`)
@@ -80,7 +80,7 @@ export const migrarRegistrosHabitos = functions.https.onRequest(
             snapshotHabitosUsuario.forEach(habitoUsuarioSnap => {
               const habitoUsuario = habitoUsuarioSnap.data()
               habitosIdByNome.set(
-                habitoUsuario.nome.toLowerCase(),
+                grupoHabitoNome.toLowerCase() + "/" + habitoUsuario.nome.toLowerCase(),
                 habitoUsuarioSnap.id
               )
             })
@@ -107,9 +107,15 @@ export const migrarRegistrosHabitos = functions.https.onRequest(
             }
             const novosHabitos: string[] = []
             habitos?.forEach((habitoNome: string) => {
-              const habitoId = habitosIdByNome.get(habitoNome.toLowerCase())
+              const habitoId = habitosIdByNome.get(nome.toLowerCase() + "/" + habitoNome.toLowerCase())
               if (habitoId) {
                 novosHabitos.push(habitoId)
+              } else {
+                // Caso não encontre o habito mas seja do grupo personalizado
+                // mantém o registro pois é um id
+                if (nome.toLowerCase() === "personalizados") {
+                  novosHabitos.push(habitoNome)
+                }
               }
             })
             return {
