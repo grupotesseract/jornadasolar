@@ -98,14 +98,16 @@ export default class RegistrosRepository implements IRegistrosRepository {
         ).map(grupoDehabito => {
           const grupoDeHabitoDoUsuario = gruposdeHabitosTemplate.find(
             grupoDehabitoDoTemplate =>
-              grupoDehabitoDoTemplate.nome === grupoDehabito.nome
+              grupoDehabitoDoTemplate.nome.toLowerCase() ===
+                grupoDehabito.nome.toLowerCase() ||
+              grupoDehabitoDoTemplate.id === grupoDehabito.id
           )
           const habitos = grupoDehabito.habitos.map(habito => {
             return (
               grupoDeHabitoDoUsuario.habitos.find(
                 habitoDoUsuario =>
                   habitoDoUsuario.id === habito ||
-                  habitoDoUsuario.nome === habito
+                  habitoDoUsuario.nome.toLowerCase() === habito.toLowerCase()
               ) ||
               habitosPersonalizadosDoUsuario.find(
                 habitoPersonalizado => habitoPersonalizado.id === habito
@@ -113,6 +115,7 @@ export default class RegistrosRepository implements IRegistrosRepository {
             )
           })
           return new GrupoDeHabitos({
+            id: grupoDeHabitoDoUsuario.id || '',
             nome: grupoDehabito.nome,
             habitos: habitos
           })

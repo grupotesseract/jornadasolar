@@ -100,53 +100,6 @@ const useStyles = makeStyles(() =>
   })
 )
 
-export const valoresIniciais = [
-  {
-    nome: 'Personalizados',
-    habitos: []
-  },
-  {
-    nome: 'social',
-    habitos: []
-  },
-  {
-    nome: 'Lazer',
-    habitos: []
-  },
-  {
-    nome: 'Atividade física',
-    habitos: []
-  },
-  {
-    nome: 'sono',
-    habitos: []
-  },
-  {
-    nome: 'Alimentação',
-    habitos: []
-  },
-  {
-    nome: 'Saúde',
-    habitos: []
-  },
-  {
-    nome: 'Profissional',
-    habitos: []
-  },
-  {
-    nome: 'Tarefa',
-    habitos: []
-  },
-  {
-    nome: 'Sexo',
-    habitos: []
-  },
-  {
-    nome: 'Vício',
-    habitos: []
-  }
-]
-
 const HabitoLabel = ({ modeDeEdicaoAtivo, href, children }) => {
   if (modeDeEdicaoAtivo) {
     return <Link href={href}>{children}</Link>
@@ -196,7 +149,7 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
     getGrupoDeHabitosTemplate()
   }, [])
 
-  const handleChange = ({ nomeDoGrupo, habito, checked }) => {
+  const handleChange = ({ idDoGrupo, nomeDoGrupo, habito, checked }) => {
     // Clona grupos de hábitos que estão no values para atualizar a referência (imutábilidade)
     const novosGruposDeHabitos = Array.from(values, value => ({ ...value }))
 
@@ -211,7 +164,9 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
     }
 
     const grupoDeHabitosAlterado = novosGruposDeHabitos.find(
-      value => value.nome === nomeDoGrupo
+      value =>
+        value.id === idDoGrupo ||
+        value.nome.toLowerCase() === nomeDoGrupo.toLowerCase()
     )
 
     let habitosAlterados
@@ -219,7 +174,9 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
       habitosAlterados = [...grupoDeHabitosAlterado.habitos, habito]
     } else {
       habitosAlterados = grupoDeHabitosAlterado.habitos.filter(
-        value => value.nome !== habito?.nome
+        value =>
+          value.id !== habito?.id ||
+          value.nome.toLowerCase() !== habito?.nome.toLowerCase()
       )
     }
 
@@ -231,15 +188,26 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
     return <Loading />
   }
 
-  const handleOnClickEditarGrupo = nomeDoGrupo => {
-    if (gruposEmModoEdicao.includes(nomeDoGrupo)) {
+  const handleOnClickEditarGrupo = (idDoGrupo, nomeDoGrupo) => {
+    if (
+      gruposEmModoEdicao.some(
+        grupoEmModoEdicao =>
+          grupoEmModoEdicao.id === idDoGrupo ||
+          grupoEmModoEdicao.nome.toLowerCase() === nomeDoGrupo.toLowerCase()
+      )
+    ) {
       const grupoEmModoEdicao = gruposEmModoEdicao.filter(
-        nomeDoGrupoEmEdicao => nomeDoGrupoEmEdicao !== nomeDoGrupo
+        grupoEmEdicao =>
+          grupoEmEdicao.id !== idDoGrupo ||
+          grupoEmEdicao.nome.toLowerCase() !== nomeDoGrupo.toLowerCase()
       )
       setGruposEmModoEdicao(grupoEmModoEdicao)
       return
     }
-    setGruposEmModoEdicao([...gruposEmModoEdicao, nomeDoGrupo])
+    setGruposEmModoEdicao([
+      ...gruposEmModoEdicao,
+      { nome: nomeDoGrupo, id: idDoGrupo }
+    ])
   }
 
   return (
@@ -247,9 +215,16 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
       <Box display="flex">
         <Box className={classes.container}>
           {gruposDeHabitosTemplate.map(grupo => {
-            const isModoDeEdicaoAtivo = gruposEmModoEdicao.includes(grupo.nome)
+            const isModoDeEdicaoAtivo = gruposEmModoEdicao.some(
+              grupoEmModoEdicao =>
+                grupoEmModoEdicao.id === grupo.id ||
+                grupoEmModoEdicao.nome.toLowerCase() ===
+                  grupo.nome.toLowerCase()
+            )
             const indexGrupo = values.findIndex(
-              value => value.nome === grupo.nome
+              value =>
+                value.id === grupo.id ||
+                value.nome.toLowerCase() === grupo.nome.toLowerCase()
             )
             return (
               <Box className={classes.grupo} key={`nome-habito-${grupo.nome}`}>
@@ -269,7 +244,9 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
                       <MaterialUiLink
                         href="#"
                         component="button"
-                        onClick={() => handleOnClickEditarGrupo(grupo.nome)}
+                        onClick={() =>
+                          handleOnClickEditarGrupo(grupo.id, grupo.nome)
+                        }
                         style={{ position: 'initial' }}
                         underline="none"
                       >
@@ -310,6 +287,7 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
                         color="primary"
                         onChange={event =>
                           handleChange({
+                            idDoGrupo: grupo.id,
                             nomeDoGrupo: grupo.nome,
                             habito: habito,
                             checked: event.target.checked
