@@ -1,7 +1,9 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { Checkbox, FormGroup, withStyles } from '@material-ui/core'
-import Sentimento, { sentimentos } from './Sentimento'
+import Sentimento from './Sentimento'
+import GetSentimentosByUserId from 'src/services/sentimentos/GetSentimentosByUserId'
+import GetAllSentimentosModelos from 'src/services/sentimentosModelos/GetAllSentimentosModelos'
 
 const StyledCheckbox = withStyles({
   root: {
@@ -45,13 +47,25 @@ const useStyles = makeStyles(() =>
 interface ISentimentosProps {
   onChange: (event) => void
   values: Array<unknown>
+  userId?: string
 }
 
 const SentimentosCheckboxGroup: FC<ISentimentosProps> = ({
   onChange,
-  values
+  values,
+  userId
 }) => {
   const classes = useStyles()
+  const [sentimentos, setSentimentos] = useState([])
+  useEffect(() => {
+    const getSentimentosUsuario = async () => {
+      setSentimentos(await new GetSentimentosByUserId(userId).call())
+    }
+    const getSentimetosModelos = async () => {
+      setSentimentos(await new GetAllSentimentosModelos().call())
+    }
+    userId ? getSentimentosUsuario() : getSentimetosModelos()
+  }, [])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
@@ -67,9 +81,11 @@ const SentimentosCheckboxGroup: FC<ISentimentosProps> = ({
       {sentimentos.map(sentimento => (
         <StyledCheckbox
           key={`sentimento-${sentimento.nome}`}
-          icon={<Sentimento nome={sentimento.nome} className={classes.label} />}
+          icon={
+            <Sentimento sentimento={sentimento} className={classes.label} />
+          }
           checkedIcon={
-            <Sentimento nome={sentimento.nome} className={classes.label} />
+            <Sentimento sentimento={sentimento} className={classes.label} />
           }
           value={sentimento.nome}
           name={sentimento.nome}

@@ -1,5 +1,4 @@
 import React, { FC } from 'react'
-import { sentimentos as listaDeSentimentosComEmojis } from '../diario/Sentimento'
 import { IRegistro } from '../../entities/Registro'
 import GraficoBase from './GraficoBase'
 
@@ -9,16 +8,14 @@ interface IProps {
 }
 
 const GraficoSentimentos: FC<IProps> = ({ diarios, mesAtual }) => {
-  const sentimentosDoMes = diarios
-    ?.map(diario => diario.sentimentos)
-    .flat()
-    .filter(sentimento => Boolean(sentimento))
+  const sentimentosDoMes = diarios?.map(diario => diario.sentimentos).flat()
 
+  const nomes = sentimentosDoMes.map(sentimento => sentimento.nome)
   return (
     <GraficoBase
-      registrosDoMes={sentimentosDoMes}
+      registrosDoMes={nomes}
       mesAtual={mesAtual}
-      listaComEmojis={listaDeSentimentosComEmojis}
+      listaComEmojis={sentimentosDoMes}
       titulo="Acompanhe a frequência de cada emoção ao longo do mês:"
     />
   )

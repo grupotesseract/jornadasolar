@@ -26,7 +26,10 @@ const Sentimentos: FC<IProps> = ({ user, userId, date }) => {
   })
 
   useEffect(() => {
-    setSentimentos(registroDoDia?.sentimentos || [])
+    const nomesSentimentos = registroDoDia?.sentimentos.map(
+      sentimento => sentimento.nome
+    )
+    setSentimentos(nomesSentimentos || [])
   }, [registroDoDia])
 
   const onSalvarClick = async () => {
@@ -45,6 +48,7 @@ const Sentimentos: FC<IProps> = ({ user, userId, date }) => {
       <SentimentosCheckboxGroup
         values={sentimentos}
         onChange={setSentimentos}
+        userId={userId}
       />
     </EdicaoDiario>
   )
