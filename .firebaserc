@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "jornadasolar-dev",
+    "production": "jornadasolar-app"
+  }
+}

@@ -11,7 +11,6 @@ import RadioGroup from '../RadioGroup'
 import { useRouter } from 'next/dist/client/router'
 import { getMessageFromCode } from '../../utils/firebaseAuth'
 import CreateUser from '../../services/user/CreateUser'
-import SignInUser from '../../services/user/SignInUser'
 import TemLivroOptions from '../../enums/user/TemLivroOptions'
 import { analytics } from '../firebase/firebase.config'
 
@@ -44,7 +43,7 @@ const DadosAutenticacao: FC = () => {
   const handleOnClickButton = async () => {
     setLoading(true)
     try {
-      const user = await new CreateUser().call({
+      await new CreateUser().call({
         nome,
         email,
         password,
@@ -53,7 +52,6 @@ const DadosAutenticacao: FC = () => {
         sentimentos,
         gruposDeHabitos
       })
-      await new SignInUser().call(user.email, user.password)
       analytics?.logEvent('sign_up')
       router.push('/app/diario')
     } catch (e) {

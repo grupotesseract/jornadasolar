@@ -22,6 +22,9 @@ import getSigno from '../../../utils/getSigno'
 import theme from '../../../../theme'
 import { appVersion } from '../../../utils/appVersion'
 import Link from 'next/link'
+import { IUser } from 'src/entities/User'
+import Novidade from 'src/components/Novidade'
+import NovidadeNotificacao from 'src/components/NovidadeNotificacao'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -71,11 +74,12 @@ const useStyles = makeStyles(() =>
 )
 
 interface IDiarioProps {
+  user: IUser
   userId: string
   userName: string
 }
 
-const Diario: FC<IDiarioProps> = ({ userId, userName }) => {
+const Diario: FC<IDiarioProps> = ({ user, userId, userName }) => {
   const [mes, setMes] = useState(new Date())
   const classes = useStyles()
   const dias = eachDayOfInterval({
@@ -108,6 +112,10 @@ const Diario: FC<IDiarioProps> = ({ userId, userName }) => {
   const signo = getSigno(new Date())
   const faseDaLua = getFaseDaLua(new Date())
 
+  const podePedirNotificacao = Notification.permission === 'default'
+  const pedeNotificacao = <NovidadeNotificacao />
+  const mostraNovidades = <Novidade path="diario" user={user} />
+
   return (
     <PageWithBottomNavigation currentPage="registro">
       <Container maxWidth="xs" className={classes.container}>
@@ -115,10 +123,8 @@ const Diario: FC<IDiarioProps> = ({ userId, userName }) => {
           <Box className={classes.background}></Box>
         </Box>
         <Box>
-          <Link href="/app/configuracoes" passHref>
-            <Typography className={classes.appVersion}>
-              versão {appVersion}
-            </Typography>
+          <Link href="/app/perfil" passHref>
+            <Typography className={classes.appVersion}>Perfil</Typography>
           </Link>
           <Saudacao className={classes.nome} nome={userName} />
           <Typography className={classes.mensagem}>
@@ -130,6 +136,8 @@ const Diario: FC<IDiarioProps> = ({ userId, userName }) => {
         <Box mt={8} mr={2} ml={2}>
           <MonthNavigator mes={mes} onClick={setMes} />
         </Box>
+
+        {podePedirNotificacao ? pedeNotificacao : mostraNovidades}
 
         {loading ? <Loading /> : registros}
       </Container>

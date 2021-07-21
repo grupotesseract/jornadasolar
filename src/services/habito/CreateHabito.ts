@@ -9,7 +9,7 @@ type Parameters = {
 }
 
 interface ICreate {
-  call(params: Parameters): boolean
+  call(params: Parameters): Promise<string>
 }
 
 export default class Create implements ICreate {
@@ -19,7 +19,7 @@ export default class Create implements ICreate {
     this.habitosRepository = new HabitosRepository()
   }
 
-  call(attributes: Parameters): boolean {
+  call(attributes: Parameters): Promise<string> {
     return this.habitosRepository.add(attributes)
   }
 }

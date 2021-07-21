@@ -9,6 +9,8 @@ import Loading from '../../components/Loading'
 import { withUser } from '../../components/hocs/withAuth'
 import useRegistrosByMonth from '../../hooks/useRegistrosByMonth'
 import theme from '../../../theme'
+import Novidade from 'src/components/Novidade'
+import { IUser } from 'src/entities/User'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -41,9 +43,10 @@ const useStyles = makeStyles(() =>
 
 interface IProps {
   userId?: string
+  user?: IUser
 }
 
-const Graficos: FC<IProps> = ({ userId }) => {
+const Graficos: FC<IProps> = ({ userId, user }) => {
   const [mes, setMes] = useState(new Date())
   const [currentTab, setCurrentTab] = React.useState('sentimentos')
   const classes = useStyles()
@@ -69,6 +72,7 @@ const Graficos: FC<IProps> = ({ userId }) => {
       <Box mt="17px" width="100%">
         <MonthNavigator mes={mes} onClick={setMes} />
       </Box>
+      <Novidade path="graficos" user={user} />
       <Box display="flex" justifyContent="center" mt="34px">
         <Tabs
           value={currentTab}

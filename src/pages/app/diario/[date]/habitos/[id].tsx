@@ -3,13 +3,21 @@ import { withUser } from 'src/components/hocs/withAuth'
 import { NextPageContext } from 'next'
 import GetHabitoById from 'src/services/habito/GetHabitoById'
 import HabitoForm from 'src/components/diario/HabitoForm'
-
 interface IProps {
+  userId: string
   date: string
   id: string
+  grupoId: string
+  idDoGrupoModelo: string
 }
 
-const NovoHabito: FC<IProps> = ({ date, id }) => {
+const EdicaoDoHabito: FC<IProps> = ({
+  date,
+  id,
+  grupoId,
+  userId,
+  idDoGrupoModelo
+}) => {
   const [habito, setHabito] = useState(null)
 
   useEffect(() => {
@@ -21,27 +29,39 @@ const NovoHabito: FC<IProps> = ({ date, id }) => {
   }, [])
 
   return (
-    <HabitoForm habito={habito} date={date} formTitulo="Edição do hábito" />
+    <HabitoForm
+      habito={habito}
+      date={date}
+      formTitulo="Edição do hábito"
+      grupoDeHabitoId={grupoId}
+      userId={userId}
+      idDoGrupoModelo={idDoGrupoModelo}
+    />
   )
 }
-
-interface INovoHabitoWithAuthProps {
+interface IEdicaoDoHabitoWithAuthProps {
   date: string
   id: string
+  grupoId: string
+  idDoGrupoModelo: string
 }
 
-const NovoHabitoWithAuth = withUser(NovoHabito)
+const EdicaoDoHabitoWithAuth = withUser(EdicaoDoHabito)
 
-NovoHabitoWithAuth.getInitialProps = (
+EdicaoDoHabitoWithAuth.getInitialProps = (
   context: NextPageContext
-): INovoHabitoWithAuthProps => {
+): IEdicaoDoHabitoWithAuthProps => {
   const date = context.query.date as string
   const id = context.query.id as string
+  const grupoId = context.query.grupoId as string
+  const idDoGrupoModelo = context.query.idDoGrupoModelo as string
 
   return {
     date,
-    id
+    id,
+    grupoId,
+    idDoGrupoModelo
   }
 }
 
-export default NovoHabitoWithAuth
+export default EdicaoDoHabitoWithAuth
