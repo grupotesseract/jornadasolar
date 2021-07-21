@@ -49,7 +49,7 @@ const useStyles = makeStyles(() =>
       marginBottom: 10,
       padding: '0 8px',
       maxWidth: '300px',
-      height: 260,
+      height: 280,
       borderRadius: '4px',
       background: '#151515',
       boxShadow: '1px 4px 10px rgba(0, 0, 0, 0.15)'
@@ -131,8 +131,7 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
     const getGrupoDeHabitosTemplate = async () => {
       const newGruposDeHabitosTemplate = await new GetGrupoDeHabitosTemplateByUserId().call(
         {
-          userId,
-          allowPersonalizados: !isCadastro
+          userId
         }
       )
       if (isCadastro) {
@@ -239,25 +238,22 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
                     <Typography className={classes.nome}>
                       {grupo.nome}
                     </Typography>
-
-                    {grupo.nome === 'Personalizados' ? (
-                      <MaterialUiLink
-                        href="#"
-                        component="button"
-                        onClick={() =>
-                          handleOnClickEditarGrupo(grupo.id, grupo.nome)
-                        }
-                        style={{ position: 'initial' }}
-                        underline="none"
+                    <MaterialUiLink
+                      href="#"
+                      component="button"
+                      onClick={() =>
+                        handleOnClickEditarGrupo(grupo.id, grupo.nome)
+                      }
+                      style={{ position: 'initial' }}
+                      underline="none"
+                    >
+                      <Typography
+                        color="primary"
+                        className={classes.linkEditar}
                       >
-                        <Typography
-                          color="primary"
-                          className={classes.linkEditar}
-                        >
-                          {isModoDeEdicaoAtivo ? 'Concluir' : 'Editar'}
-                        </Typography>
-                      </MaterialUiLink>
-                    ) : null}
+                        {isModoDeEdicaoAtivo ? 'Concluir' : 'Editar'}
+                      </Typography>
+                    </MaterialUiLink>
                   </Grid>
                   {grupo.habitos?.map(habito => (
                     <Grid

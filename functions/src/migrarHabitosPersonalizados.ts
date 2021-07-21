@@ -11,21 +11,21 @@ import { Habito } from "./types/Habito";
 export const migrarHabitosPersonalizados = functions.https.onRequest(async (request, response) => {
   let updatedHabitos = 0 // Contador para exibir no retorno
 
-  // Passa por todos os usuários 
-  const usersCollection = admin.firestore().collection("user")
-  const snapshotUsers = await usersCollection.get()
-  const usersId: Array<string> = []
-  snapshotUsers.forEach(userSnap => {
-    usersId.push(userSnap.id)
+  // Busca os hábitos personalizados
+  const snapshotHabitosPersonalizados = await admin
+    .firestore()
+    .collection("habitos")
+    .get()
+
+  const habitos: Array<Habito> = []
+  snapshotHabitosPersonalizados.forEach(habitoPersonalizadoSnap => {
+    const habitoPersonalizado = habitoPersonalizadoSnap.data() as Habito
+    habitoPersonalizado.id = habitoPersonalizadoSnap.id
+    habitos.push(habitoPersonalizado)
   })
 
-  for (const userId of usersId) {
-    // Busca os hábitos personalizados
-    const snapshotHabitosPersonalizados = await admin
-      .firestore()
-      .collection("habitos")
-      .where("userId", "==",userId)
-      .get()
+  for (const habitoPersonalizado of habitos) {
+    const { userId, id, ...habitoData } = habitoPersonalizado
 
     // Busca o grupo Personalizados
     const snapshotGrupoPersonalizado = await admin
@@ -46,44 +46,34 @@ export const migrarHabitosPersonalizados = functions.https.onRequest(async (requ
       grupoPersonalizadoId = snapshotGrupoPersonalizado.docs[0].id
       functions.logger.info("personalizado econtrado", { grupoPersonalizadoId });
     }
+    const habitoQuerySnapshot = await admin
+      .firestore()
+      .collection(`user/${userId}/gruposDeHabitos/${grupoPersonalizadoId}/habitos`)
+      .where("nome", "==", habitoPersonalizado.nome)
+      .limit(1)
+      .get();
 
-    const habitos: Array<Habito> = []
-    snapshotHabitosPersonalizados.forEach(habitoPersonalizadoSnap => {
-      const habitoPersonalizado = habitoPersonalizadoSnap.data() as Habito
-      habitoPersonalizado.id = habitoPersonalizadoSnap.id
-      habitos.push(habitoPersonalizado)
-    })
-    for (const habitoPersonalizado of habitos) {
-      const { userId, id, ...habitoData } = habitoPersonalizado
-      const habitoQuerySnapshot = await admin
-          .firestore()
-          .collection(`user/${userId}/gruposDeHabitos/${grupoPersonalizadoId}/habitos`)
-          .where("nome", "==", habitoPersonalizado.nome)
-          .limit(1)
-          .get();
-
-        if (habitoQuerySnapshot.empty) {
-          admin
-            .firestore()
-            .collection(`user/${userId}/gruposDeHabitos/${grupoPersonalizadoId}/habitos`)
-            .doc(String(id))
-            .set(habitoData);
-            functions.logger.info("habito adicionado", { habitoPersonalizado, userId, grupoPersonalizadoId });
-            updatedHabitos++
-        } else {
-          admin
-            .firestore()
-            .collection(`user/${userId}/gruposDeHabitos/${grupoPersonalizadoId}/habitos`)
-            .doc(habitoQuerySnapshot.docs[0].id)
-            .set(
-              habitoData,
-              {merge: true}
-            );
-            functions.logger.info("habito set merge: true", { habitoPersonalizado, userId, grupoPersonalizadoId });
-            updatedHabitos++
-        }
+    if (habitoQuerySnapshot.empty) {
+      admin
+        .firestore()
+        .collection(`user/${userId}/gruposDeHabitos/${grupoPersonalizadoId}/habitos`)
+        .doc(String(id))
+        .set(habitoData);
+        functions.logger.info("habito adicionado", { habitoPersonalizado, userId, grupoPersonalizadoId });
+        updatedHabitos++
+    } else {
+      admin
+        .firestore()
+        .collection(`user/${userId}/gruposDeHabitos/${grupoPersonalizadoId}/habitos`)
+        .doc(habitoQuerySnapshot.docs[0].id)
+        .set(
+          habitoData,
+          {merge: true}
+        );
+        functions.logger.info("habito set merge: true", { habitoPersonalizado, userId, grupoPersonalizadoId });
+        updatedHabitos++
     }
   }
 
-  response.send({ message: `Total de ${updatedHabitos} hábitos migrados, distribuídos para um total de ${usersId.length} usuários` });
+  response.send({ message: `Total de ${updatedHabitos} hábitos migrados` });
 });

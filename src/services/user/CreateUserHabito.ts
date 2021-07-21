@@ -5,20 +5,16 @@ interface Parameters {
   userId: string
   habito: IHabito
   grupoDeHabitoId: string
-  idDoHabitoPersonalizado: string
 }
 
 const CreateUserHabitos = async ({
   userId,
   habito,
-  grupoDeHabitoId,
-  idDoHabitoPersonalizado
+  grupoDeHabitoId
 }: Parameters) => {
-  // TODO: Após migrar usar .add ao inves de .doc().set() já que não teremos o idDoHabitoPersonalizado
   await firestore
     .collection(`user/${userId}/gruposDeHabitos/${grupoDeHabitoId}/habitos`)
-    .doc(idDoHabitoPersonalizado)
-    .set({
+    .add({
       idDoHabitoModelo: habito.id || null,
       nome: habito.nome,
       emojiUnicode: habito.emojiUnicode,

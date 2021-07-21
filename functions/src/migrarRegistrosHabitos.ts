@@ -14,7 +14,9 @@ export const migrarRegistrosHabitos = functions.https.onRequest(
     let updatedUsers = 0 // Contador para exibir no retorno
     let updatedDiarios = 0 // Contador para exibir no retorno
 
-    const userIdParam = request.query?.userid;
+    const userIdParam = request.query?.userid
+    const limite = Number(request.query?.userslimite) || 100
+    const pagina = Number(request.query?.pagina) || 0
     const usersCollection = admin.firestore().collection("user")
     const usersId: Array<string> = []
     if (userIdParam) {
@@ -32,9 +34,12 @@ export const migrarRegistrosHabitos = functions.https.onRequest(
         }
       })
     }
+    usersId.sort()
+    const usersIdPaginado = usersId.slice(pagina * limite, (pagina * limite) + limite)
+    functions.logger.info(`Aplicando migração para ${usersIdPaginado.length}, iniciando da pagina ${pagina} como limite de ${limite} users`)
+    functions.logger.info("usersPaginado", usersIdPaginado)
 
-    functions.logger.info("migração dos usuários", usersId)
-    for (const userId of usersId) {
+    for (const userId of usersIdPaginado) {
       functions.logger.info(`iniciando Migração de registros para o user ${userId}`)
       if(!userId) {
         continue
@@ -137,7 +142,8 @@ export const migrarRegistrosHabitos = functions.https.onRequest(
       } 
     }
     response.send({
-      message: `Foram alterado ${updatedDiarios} registros de diário de ${updatedUsers} usuários`
+      message: `Foram alterado ${updatedDiarios} registros de diário de ${updatedUsers} usuários`,
+      usersIdPaginado
     })
   }
 )

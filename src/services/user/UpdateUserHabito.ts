@@ -14,7 +14,6 @@ const UpdateUserHabito = async ({
   grupoDeHabitoId,
   id
 }: Parameters) => {
-  console.log('UPDATE', userId, habito, grupoDeHabitoId, id)
   await firestore
     .collection(`user/${userId}/gruposDeHabitos/${grupoDeHabitoId}/habitos`)
     .doc(id)
