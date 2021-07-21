@@ -30,7 +30,8 @@ const useStyles = makeStyles(() =>
     checkboxFormGroup: {
       display: 'flex',
       flexDirection: 'row',
-      flexWrap: 'wrap'
+      flexWrap: 'wrap',
+      marginTop: '16px'
     },
     label: {
       marginLeft: 8,

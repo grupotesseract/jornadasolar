@@ -6,13 +6,11 @@ import { withUser } from '../../../../../components/hocs/withAuth'
 import CreateOrUpdateRegistro from '../../../../../services/registro/CreateOrUpdateRegistro'
 import EdicaoDiario from '../../../../../components/templates/EdicaoDiario'
 import useRegistroByDate from '../../../../../hooks/useRegistroByDate'
-import HabitosCheckboxGroup, {
-  valoresIniciais
-} from '../../../../../components/diario/HabitosCheckboxGroup'
-import { useRouter } from 'next/router'
+import HabitosCheckboxGroup from '../../../../../components/diario/HabitosCheckboxGroup'
 import { analytics } from '../../../../../components/firebase/firebase.config'
 import Novidade from '../../../../../components/Novidade'
 import { IUser } from 'src/entities/User'
+import { getGrupoDeHabitosIniciais } from 'src/utils/getGrupoDeHabitosIniciais'
 
 interface IProps {
   date: string
@@ -21,7 +19,6 @@ interface IProps {
 
 const Habitos: FC<IProps> = ({ date, user }) => {
   const dia = parse(date, 'd-M-yyyy', new Date())
-  const router = useRouter()
   const userId = user?.id
 
   const { loading, registroDoDia } = useRegistroByDate({
@@ -29,7 +26,15 @@ const Habitos: FC<IProps> = ({ date, user }) => {
     date: dia
   })
 
-  const [gruposDeHabitos, setGruposDeHabitos] = useState(valoresIniciais)
+  const [gruposDeHabitos, setGruposDeHabitos] = useState([])
+
+  useEffect(() => {
+    const buscarValoresIniciais = async () => {
+      const valoresIniciais = await getGrupoDeHabitosIniciais(userId)
+      setGruposDeHabitos(valoresIniciais)
+    }
+    buscarValoresIniciais()
+  }, [])
 
   useEffect(() => {
     if (registroDoDia?.gruposDeHabitos?.length > 0) {
@@ -47,18 +52,13 @@ const Habitos: FC<IProps> = ({ date, user }) => {
     analytics?.logEvent('add_habitos')
   }
 
-  const handleAdicionarHabito = () => {
-    router.push(`/app/diario/${date}/habitos/novo`)
-  }
-
   return (
     <EdicaoDiario date={date} onClick={onSalvarClick} loading={loading}>
-      <Novidade slug="habitos-personalizados" user={user} />
-      <Box mt="46px" maxWidth={360}>
+      <Novidade path="habitos" user={user} />
+      <Box mt={2} maxWidth={360}>
         <HabitosCheckboxGroup
           onChange={setGruposDeHabitos}
           values={gruposDeHabitos}
-          onAdicionarHabitoClick={handleAdicionarHabito}
           userId={userId}
           date={date}
         />

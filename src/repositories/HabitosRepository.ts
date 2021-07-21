@@ -9,7 +9,7 @@ export interface ICreateParameters {
 }
 
 export interface IHabitosRepository {
-  add(params): boolean
+  add(params): Promise<string>
   getAllByUserId(userId: string): Promise<Array<IHabito>>
   update(id, values): boolean
   getById(id: string): Promise<IHabito>
@@ -22,10 +22,10 @@ export default class HabitosRepository implements IHabitosRepository {
     this.collection = firestore.collection('habitos')
   }
 
-  add(attributes: ICreateParameters): boolean {
+  async add(attributes: ICreateParameters): Promise<string> {
     try {
-      this.collection.add(attributes)
-      return true
+      const { id } = await this.collection.add(attributes)
+      return id
     } catch (e) {
       throw new Error('Ocorreu um erro inesperado ao criar o hábito')
     }

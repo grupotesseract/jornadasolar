@@ -6,6 +6,7 @@ interface IhabitoAttributes {
   userId?: string
   nome: string
   emojiUnicode: Array<string>
+  posicao?: number
 }
 
 export type IHabito = IhabitoAttributes
@@ -15,12 +16,14 @@ export default class Habito implements IHabito {
   public userId: string
   public nome: string
   public emojiUnicode: Array<string>
+  public posicao: number
 
-  constructor({ id, userId, nome, emojiUnicode }: IhabitoAttributes) {
+  constructor({ id, userId, nome, emojiUnicode, posicao }: IhabitoAttributes) {
     this.id = id
     this.userId = userId
     this.nome = nome
     this.emojiUnicode = emojiUnicode
+    this.posicao = posicao
   }
 
   get emoji(): string {
