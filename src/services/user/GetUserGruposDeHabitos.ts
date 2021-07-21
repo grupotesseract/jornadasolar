@@ -26,12 +26,16 @@ const GetUserGruposDeHabitos = async (
     })
 
     for (let index = 0; index < gruposDeHabitos.length; index++) {
+      const nomeOuPosicao =
+        gruposDeHabitos[index].nome.toLowerCase() === 'personalizados'
+          ? 'nome'
+          : 'posicao'
       const grupoDeHabitos = gruposDeHabitos[index]
       const habitosSnapshot = await firestore
         .collection(`user/${userId}/gruposDeHabitos/`)
         .doc(grupoDeHabitos.id)
         .collection('habitos')
-        .orderBy('posicao', 'asc')
+        .orderBy(nomeOuPosicao, 'asc')
         .get()
       const habitos = []
       habitosSnapshot.forEach(habitoSnapshot => {
