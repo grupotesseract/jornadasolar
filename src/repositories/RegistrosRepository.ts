@@ -102,18 +102,19 @@ export default class RegistrosRepository implements IRegistrosRepository {
                 grupoDehabito.nome.toLowerCase() ||
               grupoDehabitoDoTemplate.id === grupoDehabito.id
           )
-          const habitos = grupoDehabito.habitos.map(habito => {
-            return (
-              grupoDeHabitoDoUsuario.habitos.find(
-                habitoDoUsuario =>
-                  habitoDoUsuario.id === habito ||
-                  habitoDoUsuario.nome.toLowerCase() === habito.toLowerCase()
-              ) ||
-              habitosPersonalizadosDoUsuario.find(
-                habitoPersonalizado => habitoPersonalizado.id === habito
+          const habitos =
+            grupoDehabito.habitos?.map(habito => {
+              return (
+                grupoDeHabitoDoUsuario.habitos.find(
+                  habitoDoUsuario =>
+                    habitoDoUsuario.id === habito ||
+                    habitoDoUsuario.nome.toLowerCase() === habito.toLowerCase()
+                ) ||
+                habitosPersonalizadosDoUsuario.find(
+                  habitoPersonalizado => habitoPersonalizado.id === habito
+                )
               )
-            )
-          })
+            }) || []
           return new GrupoDeHabitos({
             id: grupoDeHabitoDoUsuario.id || '',
             nome: grupoDehabito.nome,
