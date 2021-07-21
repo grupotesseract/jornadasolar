@@ -108,7 +108,7 @@ export default class RegistrosRepository implements IRegistrosRepository {
                 grupoDeHabitoDoUsuario.habitos.find(
                   habitoDoUsuario =>
                     habitoDoUsuario.id === habito ||
-                    habitoDoUsuario.nome === habito
+                    habitoDoUsuario.nome.toLowerCase() === habito.toLowerCase()
                 ) ||
                 habitosPersonalizadosDoUsuario.find(
                   habitoPersonalizado => habitoPersonalizado.id === habito
