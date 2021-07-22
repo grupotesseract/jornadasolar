@@ -37,15 +37,15 @@ export const preencheGruposDeHabitosUsers = functions.https.onRequest(async (req
     })
   }
 
-  functions.logger.info("gruposModelo", { gruposDeHabitos })
-
   const usersCollection = admin.firestore().collection("user")
-  const snapshotUsers = await usersCollection.get()
   const usersId: Array<string> = []
+  const snapshotUsers = await usersCollection.get()
   snapshotUsers.forEach(userSnap => {
     usersId.push(userSnap.id)
   })
 
+  functions.logger.info("lista de usuários que passarão pela migração", usersId)
+  
   for (const userId of usersId) {
   // Percorre todos os usuários
     const snapshotGruposUser = await admin
@@ -54,11 +54,10 @@ export const preencheGruposDeHabitosUsers = functions.https.onRequest(async (req
       .get()
     // Caso não tenha grupoDeHabitos, insere hábitos
     if (snapshotGruposUser.empty) {
+      functions.logger.info(`inserindo grupos no user ${userId}`)
       for (const grupo of gruposDeHabitos) {
-        functions.logger.info(`inserindo grupo no user ${userId}`, { grupo })
         const { habitos, id, ...grupoProps } = grupo
         const grupoRef = await usersCollection.doc(userId).collection("gruposDeHabitos").add({ ...grupoProps, idDoGrupoModelo: id })
-        functions.logger.info(`inserindo habitos no user ${userId}`, { habitos })
         habitos.forEach(({ id, ...habito }: Habito) => {
           admin
             .firestore()
