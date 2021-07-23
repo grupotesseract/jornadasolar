@@ -61,13 +61,14 @@ const SentimentosCheckboxGroup: FC<ISentimentosProps> = ({
     const getSentimentosUsuario = async () => {
       setSentimentos(await new GetSentimentosByUserId(userId).call())
     }
-    const getSentimetosModelos = async () => {
+    const getSentimentosModelos = async () => {
       setSentimentos(await new GetAllSentimentosModelos().call())
     }
-    userId ? getSentimentosUsuario() : getSentimetosModelos()
+    userId ? getSentimentosUsuario() : getSentimentosModelos()
   }, [])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('array de sentimentos', sentimentos)
     if (event.target.checked) {
       onChange([...values, event.target.value])
     } else {
@@ -87,9 +88,9 @@ const SentimentosCheckboxGroup: FC<ISentimentosProps> = ({
           checkedIcon={
             <Sentimento sentimento={sentimento} className={classes.label} />
           }
-          value={sentimento.nome}
+          value={sentimento.id}
           name={sentimento.nome}
-          checked={values.includes(sentimento.nome)}
+          checked={values.includes(sentimento.id)}
           onChange={handleChange}
         />
       ))}

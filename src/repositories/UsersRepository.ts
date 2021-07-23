@@ -10,6 +10,7 @@ import CreateUserGrupoDeHabitos from 'src/services/user/CreateUserGrupoDeHabitos
 import GetAllSentimentosModelos from 'src/services/sentimentosModelos/GetAllSentimentosModelos'
 import CreateUserSentimentos from 'src/services/sentimentos/CreateUserSentimento'
 import GetUserGruposDeHabitos from 'src/services/user/GetUserGruposDeHabitos'
+import GetSentimentosByUserId from 'src/services/sentimentos/GetSentimentosByUserId'
 
 interface ICreateParameters {
   nome: string
@@ -78,18 +79,6 @@ export default class UsersRepository implements IUsersRepository {
       })
     })
 
-    // Cria subcollection de sentimentos na collection user
-    const sentimentosModelos = await new GetAllSentimentosModelos().call()
-    const serviceCreateSentimento = new CreateUserSentimentos(user.uid)
-
-    sentimentosModelos.forEach(async sentimento => {
-      const { id, nome, emojiUnicode } = sentimento
-      await serviceCreateSentimento.call({
-        idSentimentoModelo: id,
-        nome,
-        emojiUnicode
-      })
-    })
     // Busca grupos de hábitos do usuário e atualiza o gruposDeHabitos do registro com os ids
     const gruposDeHabitosDoUsuario = await GetUserGruposDeHabitos(user.uid)
     const gruposDeHabitosAtualizados = gruposDeHabitos.map(grupoDeHabito => {
@@ -116,11 +105,36 @@ export default class UsersRepository implements IUsersRepository {
       }
     })
 
+    // Cria subcollection de sentimentos na collection user
+    const sentimentosModelos = await new GetAllSentimentosModelos().call()
+    const serviceCreateSentimento = new CreateUserSentimentos(user.uid)
+
+    sentimentosModelos.forEach(async sentimento => {
+      const { id, nome, emojiUnicode } = sentimento
+      await serviceCreateSentimento.call({
+        idSentimentoModelo: id,
+        nome,
+        emojiUnicode
+      })
+    })
+
+    const sentimentosDoUsuario = await new GetSentimentosByUserId(
+      user.uid
+    ).call()
+    console.log('sentimentosDoUsuario', sentimentosDoUsuario)
+    const sentimentosAtualizado = sentimentos.map(sentimento => {
+      const sentimentoUsuario = sentimentosDoUsuario.find(
+        sentimentoUser => sentimentoUser.idSentimentoModelo === sentimento
+      )
+      return sentimentoUsuario.id
+    })
+    console.log('sentimentosAtualizado', sentimentosAtualizado)
+
     // Cria o primeiro registro do usuário no diário
     await new CreateOrUpdateRegistro().call({
       date: now,
       userId: user.uid,
-      sentimentos,
+      sentimentos: sentimentosAtualizado,
       gruposDeHabitos: gruposDeHabitosAtualizados
     })
 

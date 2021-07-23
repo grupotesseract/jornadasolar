@@ -26,10 +26,10 @@ const Sentimentos: FC<IProps> = ({ user, userId, date }) => {
   })
 
   useEffect(() => {
-    const nomesSentimentos = registroDoDia?.sentimentos.map(
-      sentimento => sentimento.nome
+    const idsSentimentos = registroDoDia?.sentimentos.map(
+      sentimento => sentimento.id
     )
-    setSentimentos(nomesSentimentos || [])
+    setSentimentos(idsSentimentos || [])
   }, [registroDoDia])
 
   const onSalvarClick = async () => {

@@ -15,6 +15,7 @@ type Parameters = {
   sentimentos?: Array<string>
   gruposDeHabitos?: Array<IGrupoDeHabitos> | Array<IParsedGrupoDeHabitos>
   anotacoes?: string
+  sentimentosComId?: boolean
 }
 
 interface ICreateOrUpdate {
@@ -42,6 +43,10 @@ export default class CreateOrUpdate implements ICreateOrUpdate {
           habitos
         })
       })
+    }
+
+    if (Object.keys(attributes).includes('sentimentos')) {
+      parsedAttributes.sentimentosComId = true
     }
 
     if (id) {
