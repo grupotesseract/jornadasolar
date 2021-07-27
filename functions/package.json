@@ -5,6 +5,8 @@
     "build": "tsc",
     "serve": "npm run build && firebase emulators:start",
     "serve:saved": "npm run build && firebase emulators:start --import=./saved-data",
+    "serve:export": "npm run build && firebase emulators:start --export-on-exit --import=./saved-data",
+    "watch": "npm run build -- --watch",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
