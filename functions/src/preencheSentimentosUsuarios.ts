@@ -28,25 +28,34 @@ export const preencheSentimentosUsuarios = functions.https.onRequest(
       sentimentosModelos.push(sentimentoModelo)
     })
 
-    const usersSnapshot = await firestore.collection("user").get()
-
-    usersSnapshot.forEach(async user => {
-      const userId = user.id
+    const usersId: Array<string> = []
+    const snapshotUsers = await firestore.collection("user").get()
+    snapshotUsers.forEach(userSnap => {
+      const userId = userSnap.id
       const collectionSentimentosUsuario = firestore.collection(
         `user/${userId}/sentimentos`
       )
-      const sentimentoUserSnapshot = await collectionSentimentosUsuario.get()
-      if (sentimentoUserSnapshot.empty) {
-        sentimentosModelos.forEach(sentimento => {
-          const { id, nome, emojiUnicode } = sentimento
-          collectionSentimentosUsuario.add({
-            idSentimentoModelo: id,
-            nome,
-            emojiUnicode
-          })
-        })
-      }
+      collectionSentimentosUsuario.get().then(snapshot => {
+        if (snapshot.empty) {
+          usersId.push(userId)
+        }
+      })
     })
+
+    functions.logger.info(`Migrando sentimentos de ${usersId.length} usuários`)
+    for (const userId of usersId) {
+      sentimentosModelos.forEach(sentimento => {
+        const { id, nome, emojiUnicode } = sentimento
+        const collectionSentimentosUsuario = firestore.collection(
+          `user/${userId}/sentimentos`
+        )
+        collectionSentimentosUsuario.add({
+          idSentimentoModelo: id,
+          nome,
+          emojiUnicode
+        })
+      })
+    }
 
     functions.logger.info("preenche sentimentos nos usuarios", {
       structuredData: true
