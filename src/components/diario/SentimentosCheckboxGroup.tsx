@@ -2,8 +2,7 @@ import React, { FC, useEffect, useState } from 'react'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { Checkbox, FormGroup, withStyles } from '@material-ui/core'
 import Sentimento from './Sentimento'
-import GetSentimentosByUserId from 'src/services/sentimentos/GetSentimentosByUserId'
-import GetAllSentimentosModelos from 'src/services/sentimentosModelos/GetAllSentimentosModelos'
+import { getSentimentosIniciais } from 'src/utils/getSentimentosIniciais'
 
 const StyledCheckbox = withStyles({
   root: {
@@ -58,17 +57,13 @@ const SentimentosCheckboxGroup: FC<ISentimentosProps> = ({
   const classes = useStyles()
   const [sentimentos, setSentimentos] = useState([])
   useEffect(() => {
-    const getSentimentosUsuario = async () => {
-      setSentimentos(await new GetSentimentosByUserId(userId).call())
+    const getSentimentos = async () => {
+      setSentimentos(await getSentimentosIniciais(userId))
     }
-    const getSentimentosModelos = async () => {
-      setSentimentos(await new GetAllSentimentosModelos().call())
-    }
-    userId ? getSentimentosUsuario() : getSentimentosModelos()
+    getSentimentos()
   }, [])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('array de sentimentos', sentimentos)
     if (event.target.checked) {
       onChange([...values, event.target.value])
     } else {

@@ -121,14 +121,12 @@ export default class UsersRepository implements IUsersRepository {
     const sentimentosDoUsuario = await new GetSentimentosByUserId(
       user.uid
     ).call()
-    console.log('sentimentosDoUsuario', sentimentosDoUsuario)
     const sentimentosAtualizado = sentimentos.map(sentimento => {
       const sentimentoUsuario = sentimentosDoUsuario.find(
         sentimentoUser => sentimentoUser.idSentimentoModelo === sentimento
       )
       return sentimentoUsuario.id
     })
-    console.log('sentimentosAtualizado', sentimentosAtualizado)
 
     // Cria o primeiro registro do usuário no diário
     await new CreateOrUpdateRegistro().call({

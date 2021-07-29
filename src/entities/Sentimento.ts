@@ -1,7 +1,7 @@
 import UnicodeToEmoji from '../services/UnicodeToEmoji'
 
 interface ISentimentoAttributes {
-  emoji: string
+  emoji?: string
   id?: string
   nome: string
   emojiUnicode: Array<string>

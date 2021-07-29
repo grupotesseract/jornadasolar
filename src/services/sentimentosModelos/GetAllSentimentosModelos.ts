@@ -15,6 +15,6 @@ export default class GetAllSentimentosModelos implements IGetAll {
 
   async call(): Promise<Array<ISentimento>> {
     const Sentimentos = await this.sentimentosModelosRepository.getAll()
-    return Sentimentos.map(sentimento => new Sentimento(sentimento))
+    return Sentimentos
   }
 }

@@ -1,5 +1,5 @@
 import { firestore } from 'src/components/firebase/firebase.config'
-import { ISentimento } from 'src/entities/Sentimento'
+import Sentimento, { ISentimento } from 'src/entities/Sentimento'
 
 interface ICreateParameters {
   idSentimentoModelo?: string
@@ -38,7 +38,7 @@ export default class SentimentosRepository implements ISentimentosRepository {
         sentimentos.push({ id: sentimento.id, ...dados })
       })
 
-      return sentimentos
+      return sentimentos.map(sentimento => new Sentimento(sentimento))
     } catch (e) {
       throw new Error(
         'Ocorreu um erro inesperado ao buscar os sentimentos do usuário.' + e
