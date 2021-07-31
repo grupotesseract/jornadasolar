@@ -238,22 +238,24 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
                     <Typography className={classes.nome}>
                       {grupo.nome}
                     </Typography>
-                    <MaterialUiLink
-                      href="#"
-                      component="button"
-                      onClick={() =>
-                        handleOnClickEditarGrupo(grupo.id, grupo.nome)
-                      }
-                      style={{ position: 'initial' }}
-                      underline="none"
-                    >
-                      <Typography
-                        color="primary"
-                        className={classes.linkEditar}
+                    {!isCadastro && (
+                      <MaterialUiLink
+                        href="#"
+                        component="button"
+                        onClick={() =>
+                          handleOnClickEditarGrupo(grupo.id, grupo.nome)
+                        }
+                        style={{ position: 'initial' }}
+                        underline="none"
                       >
-                        {isModoDeEdicaoAtivo ? 'Concluir' : 'Editar'}
-                      </Typography>
-                    </MaterialUiLink>
+                        <Typography
+                          color="primary"
+                          className={classes.linkEditar}
+                        >
+                          {isModoDeEdicaoAtivo ? 'Concluir' : 'Editar'}
+                        </Typography>
+                      </MaterialUiLink>
+                    )}
                   </Grid>
                   {grupo.habitos?.map(habito => (
                     <Grid
