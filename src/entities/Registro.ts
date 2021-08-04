@@ -1,10 +1,11 @@
 import { IGrupoDeHabitos } from './GrupoDeHabitos'
+import { ISentimento } from './Sentimento'
 
 interface IRegistroAttributes {
   id: string
   userId?: string
   date: Date
-  sentimentos?: Array<string>
+  sentimentos?: Array<ISentimento>
   gruposDeHabitos?: Array<IGrupoDeHabitos>
   anotacoes?: string
 }
@@ -15,7 +16,7 @@ export default class Registro implements IRegistro {
   public id: string
   public date: Date
   public userId: string
-  public sentimentos: Array<string>
+  public sentimentos: Array<ISentimento>
   public gruposDeHabitos: Array<IGrupoDeHabitos>
   public anotacoes: string
 

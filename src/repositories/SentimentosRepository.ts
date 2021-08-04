@@ -9,6 +9,7 @@ interface ICreateParameters {
 
 export interface ISentimentosRepository {
   create(params: ICreateParameters): Promise<ISentimento>
+  getUserSentimentos(id: string): Promise<Array<ISentimento>>
 }
 export default class SentimentosRepository implements ISentimentosRepository {
   private collection
@@ -24,5 +25,24 @@ export default class SentimentosRepository implements ISentimentosRepository {
       nome,
       emojiUnicode
     })
+  }
+
+  async getUserSentimentos(id: string): Promise<Array<ISentimento>> {
+    try {
+      const querySnapshot = await firestore
+        .collection(`user/${id}/sentimentos`)
+        .get()
+      const sentimentos = []
+      querySnapshot.forEach(sentimento => {
+        const dados = sentimento.data()
+        sentimentos.push({ id: sentimento.id, ...dados })
+      })
+
+      return sentimentos
+    } catch (e) {
+      throw new Error(
+        'Ocorreu um erro inesperado ao buscar os sentimentos do usuário.' + e
+      )
+    }
   }
 }

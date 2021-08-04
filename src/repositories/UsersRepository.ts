@@ -78,7 +78,6 @@ export default class UsersRepository implements IUsersRepository {
       })
     })
 
-
     // Cria subcollection de sentimentos na collection user
     const sentimentosModelos = await new GetAllSentimentosModelos().call()
     const serviceCreateSentimento = new CreateUserSentimentos(user.uid)
@@ -117,7 +116,6 @@ export default class UsersRepository implements IUsersRepository {
       }
     })
 
-    
     // Cria o primeiro registro do usuário no diário
     await new CreateOrUpdateRegistro().call({
       date: now,
