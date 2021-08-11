@@ -1,4 +1,4 @@
-import { ISentimento } from 'src/entities/Sentimento'
+import Sentimento, { ISentimento } from 'src/entities/Sentimento'
 import SentimentosModelosRepository, {
   ISentimentosModelosRepository
 } from 'src/repositories/SentimentosModelosRepository'
@@ -14,6 +14,7 @@ export default class GetAllSentimentosModelos implements IGetAll {
   }
 
   async call(): Promise<Array<ISentimento>> {
-    return await this.sentimentosModelosRepository.getAll()
+    const Sentimentos = await this.sentimentosModelosRepository.getAll()
+    return Sentimentos
   }
 }

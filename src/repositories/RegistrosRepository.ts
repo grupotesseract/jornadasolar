@@ -130,11 +130,11 @@ export default class RegistrosRepository implements IRegistrosRepository {
           })
         })
 
-        console.log(registrosData)
         const sentimentosDoRegistro = (registrosData.sentimentos || []).map(
           sentimento => {
             const sentimentoDoUsuario = sentimentosTemplate.find(
-              template => template.nome === sentimento
+              template =>
+                template.nome === sentimento || template.id === sentimento
             )
             return sentimentoDoUsuario
           }

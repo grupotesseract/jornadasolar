@@ -1,4 +1,4 @@
-import Sentimento, { ISentimento } from 'src/entities/Sentimento'
+import { ISentimento } from 'src/entities/Sentimento'
 import SentimentosRepository, {
   ISentimentosRepository
 } from 'src/repositories/SentimentosRepository'
@@ -25,6 +25,6 @@ export default class GetSentimentosByUserId implements IGetSentimentosByUserId {
       ? SentimentosDoUsuario
       : await new GetAllSentimentosModelos().call()
 
-    return Sentimentos.map(sentimento => new Sentimento(sentimento))
+    return Sentimentos
   }
 }
