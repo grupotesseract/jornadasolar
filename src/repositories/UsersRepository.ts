@@ -11,6 +11,7 @@ import GetAllSentimentosModelos from 'src/services/sentimentosModelos/GetAllSent
 import CreateUserSentimentos from 'src/services/sentimentos/CreateUserSentimento'
 import GetUserGruposDeHabitos from 'src/services/user/GetUserGruposDeHabitos'
 import GetSentimentosByUserId from 'src/services/sentimentos/GetSentimentosByUserId'
+import { isSameDay } from 'date-fns'
 
 interface ICreateParameters {
   nome: string
@@ -24,13 +25,14 @@ interface ICreateParameters {
 
 interface IUpdateParameters {
   id: string
-  attributes: string
+  attributes: Record<string, unknown>
 }
 
 export interface IUsersRepository {
   add(params): Promise<IUser>
   getById(id: string): Promise<IUser>
   update(params): boolean
+  updateAccessFlags(user: IUser): void
 }
 
 export default class UsersRepository implements IUsersRepository {
@@ -66,7 +68,9 @@ export default class UsersRepository implements IUsersRepository {
       objetivos,
       temLivro,
       created_at: now,
-      updated_at: now
+      updated_at: now,
+      lastAccess: now,
+      countAccess: 1
     }
     await this.collection.doc(user.uid).set(data)
 
@@ -144,6 +148,29 @@ export default class UsersRepository implements IUsersRepository {
       temLivro,
       objetivos
     })
+  }
+
+  updateAccessFlags(user: IUser): void {
+    const hoje = new Date()
+    const mesmoDia = isSameDay(hoje, user.lastAccess)
+
+    if (!mesmoDia) {
+      try {
+        const acessos = user.countAccess + 1
+        if (!user.lastAccess) {
+          this.collection
+            .doc(user.id)
+            .set({ lastAccess: hoje, countAccess: acessos }, { merge: true })
+        } else {
+          this.update({
+            id: user.id,
+            attributes: { lastAccess: hoje, countAccess: acessos }
+          })
+        }
+      } catch (e) {
+        throw new Error('Ocorreu um erro inesperado ao atualizar usuário.' + e)
+      }
+    }
   }
 
   async getById(id: string): Promise<IUser> {

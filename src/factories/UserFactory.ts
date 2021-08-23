@@ -17,6 +17,10 @@ export default class UserFactory {
       novidadesDispensadas
     } = userSnapshot.data()
 
+    const dados = userSnapshot.data()
+    const lastAccess = dados.lastAccess ? dados.lastAccess.toDate() : null
+    const countAccess = dados.countAccess ? dados.countAccess : 0
+
     return new User({
       id,
       nome,
@@ -25,7 +29,9 @@ export default class UserFactory {
       temLivro,
       objetivos,
       role,
-      novidadesDispensadas: novidadesDispensadas || []
+      novidadesDispensadas: novidadesDispensadas || [],
+      lastAccess: lastAccess,
+      countAccess: countAccess
     })
   }
 }
