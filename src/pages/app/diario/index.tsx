@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { Box, Container, Typography } from '@material-ui/core'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import {
@@ -20,11 +20,11 @@ import Loading from '../../../components/Loading'
 import getFaseDaLua from '../../../utils/getFaseDaLua'
 import getSigno from '../../../utils/getSigno'
 import theme from '../../../../theme'
-import { appVersion } from '../../../utils/appVersion'
 import Link from 'next/link'
 import { IUser } from 'src/entities/User'
 import Novidade from 'src/components/Novidade'
 import NovidadeNotificacao from 'src/components/NovidadeNotificacao'
+import UpdateFlagsDeAcesso from 'src/services/user/UpdateFlagsDeAcesso'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -86,6 +86,10 @@ const Diario: FC<IDiarioProps> = ({ user, userId, userName }) => {
     start: startOfMonth(mes),
     end: isThisMonth(mes) ? new Date() : lastDayOfMonth(mes)
   })
+
+  useEffect(() => {
+    new UpdateFlagsDeAcesso().call(user)
+  }, [])
 
   const { loading, diarios } = useRegistrosByMonth({
     userId,
