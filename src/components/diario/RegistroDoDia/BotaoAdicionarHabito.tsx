@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import theme from '../../../../theme'
-import Link from 'next/link'
+import Loading from 'src/components/Loading'
 
 const StyledButton = withStyles({
   root: {
@@ -37,22 +37,27 @@ const useStyles = makeStyles(() =>
 )
 
 interface IBotaoAdicionarHabitoProps {
-  href: any
-  classname?: string
+  isLoading: boolean
+  onClick?: (event) => void
 }
 
-const BotaoAdicionarHabito = ({ href }: IBotaoAdicionarHabitoProps) => {
+const BotaoAdicionarHabito = ({
+  isLoading,
+  onClick
+}: IBotaoAdicionarHabitoProps) => {
   const classes = useStyles()
 
   return (
-    <Link href={href} passHref>
-      <div>
-        <StyledButton>
+    <div>
+      <StyledButton onClick={onClick}>
+        {isLoading ? (
+          <Loading color="secondary" size={20} />
+        ) : (
           <AddIcon color="secondary" fontSize="large" />
-        </StyledButton>
-        <Typography className={classes.labelBotao}>Novo hábito</Typography>
-      </div>
-    </Link>
+        )}
+      </StyledButton>
+      <Typography className={classes.labelBotao}>Novo hábito</Typography>
+    </div>
   )
 }
 

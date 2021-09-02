@@ -26,7 +26,8 @@
     "prettier/prettier": "error",
     "react/prop-types": "off",
     "space-before-function-paren": "off",
-    "@typescript-eslint/no-use-before-define": ["error"]
+    "@typescript-eslint/no-use-before-define": ["error"],
+    "multiline-ternary": ["always-multiline"]
   },
   "settings": {
     "react": {
