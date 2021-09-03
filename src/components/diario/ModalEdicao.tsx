@@ -19,7 +19,6 @@ const useStyles = makeStyles(() =>
       marginRight: 8,
       fontSize: 16,
       fontWeight: 700,
-      textTransform: 'capitalize',
       marginTop: 8
     },
     form: {
@@ -60,8 +59,8 @@ interface IProps {
   itemEdicao?: IItemEdicao
   formTitulo: ReactElement | string
   labelNome: string
-  onConfirma?: (IItemEdicao) => void
-  onFecha?: () => void
+  onConfirma: (IItemEdicao) => void
+  onFecha: () => void
   isOpen: boolean
 }
 

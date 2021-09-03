@@ -1,4 +1,3 @@
-/* eslint-disable multiline-ternary */
 import React, { FC, useEffect, useState } from 'react'
 import {
   Box,
@@ -122,14 +121,12 @@ const HabitoLabel = ({ modeDeEdicaoAtivo, classeTexto, nome, onEditar }) => {
 interface IHabitosCheckboxGroupProps {
   values: Array<IGrupoDeHabitos>
   userId?: string
-  date?: string
   onChange: (event) => void
 }
 
 const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
   values,
   userId,
-  date,
   onChange
 }) => {
   const classes = useStyles()
@@ -141,7 +138,7 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
   const [habitoEmEdicao, setHabitoEmEdicao] = useState<IHabito>(null)
   const [grupoEmEdicao, setGrupoEmEdicao] = useState<IGrupoDeHabitos>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [tituloModal, setTituloModal] = useState('Edição do hábito')
+  const tituloModal = habitoEmEdicao ? 'Edição do hábito' : 'Novo hábito'
   const dispatch = useDispatch()
 
   const getGrupoDeHabitosTemplate = async () => {
@@ -226,17 +223,17 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
   }
 
   const handleComecarEdicao = (habito, grupo) => {
-    setTituloModal('Edição do hábito')
     setHabitoEmEdicao(habito)
     setGrupoEmEdicao(grupo)
     setIsModalAberto(true)
   }
 
   const handleNovoHabito = grupo => {
-    setTituloModal('Novo hábito')
-    setHabitoEmEdicao(null)
-    setGrupoEmEdicao(grupo)
-    setIsModalAberto(true)
+    if (!isLoading) {
+      setHabitoEmEdicao(null)
+      setGrupoEmEdicao(grupo)
+      setIsModalAberto(true)
+    }
   }
 
   const handleFecharModal = () => {
