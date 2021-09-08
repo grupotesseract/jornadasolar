@@ -8,6 +8,7 @@ import ModalEdicao, { IItemEdicao } from './ModalEdicao'
 import UpdateUserSentimentos from 'src/services/sentimentos/UpdateUserSentimento'
 import CreateUserSentimentos from 'src/services/sentimentos/CreateUserSentimento'
 import { useDispatch } from 'react-redux'
+import { useRouter } from 'next/router'
 import {
   sentimentoUpdated,
   sentimentoFailedUpdate,
@@ -71,6 +72,8 @@ const SentimentosCheckboxGroup: FC<ISentimentosProps> = ({
   const [isModalAberto, setIsModalAberto] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [sentimentoEdicao, setSentimentoEdicao] = useState(null)
+  const router = useRouter()
+  const isCadastro = router.pathname === '/cadastro'
   const dispatch = useDispatch()
 
   const getSentimentos = async () => {
@@ -84,11 +87,13 @@ const SentimentosCheckboxGroup: FC<ISentimentosProps> = ({
   }, [])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      onChange([...values, event.target.value])
-    } else {
-      const newValues = values.filter(value => value !== event.target.value)
-      onChange(newValues)
+    if (!isEmEdicao) {
+      if (event.target.checked) {
+        onChange([...values, event.target.value])
+      } else {
+        const newValues = values.filter(value => value !== event.target.value)
+        onChange(newValues)
+      }
     }
   }
 
@@ -148,8 +153,8 @@ const SentimentosCheckboxGroup: FC<ISentimentosProps> = ({
   }
 
   const handleConfirmarEdicao = (item: IItemEdicao) => {
-    atualizaNaPagina(item)
     if (sentimentoEdicao) {
+      atualizaNaPagina(item)
       const sentimentoAtualizado = {
         ...sentimentoEdicao,
         nome: item.nome,
@@ -195,7 +200,7 @@ const SentimentosCheckboxGroup: FC<ISentimentosProps> = ({
             }}
           />
         ))}
-        {isEmEdicao && (
+        {!isCadastro && (
           <StyledCheckbox
             key="botaoNovo"
             icon={IconeCriarNovo}
