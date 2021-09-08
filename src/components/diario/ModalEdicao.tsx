@@ -78,7 +78,7 @@ const ModalEdicao: FC<IProps> = ({
     emojiUnicode: []
   })
 
-  const [error, setErrors] = useState('')
+  const [error, setErrors] = useState(null)
   const classes = useStyles()
 
   useEffect(() => {
@@ -98,25 +98,44 @@ const ModalEdicao: FC<IProps> = ({
   }, [itemEdicao])
 
   const onChangeNome = ({ target: { value } }) => {
+    setErrors({})
     setItem({ ...item, nome: value })
   }
 
   const onChangeEmoji = ({ target: { value } }) => {
-    setErrors('')
+    setErrors({})
     const unicodes = new EmojiToUnicode().call(value.trim().toLowerCase())
+    let emoji = value.trim().toLowerCase()
+
     if (unicodes.length <= 0) {
-      setErrors('Por favor adicione um emoji')
+      setErrors({ emoji: 'Por favor adicione um emoji' })
+      emoji = ''
     }
+
     setItem({
       ...item,
-      emoji: value.trim().toLowerCase(),
+      emoji: emoji,
       emojiUnicode: unicodes
     })
   }
 
+  const validaPreenchimento = () => {
+    if (!item.emojiUnicode.length) {
+      setErrors({ emoji: 'Por favor adicione um emoji' })
+      return false
+    }
+    if (!item.nome.length) {
+      setErrors({ nome: 'Por favor adicione um nome' })
+      return false
+    }
+    return true
+  }
+
   const handleConfirma = () => {
-    onConfirma(item)
-    onFecha()
+    if (validaPreenchimento()) {
+      onConfirma(item)
+      onFecha()
+    }
   }
 
   const handleFecha = () => {
@@ -148,14 +167,16 @@ const ModalEdicao: FC<IProps> = ({
             <TextField
               value={item.emoji}
               onChange={onChangeEmoji}
-              error={Boolean(error)}
-              helperText={error}
+              error={error?.emoji}
+              helperText={error?.emoji}
               inputProps={{ maxLength: 2 }}
             />
             <InputLabel>{labelNome}</InputLabel>
             <TextField
               value={item.nome}
               onChange={onChangeNome}
+              error={error?.nome}
+              helperText={error?.nome}
               inputProps={{ maxLength: 15 }}
             />
           </Box>

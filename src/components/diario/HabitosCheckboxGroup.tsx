@@ -190,9 +190,7 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
       habitosAlterados = [...grupoDeHabitosAlterado.habitos, habito]
     } else {
       habitosAlterados = grupoDeHabitosAlterado.habitos.filter(
-        value =>
-          value.id !== habito?.id ||
-          value.nome.toLowerCase() !== habito?.nome.toLowerCase()
+        value => value.id !== habito?.id
       )
     }
 
@@ -374,8 +372,8 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
                           })
                         }
                         checked={values[indexGrupo]?.habitos
-                          .map(habito => habito?.nome)
-                          .includes(habito?.nome)}
+                          .map(habito => habito?.id)
+                          .includes(habito?.id)}
                       />
                       <HabitoLabel
                         modeDeEdicaoAtivo={isModoDeEdicaoAtivo}
