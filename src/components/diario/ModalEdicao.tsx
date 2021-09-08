@@ -121,6 +121,7 @@ const ModalEdicao: FC<IProps> = ({
 
   const validaPreenchimento = () => {
     if (!item.emojiUnicode.length) {
+      setErrors({ emoji: 'Por favor adicione um emoji' })
       return false
     }
     if (!item.nome.length) {

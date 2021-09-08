@@ -190,9 +190,7 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
       habitosAlterados = [...grupoDeHabitosAlterado.habitos, habito]
     } else {
       habitosAlterados = grupoDeHabitosAlterado.habitos.filter(
-        value =>
-          value.id !== habito?.id ||
-          value.nome.toLowerCase() !== habito?.nome.toLowerCase()
+        value => value.id !== habito?.id
       )
     }
 
