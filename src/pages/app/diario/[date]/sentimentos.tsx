@@ -9,6 +9,8 @@ import useRegistroByDate from '../../../../hooks/useRegistroByDate'
 import { analytics } from '../../../../components/firebase/firebase.config'
 import Novidade from 'src/components/Novidade'
 import { IUser } from 'src/entities/User'
+import { createStyles, makeStyles, Typography } from '@material-ui/core'
+import ModalEdicao from 'src/components/diario/ModalEdicao'
 
 interface IProps {
   user?: IUser
@@ -16,8 +18,22 @@ interface IProps {
   date: string
 }
 
+const useStyles = makeStyles(() =>
+  createStyles({
+    botaoEditar: {
+      marginRight: 14,
+      marginTop: 14,
+      fontSize: 14,
+      cursor: 'pointer'
+    }
+  })
+)
+
 const Sentimentos: FC<IProps> = ({ user, userId, date }) => {
   const [sentimentos, setSentimentos] = useState<string[]>([])
+  const [isEmEdicao, setIsEmEdicao] = useState(false)
+
+  const classes = useStyles()
   const dia = parse(date, 'd-M-yyyy', new Date())
 
   const { loading, registroDoDia } = useRegistroByDate({
@@ -26,7 +42,10 @@ const Sentimentos: FC<IProps> = ({ user, userId, date }) => {
   })
 
   useEffect(() => {
-    setSentimentos(registroDoDia?.sentimentos || [])
+    const idsSentimentos = registroDoDia?.sentimentos.map(
+      sentimento => sentimento.id
+    )
+    setSentimentos(idsSentimentos || [])
   }, [registroDoDia])
 
   const onSalvarClick = async () => {
@@ -39,14 +58,37 @@ const Sentimentos: FC<IProps> = ({ user, userId, date }) => {
     analytics?.logEvent('add_sentimentos')
   }
 
+  const toggleEditar = () => {
+    setIsEmEdicao(!isEmEdicao)
+  }
+
+  const BotaoEditar = (
+    <Typography
+      color="primary"
+      className={classes.botaoEditar}
+      onClick={toggleEditar}
+    >
+      {isEmEdicao ? 'Concluir' : 'Editar'}
+    </Typography>
+  )
+
   return (
-    <EdicaoDiario date={date} onClick={onSalvarClick} loading={loading}>
-      <Novidade path="sentimentos" user={user} />
-      <SentimentosCheckboxGroup
-        values={sentimentos}
-        onChange={setSentimentos}
-      />
-    </EdicaoDiario>
+    <>
+      <EdicaoDiario
+        date={date}
+        onClick={onSalvarClick}
+        loading={loading}
+        BotaoSecundario={BotaoEditar}
+      >
+        <Novidade path="sentimentos" user={user} />
+        <SentimentosCheckboxGroup
+          values={sentimentos}
+          onChange={setSentimentos}
+          userId={userId}
+          isEmEdicao={isEmEdicao}
+        />
+      </EdicaoDiario>
+    </>
   )
 }
 

@@ -10,6 +10,8 @@ import CreateUserGrupoDeHabitos from 'src/services/user/CreateUserGrupoDeHabitos
 import GetAllSentimentosModelos from 'src/services/sentimentosModelos/GetAllSentimentosModelos'
 import CreateUserSentimentos from 'src/services/sentimentos/CreateUserSentimento'
 import GetUserGruposDeHabitos from 'src/services/user/GetUserGruposDeHabitos'
+import GetSentimentosByUserId from 'src/services/sentimentos/GetSentimentosByUserId'
+import { isSameDay } from 'date-fns'
 
 interface ICreateParameters {
   nome: string
@@ -23,13 +25,14 @@ interface ICreateParameters {
 
 interface IUpdateParameters {
   id: string
-  attributes: string
+  attributes: Record<string, unknown>
 }
 
 export interface IUsersRepository {
   add(params): Promise<IUser>
   getById(id: string): Promise<IUser>
   update(params): boolean
+  updateAccessFlags(user: IUser): void
 }
 
 export default class UsersRepository implements IUsersRepository {
@@ -65,7 +68,9 @@ export default class UsersRepository implements IUsersRepository {
       objetivos,
       temLivro,
       created_at: now,
-      updated_at: now
+      updated_at: now,
+      lastAccess: now,
+      countAccess: 1
     }
     await this.collection.doc(user.uid).set(data)
 
@@ -78,19 +83,6 @@ export default class UsersRepository implements IUsersRepository {
       })
     })
 
-
-    // Cria subcollection de sentimentos na collection user
-    const sentimentosModelos = await new GetAllSentimentosModelos().call()
-    const serviceCreateSentimento = new CreateUserSentimentos(user.uid)
-
-    sentimentosModelos.forEach(async sentimento => {
-      const { id, nome, emojiUnicode } = sentimento
-      await serviceCreateSentimento.call({
-        idSentimentoModelo: id,
-        nome,
-        emojiUnicode
-      })
-    })
     // Busca grupos de hábitos do usuário e atualiza o gruposDeHabitos do registro com os ids
     const gruposDeHabitosDoUsuario = await GetUserGruposDeHabitos(user.uid)
     const gruposDeHabitosAtualizados = gruposDeHabitos.map(grupoDeHabito => {
@@ -117,12 +109,34 @@ export default class UsersRepository implements IUsersRepository {
       }
     })
 
-    
+    // Cria subcollection de sentimentos na collection user
+    const sentimentosModelos = await new GetAllSentimentosModelos().call()
+    const serviceCreateSentimento = new CreateUserSentimentos(user.uid)
+
+    sentimentosModelos.forEach(async sentimento => {
+      const { id, nome, emojiUnicode } = sentimento
+      await serviceCreateSentimento.call({
+        idSentimentoModelo: id,
+        nome,
+        emojiUnicode
+      })
+    })
+
+    const sentimentosDoUsuario = await new GetSentimentosByUserId(
+      user.uid
+    ).call()
+    const sentimentosAtualizado = sentimentos.map(sentimento => {
+      const sentimentoUsuario = sentimentosDoUsuario.find(
+        sentimentoUser => sentimentoUser.idSentimentoModelo === sentimento
+      )
+      return sentimentoUsuario.id
+    })
+
     // Cria o primeiro registro do usuário no diário
     await new CreateOrUpdateRegistro().call({
       date: now,
       userId: user.uid,
-      sentimentos,
+      sentimentos: sentimentosAtualizado,
       gruposDeHabitos: gruposDeHabitosAtualizados
     })
 
@@ -134,6 +148,29 @@ export default class UsersRepository implements IUsersRepository {
       temLivro,
       objetivos
     })
+  }
+
+  updateAccessFlags(user: IUser): void {
+    const hoje = new Date()
+    const mesmoDia = isSameDay(hoje, user.lastAccess)
+
+    if (!mesmoDia) {
+      try {
+        const acessos = user.countAccess + 1
+        if (!user.lastAccess) {
+          this.collection
+            .doc(user.id)
+            .set({ lastAccess: hoje, countAccess: acessos }, { merge: true })
+        } else {
+          this.update({
+            id: user.id,
+            attributes: { lastAccess: hoje, countAccess: acessos }
+          })
+        }
+      } catch (e) {
+        throw new Error('Ocorreu um erro inesperado ao atualizar usuário.' + e)
+      }
+    }
   }
 
   async getById(id: string): Promise<IUser> {

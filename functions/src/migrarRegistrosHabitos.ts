@@ -28,13 +28,13 @@ export const migrarRegistrosHabitos = functions.https.onRequest(
       // ainda não foram migrados ao array usersId
       const snapshotUsers = await usersCollection.get() 
       snapshotUsers.forEach(userSnap => {
-        const { registroMigrado } = userSnap.data()
-        if (!registroMigrado) {
+        const { registrosMigrados } = userSnap.data()
+        if (!registrosMigrados) {
           usersId.push(userSnap.id)
         }
       })
-    }
-    usersId.sort()
+    
+    usersId.sort()}
     const usersIdPaginado = usersId.slice(pagina * limite, (pagina * limite) + limite)
     functions.logger.info(`Aplicando migração para ${usersIdPaginado.length}, iniciando da pagina ${pagina} como limite de ${limite} users`)
     functions.logger.info("usersPaginado", usersIdPaginado)

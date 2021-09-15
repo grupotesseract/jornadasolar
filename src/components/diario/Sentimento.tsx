@@ -1,38 +1,16 @@
 import React, { FC } from 'react'
+import { ISentimento } from 'src/entities/Sentimento'
 import EmojiComNome from '../EmojiComNome'
-
-export const sentimentos = [
-  { emoji: 'triste', nome: 'Triste' },
-  { emoji: 'alegre', nome: 'Alegre' },
-  { emoji: 'amedrontado', nome: 'Amedrontado' },
-  { emoji: 'seguro', nome: 'Seguro' },
-  { emoji: 'irritado', nome: 'Irritado' },
-  { emoji: 'pacifico', nome: 'Pacífico' },
-  { emoji: 'cansado', nome: 'Cansado' },
-  { emoji: 'motivado', nome: 'Motivado' },
-  { emoji: 'culpado', nome: 'Culpado' },
-  { emoji: 'grato', nome: 'Grato' },
-  { emoji: 'desanimado', nome: 'Desanimado' },
-  { emoji: 'confiante', nome: 'Confiante' },
-  { emoji: 'inseguro', nome: 'Inseguro' },
-  { emoji: 'amoroso', nome: 'Amoroso' },
-  { emoji: 'ansioso', nome: 'Ansioso' },
-  { emoji: 'calmo', nome: 'Calmo' }
-]
-
 interface IProps {
-  nome: string
+  sentimento: ISentimento
   className?: string
 }
 
-const Sentimento: FC<IProps> = ({ nome, className }) => {
-  const sentimento = sentimentos.find(
-    sentimento => sentimento.nome.toLowerCase() === nome.toLowerCase()
-  )
+const Sentimento: FC<IProps> = ({ sentimento, className }) => {
   return (
     <EmojiComNome
-      emoji={sentimento.emoji}
-      nome={sentimento.nome}
+      emoji={sentimento?.emoji}
+      nome={sentimento?.nome}
       className={className}
     />
   )

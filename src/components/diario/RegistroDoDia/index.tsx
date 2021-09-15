@@ -84,10 +84,10 @@ const RegistroDoDia: FC<IProps> = ({ diario }) => {
       <Categoria
         key="registro-do-dia-sentimentos"
         nome="sentimentos"
-        conteudo={sentimentos?.map((nomeSentimento, index) => {
+        conteudo={sentimentos?.map((sentimento, index) => {
           return (
             <Fragment key={`sentimento-${index}`}>
-              <Sentimento nome={nomeSentimento} />
+              <Sentimento sentimento={sentimento} />
               {index === sentimentos.length - 1 ? null : ', '}
             </Fragment>
           )
