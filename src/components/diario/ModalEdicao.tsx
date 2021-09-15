@@ -95,7 +95,7 @@ const ModalEdicao: FC<IProps> = ({
         emojiUnicode: []
       })
     }
-  }, [itemEdicao])
+  }, [itemEdicao, isOpen])
 
   const onChangeNome = ({ target: { value } }) => {
     setErrors({})
@@ -143,8 +143,8 @@ const ModalEdicao: FC<IProps> = ({
   }
 
   return (
-    <Slide direction="up" in={isOpen} mountOnEnter unmountOnExit>
-      <Backdrop open={isOpen} className={classes.backdrop}>
+    <Backdrop open={isOpen} className={classes.backdrop}>
+      <Slide direction="up" in={isOpen} mountOnEnter unmountOnExit>
         <Paper className={classes.form}>
           <Box className={classes.header}>
             <Typography color="textSecondary" className={classes.titulo}>
@@ -181,8 +181,8 @@ const ModalEdicao: FC<IProps> = ({
             />
           </Box>
         </Paper>
-      </Backdrop>
-    </Slide>
+      </Slide>
+    </Backdrop>
   )
 }
 

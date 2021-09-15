@@ -11,6 +11,11 @@ import {
 } from './admin/novidades'
 import { nameUpdated, passwordUpdated } from './perfil'
 import { habitoFailedCreate, habitoFailedUpdate, habitoUpdated } from './habito'
+import {
+  sentimentoFailedCreate,
+  sentimentoFailedUpdate,
+  sentimentoUpdated
+} from './sentimento'
 
 export enum AlertSeverity {
   Error = 'error',
@@ -91,6 +96,21 @@ const alertSlice = createSlice({
       .addCase(habitoFailedCreate, state => {
         state.severity = AlertSeverity.Warning
         state.message = 'A criação do hábito falhou.'
+        state.only = []
+      })
+      .addCase(sentimentoUpdated, state => {
+        state.severity = AlertSeverity.Success
+        state.message = 'Sentimento atualizado com sucesso.'
+        state.only = []
+      })
+      .addCase(sentimentoFailedUpdate, state => {
+        state.severity = AlertSeverity.Warning
+        state.message = 'A atualização do sentimento falhou.'
+        state.only = []
+      })
+      .addCase(sentimentoFailedCreate, state => {
+        state.severity = AlertSeverity.Warning
+        state.message = 'A criação do sentimento falhou.'
         state.only = []
       })
   }
