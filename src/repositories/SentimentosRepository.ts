@@ -9,6 +9,7 @@ interface ICreateParameters {
 
 export interface ISentimentosRepository {
   create(params: ICreateParameters): Promise<ISentimento>
+  update(params: ISentimento): Promise<void>
   getUserSentimentos(id: string): Promise<Array<ISentimento>>
 }
 export default class SentimentosRepository implements ISentimentosRepository {
@@ -20,11 +21,31 @@ export default class SentimentosRepository implements ISentimentosRepository {
 
   create(params: ICreateParameters): Promise<ISentimento> {
     const { nome, emojiUnicode, idSentimentoModelo } = params
-    return this.collection.add({
-      idSentimentoModelo,
-      nome,
-      emojiUnicode
-    })
+    return this.collection
+      .add({
+        idSentimentoModelo: idSentimentoModelo || null,
+        nome,
+        emojiUnicode
+      })
+      .catch(error => {
+        throw new Error(
+          'Ocorreu um erro inesperado ao criar o sentimento' + error
+        )
+      })
+  }
+
+  async update(sentimento: ISentimento): Promise<void> {
+    const { id } = sentimento
+    const { nome, emojiUnicode } = sentimento
+    console.log('sentimento', sentimento)
+    await this.collection
+      .doc(id)
+      .update({ nome, emojiUnicode })
+      .catch(error => {
+        throw new Error(
+          'Ocorreu um erro inesperado ao atualizar o sentimento' + error
+        )
+      })
   }
 
   async getUserSentimentos(id: string): Promise<Array<ISentimento>> {
