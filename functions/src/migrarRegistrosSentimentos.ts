@@ -22,8 +22,8 @@ export const migrarRegistrosSentimentos = functions.https.onRequest(
     } else {
       const usersSnapshot = await usersCollection.get()
       usersSnapshot.forEach(async user => {
-        const { sentimentosMigrados } = user.data()
-        if (!sentimentosMigrados) {
+        const { sentimentosComId } = user.data()
+        if (!sentimentosComId) {
           const id = user.id
           userIds.push(id)
         }
@@ -47,7 +47,7 @@ export const migrarRegistrosSentimentos = functions.https.onRequest(
         continue
       }
       sentimentosSnapshot.forEach(sentimentoSnap => {
-        sentimentosIdPeloNome.set(sentimentoSnap.data().nome, sentimentoSnap.id)
+        sentimentosIdPeloNome.set(sentimentoSnap.data().nome.toLowerCase(), sentimentoSnap.id)
       })
 
       const diariosSnapshot = await diariosCollection
@@ -70,7 +70,7 @@ export const migrarRegistrosSentimentos = functions.https.onRequest(
 
         const sentimentosAtualizados = sentimentos.map(
           (sentimentoOriginal: string) => {
-            const sentimentoId = sentimentosIdPeloNome.get(sentimentoOriginal)
+            const sentimentoId = sentimentosIdPeloNome.get(sentimentoOriginal.toLowerCase())
             if (sentimentoId) {
               return sentimentoId
             } else {
