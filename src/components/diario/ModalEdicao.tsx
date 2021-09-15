@@ -95,7 +95,7 @@ const ModalEdicao: FC<IProps> = ({
         emojiUnicode: []
       })
     }
-  }, [itemEdicao])
+  }, [itemEdicao, isOpen])
 
   const onChangeNome = ({ target: { value } }) => {
     setErrors({})
