@@ -8,7 +8,8 @@ export interface IGruposDeHabitosModelosRepository {
   getAll(): Promise<Array<IGrupoDeHabitos>>
 }
 
-export default class GruposDeHabitosModelosRepository implements IGruposDeHabitosModelosRepository {
+export default class GruposDeHabitosModelosRepository
+  implements IGruposDeHabitosModelosRepository {
   private collection
 
   constructor() {

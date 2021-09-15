@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, ReactNode, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { bindActionCreators } from '@reduxjs/toolkit'
 import { useRouter } from 'next/dist/client/router'
@@ -16,9 +16,16 @@ interface IProps {
   date: string
   loading: boolean
   onClick: () => void
+  BotaoSecundario?: ReactNode
 }
 
-const EdicaoDiario: FC<IProps> = ({ children, date, loading, onClick }) => {
+const EdicaoDiario: FC<IProps> = ({
+  children,
+  date,
+  loading,
+  onClick,
+  BotaoSecundario
+}) => {
   const [submit, setSubmit] = useState(false)
   const dia = parse(date, 'd-M-yyyy', new Date())
   const router = useRouter()
@@ -56,7 +63,10 @@ const EdicaoDiario: FC<IProps> = ({ children, date, loading, onClick }) => {
   return (
     <Container maxWidth="xs">
       <Box display="flex" flexDirection="column">
-        <LinkVoltar href={`/app/diario/${date}`} />
+        <Box display="flex" flexDirection="row" justifyContent="space-between">
+          <LinkVoltar href={`/app/diario/${date}`} />
+          {BotaoSecundario}
+        </Box>
         <Box mb={12} mr="auto" ml="auto">
           <Box
             mt="23px"

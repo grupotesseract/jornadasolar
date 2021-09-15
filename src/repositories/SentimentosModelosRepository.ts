@@ -1,4 +1,4 @@
-import { ISentimento } from 'src/entities/Sentimento'
+import Sentimento, { ISentimento } from 'src/entities/Sentimento'
 import { firestore } from '../components/firebase/firebase.config'
 
 export interface ISentimentosModelosRepository {
@@ -28,7 +28,7 @@ export default class SentimentosModelosRepository
           emojiUnicode: dados.emojiUnicode
         }
 
-        sentimentosModelos.push(sentimentoModelo)
+        sentimentosModelos.push(new Sentimento(sentimentoModelo))
       })
       return sentimentosModelos
     } catch (e) {

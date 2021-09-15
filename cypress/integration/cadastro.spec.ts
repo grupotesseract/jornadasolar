@@ -43,8 +43,8 @@ describe('Cadastro', () => {
 
     // Verifica se os dados preenchidos no cadastro estão sendo exibidos
     cy.get('[data-cy=ver-mais]').first().click()
-    cy.get('[data-cy=diario]').first().contains('Alegre')
-    cy.get('[data-cy=diario]').eq(1).contains('Amigos')
+    cy.get('[data-cy=box-detalhe]').first().contains('Alegre')
+    cy.get('[data-cy=box-detalhe]').eq(1).contains('Amigos')
 
     // Volta para página diário
     cy.get('[data-cy=link-voltar]').click()

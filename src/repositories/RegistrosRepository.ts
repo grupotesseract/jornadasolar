@@ -5,6 +5,7 @@ import { firestore } from '../components/firebase/firebase.config'
 import Registro, { IRegistro } from '../entities/Registro'
 import { IGrupoDeHabitos } from '../entities/GrupoDeHabitos'
 import GetHabitosByUserId from 'src/services/habito/GetHabitosByUserId'
+import GetSentimentosByUserId from 'src/services/sentimentos/GetSentimentosByUserId'
 
 export interface ICreateParameters {
   date: Date
@@ -86,13 +87,20 @@ export default class RegistrosRepository implements IRegistrosRepository {
       const habitosPersonalizadosDoUsuario = await new GetHabitosByUserId().call(
         userId
       )
+
+      const sentimentosTemplate = await new GetSentimentosByUserId(
+        userId
+      ).call()
+
       const querySnapshot = await this.collection
         .where('userId', '==', userId)
         .where('date', '>=', startDate)
         .where('date', '<=', endDate)
         .get()
+
       querySnapshot.forEach(RegistroSnapshot => {
         const registrosData = RegistroSnapshot.data()
+
         const gruposDeHabitosDoRegistro = (
           registrosData.gruposDeHabitos || []
         ).map(grupoDehabito => {
@@ -121,10 +129,21 @@ export default class RegistrosRepository implements IRegistrosRepository {
             habitos: habitos
           })
         })
+
+        const sentimentosDoRegistro = (registrosData.sentimentos || []).map(
+          sentimento => {
+            const sentimentoDoUsuario = sentimentosTemplate.find(
+              template =>
+                template.nome === sentimento || template.id === sentimento
+            )
+            return sentimentoDoUsuario
+          }
+        )
+
         const registros = new Registro({
           id: RegistroSnapshot.id,
           date: registrosData.date.toDate(),
-          sentimentos: registrosData.sentimentos,
+          sentimentos: sentimentosDoRegistro,
           gruposDeHabitos: gruposDeHabitosDoRegistro,
           anotacoes: registrosData.anotacoes
         })

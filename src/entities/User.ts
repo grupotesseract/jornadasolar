@@ -10,6 +10,8 @@ interface IUserAttributes {
   role?: string
   novidadesDispensadas?: Array<string>
   novidadeDispensada?(slug: string): boolean
+  lastAccess?: Date
+  countAccess?: number
 }
 
 export type IUser = IUserAttributes
@@ -23,6 +25,8 @@ export default class User implements IUser {
   public temLivro: TemLivroOptions
   public role: string
   public novidadesDispensadas: Array<string>
+  public lastAccess?: Date
+  public countAccess?: number
 
   constructor({
     id,
@@ -32,7 +36,9 @@ export default class User implements IUser {
     objetivos,
     temLivro,
     role,
-    novidadesDispensadas
+    novidadesDispensadas,
+    lastAccess,
+    countAccess
   }: IUserAttributes) {
     this.id = id
     this.nome = nome
@@ -42,6 +48,8 @@ export default class User implements IUser {
     this.temLivro = temLivro
     this.role = role
     this.novidadesDispensadas = novidadesDispensadas
+    this.lastAccess = lastAccess
+    this.countAccess = countAccess
   }
 
   novidadeDispensada(slug: string): boolean {

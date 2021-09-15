@@ -31,15 +31,14 @@ const Detalhe: FC<IProps> = ({ user, userId, date }) => {
   const habitos = registroDoDia?.gruposDeHabitos
     ?.map(grupo => grupo.habitos)
     .flat()
-
   const detalhesdaCategoria = (
     <>
       <DetalheDaCategoria
         nome="Sentimentos"
-        conteudo={registroDoDia?.sentimentos?.map((nomeSentimento, index) => {
+        conteudo={registroDoDia?.sentimentos?.map((sentimento, index) => {
           return (
             <Fragment key={`sentimento-${index}`}>
-              <Sentimento nome={nomeSentimento} />
+              <Sentimento sentimento={sentimento} />
               {index === registroDoDia?.sentimentos.length - 1 ? null : ', '}
             </Fragment>
           )
