@@ -60,7 +60,6 @@ const Habitos: FC<IProps> = ({ date, user }) => {
           onChange={setGruposDeHabitos}
           values={gruposDeHabitos}
           userId={userId}
-          date={date}
         />
       </Box>
     </EdicaoDiario>

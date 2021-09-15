@@ -10,6 +10,7 @@ import {
   deleteNovidade
 } from './admin/novidades'
 import { nameUpdated, passwordUpdated } from './perfil'
+import { habitoFailedCreate, habitoFailedUpdate, habitoUpdated } from './habito'
 
 export enum AlertSeverity {
   Error = 'error',
@@ -76,6 +77,21 @@ const alertSlice = createSlice({
         state.severity = AlertSeverity.Success
         state.message = 'Senha alterada com sucesso.'
         state.only = ['/app/perfil/dados']
+      })
+      .addCase(habitoUpdated, state => {
+        state.severity = AlertSeverity.Success
+        state.message = 'Hábito atualizado com sucesso.'
+        state.only = []
+      })
+      .addCase(habitoFailedUpdate, state => {
+        state.severity = AlertSeverity.Warning
+        state.message = 'A atualização do hábito falhou.'
+        state.only = []
+      })
+      .addCase(habitoFailedCreate, state => {
+        state.severity = AlertSeverity.Warning
+        state.message = 'A criação do hábito falhou.'
+        state.only = []
       })
   }
 })

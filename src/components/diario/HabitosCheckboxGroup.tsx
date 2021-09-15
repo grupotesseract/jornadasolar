@@ -1,4 +1,3 @@
-/* eslint-disable multiline-ternary */
 import React, { FC, useEffect, useState } from 'react'
 import {
   Box,
@@ -15,7 +14,16 @@ import GetGrupoDeHabitosTemplateByUserId from 'src/services/grupoDehabitos/GetGr
 import BotaoAdicionarHabito from './RegistroDoDia/BotaoAdicionarHabito'
 import { IGrupoDeHabitos } from 'src/entities/GrupoDeHabitos'
 import Loading from '../Loading'
-import Link from 'next/link'
+import ModalEdicao, { IItemEdicao } from './ModalEdicao'
+import UpdateUserHabito from 'src/services/user/UpdateUserHabito'
+import CreateUserHabitos from 'src/services/user/CreateUserHabito'
+import { IHabito } from 'src/entities/Habito'
+import { useDispatch } from 'react-redux'
+import {
+  habitoUpdated,
+  habitoFailedUpdate,
+  habitoFailedCreate
+} from 'src/redux/habito'
 
 const StyledCheckbox = withStyles({
   root: {
@@ -100,25 +108,25 @@ const useStyles = makeStyles(() =>
   })
 )
 
-const HabitoLabel = ({ modeDeEdicaoAtivo, href, children }) => {
+const HabitoLabel = ({ modeDeEdicaoAtivo, classeTexto, nome, onEditar }) => {
   if (modeDeEdicaoAtivo) {
-    return <Link href={href}>{children}</Link>
+    return (
+      <Typography className={classeTexto} onClick={onEditar}>
+        <Emoji nome="lapis" /> {nome}
+      </Typography>
+    )
   }
-
-  return <>{children}</>
+  return <Typography className={classeTexto}>{nome}</Typography>
 }
-
 interface IHabitosCheckboxGroupProps {
   values: Array<IGrupoDeHabitos>
   userId?: string
-  date?: string
   onChange: (event) => void
 }
 
 const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
   values,
   userId,
-  date,
   onChange
 }) => {
   const classes = useStyles()
@@ -126,25 +134,34 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
   const router = useRouter()
   const isCadastro = router.pathname === '/cadastro'
   const [gruposEmModoEdicao, setGruposEmModoEdicao] = useState([])
+  const [isModalAberto, setIsModalAberto] = useState(false)
+  const [habitoEmEdicao, setHabitoEmEdicao] = useState<IHabito>(null)
+  const [grupoEmEdicao, setGrupoEmEdicao] = useState<IGrupoDeHabitos>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const tituloModal = habitoEmEdicao ? 'Edição do hábito' : 'Novo hábito'
+  const dispatch = useDispatch()
+
+  const getGrupoDeHabitosTemplate = async () => {
+    setIsLoading(true)
+    const newGruposDeHabitosTemplate = await new GetGrupoDeHabitosTemplateByUserId().call(
+      {
+        userId
+      }
+    )
+    if (isCadastro) {
+      const gruposDeHabitosSemPersonalizados = Array.from(
+        newGruposDeHabitosTemplate,
+        grupo => ({ ...grupo })
+      )
+      delete gruposDeHabitosSemPersonalizados[0]
+      setGruposDeHabitosTemplate(gruposDeHabitosSemPersonalizados)
+    } else {
+      setGruposDeHabitosTemplate(newGruposDeHabitosTemplate)
+    }
+    setIsLoading(false)
+  }
 
   useEffect(() => {
-    const getGrupoDeHabitosTemplate = async () => {
-      const newGruposDeHabitosTemplate = await new GetGrupoDeHabitosTemplateByUserId().call(
-        {
-          userId
-        }
-      )
-      if (isCadastro) {
-        const gruposDeHabitosSemPersonalizados = Array.from(
-          newGruposDeHabitosTemplate,
-          grupo => ({ ...grupo })
-        )
-        delete gruposDeHabitosSemPersonalizados[0]
-        setGruposDeHabitosTemplate(gruposDeHabitosSemPersonalizados)
-      } else {
-        setGruposDeHabitosTemplate(newGruposDeHabitosTemplate)
-      }
-    }
     getGrupoDeHabitosTemplate()
   }, [])
 
@@ -173,18 +190,12 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
       habitosAlterados = [...grupoDeHabitosAlterado.habitos, habito]
     } else {
       habitosAlterados = grupoDeHabitosAlterado.habitos.filter(
-        value =>
-          value.id !== habito?.id ||
-          value.nome.toLowerCase() !== habito?.nome.toLowerCase()
+        value => value.id !== habito?.id
       )
     }
 
     grupoDeHabitosAlterado.habitos = habitosAlterados
     onChange(novosGruposDeHabitos)
-  }
-
-  if (gruposDeHabitosTemplate.length === 0) {
-    return <Loading />
   }
 
   const handleOnClickEditarGrupo = (idDoGrupo, nomeDoGrupo) => {
@@ -207,6 +218,75 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
       ...gruposEmModoEdicao,
       { nome: nomeDoGrupo, id: idDoGrupo }
     ])
+  }
+
+  const handleComecarEdicao = (habito, grupo) => {
+    setHabitoEmEdicao(habito)
+    setGrupoEmEdicao(grupo)
+    setIsModalAberto(true)
+  }
+
+  const handleNovoHabito = grupo => {
+    if (!isLoading) {
+      setHabitoEmEdicao(null)
+      setGrupoEmEdicao(grupo)
+      setIsModalAberto(true)
+    }
+  }
+
+  const handleFecharModal = () => {
+    setIsModalAberto(false)
+  }
+
+  const atualizaHabitoNaTela = (novosDados: IItemEdicao) => {
+    const grupoAtualizado = gruposDeHabitosTemplate.map(grupo => {
+      if (grupo.id !== grupoEmEdicao.id) {
+        return grupo
+      }
+      const habitosAtualizados = grupo.habitos.map(habito => {
+        if (habito.id !== habitoEmEdicao.id) {
+          return habito
+        }
+        return {
+          ...habito,
+          nome: novosDados.nome,
+          emojiUnicode: novosDados.emojiUnicode,
+          emoji: novosDados.emoji
+        }
+      })
+      return { ...grupo, habitos: habitosAtualizados }
+    })
+    setGruposDeHabitosTemplate(grupoAtualizado)
+  }
+
+  const handleConfirmarEdicao = (item: IItemEdicao) => {
+    if (habitoEmEdicao) {
+      atualizaHabitoNaTela(item)
+      UpdateUserHabito({
+        userId,
+        habito: { nome: item.nome, emojiUnicode: item.emojiUnicode },
+        grupoDeHabitoId: grupoEmEdicao.id,
+        id: habitoEmEdicao.id
+      })
+        .then(() => dispatch(habitoUpdated()))
+        .catch(() => dispatch(habitoFailedUpdate()))
+    } else {
+      CreateUserHabitos({
+        userId,
+        habito: {
+          nome: item.nome,
+          emojiUnicode: item.emojiUnicode,
+          posicao: Number(grupoEmEdicao.habitos?.length)
+        },
+        grupoDeHabitoId: grupoEmEdicao.id
+      })
+        .then(() => getGrupoDeHabitosTemplate())
+        .catch(() => dispatch(habitoFailedCreate()))
+    }
+  }
+
+  if (gruposDeHabitosTemplate.length === 0) {
+    return <Loading />
   }
 
   return (
@@ -292,32 +372,21 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
                           })
                         }
                         checked={values[indexGrupo]?.habitos
-                          .map(habito => habito?.nome)
-                          .includes(habito?.nome)}
+                          .map(habito => habito?.id)
+                          .includes(habito?.id)}
                       />
                       <HabitoLabel
                         modeDeEdicaoAtivo={isModoDeEdicaoAtivo}
-                        href={{
-                          pathname: `/app/diario/${date}/habitos/${habito.id}`,
-                          query: {
-                            grupoId: grupo.id,
-                            date: date,
-                            id: habito.id,
-                            idDoGrupoModelo: grupo.idDoGrupoModelo
-                          }
+                        classeTexto={
+                          values[indexGrupo]?.habitos.includes(habito?.nome)
+                            ? `${classes.habito} ${classes.habitoChecked}`
+                            : classes.habito
+                        }
+                        nome={habito?.nome}
+                        onEditar={() => {
+                          handleComecarEdicao(habito, grupo)
                         }}
-                      >
-                        <Typography
-                          className={
-                            values[indexGrupo]?.habitos.includes(habito?.nome)
-                              ? `${classes.habito} ${classes.habitoChecked}`
-                              : classes.habito
-                          }
-                        >
-                          {isModoDeEdicaoAtivo ? <Emoji nome="lapis" /> : null}{' '}
-                          {habito?.nome}
-                        </Typography>
-                      </HabitoLabel>
+                      />
                     </Grid>
                   ))}
                   {grupo.nome === 'Personalizados' && !isCadastro ? (
@@ -328,15 +397,8 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
                     >
                       {grupo.habitos?.length < 6 ? (
                         <BotaoAdicionarHabito
-                          href={{
-                            pathname: `/app/diario/${date}/habitos/novo`,
-                            query: {
-                              grupoId: grupo.id,
-                              date: date,
-                              idDoGrupoModelo: grupo.idDoGrupoModelo,
-                              posicaoDohabito: grupo.habitos?.length + 1
-                            }
-                          }}
+                          isLoading={isLoading}
+                          onClick={() => handleNovoHabito(grupo)}
                         />
                       ) : null}
                     </Grid>
@@ -347,6 +409,14 @@ const HabitosCheckboxGroup: FC<IHabitosCheckboxGroupProps> = ({
           })}
         </Box>
       </Box>
+      <ModalEdicao
+        itemEdicao={habitoEmEdicao}
+        isOpen={isModalAberto}
+        formTitulo={tituloModal}
+        labelNome="Hábito"
+        onFecha={handleFecharModal}
+        onConfirma={handleConfirmarEdicao}
+      />
     </>
   )
 }
