@@ -26,6 +26,15 @@ const theme = createMuiTheme(
     },
     typography: {
       fontFamily: ['Nunito Sans', 'sans-serif'].join(',')
+    },
+    overrides: {
+      MuiCssBaseline: {
+        '@global': {
+          html: {
+            scrollBehavior: 'smooth'
+          }
+        }
+      }
     }
   },
   ptBR
