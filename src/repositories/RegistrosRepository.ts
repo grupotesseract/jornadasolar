@@ -111,7 +111,7 @@ export default class RegistrosRepository implements IRegistrosRepository {
           )
           if (grupoDeHabitoDoUsuario) {
             const habitos = []
-            grupoRegistro.habitos?.foreach(habito => {
+            grupoRegistro.habitos?.forEach(habito => {
               const habitoDoUsuario =
                 grupoDeHabitoDoUsuario.habitos.find(
                   habitoDoUsuario =>
