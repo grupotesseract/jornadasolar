@@ -64,7 +64,9 @@ interface IProps {
 const PlayerMeditacao: FC<IProps> = ({ id }) => {
   const [meditacao, setMeditacao] = useState(null)
   const [isPlaying, setIsPlaying] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isEmpty, setIsEmpty] = useState(true)
+  const [podeComecar, setPodeComecar] = useState(false)
+  const [isMeditacaoCarregada, setIsMeditacaoCarregada] = useState(false)
   const [progress, setProgress] = useState(0)
   const [duracao, setDuracao] = useState(0)
   const audioRef = useRef<HTMLAudioElement>(null)
@@ -74,7 +76,7 @@ const PlayerMeditacao: FC<IProps> = ({ id }) => {
     const buscarMeditacao = async () => {
       const novaMeditacao = await new GetMeditacaoById().call(id)
       setMeditacao(novaMeditacao)
-      setIsLoading(!novaMeditacao.url)
+      setIsEmpty(!novaMeditacao.url)
     }
     buscarMeditacao()
   }, [])
@@ -105,6 +107,13 @@ const PlayerMeditacao: FC<IProps> = ({ id }) => {
     return horas > 0 ? timeString : timeString.substring(3)
   }
 
+  const handleCanPlayThrough = () => {
+    setIsMeditacaoCarregada(true)
+  }
+
+  const handleCanPlay = () => {
+    setPodeComecar(true)
+  }
   const handlePlayPause = () => {
     setIsPlaying(!isPlaying)
   }
@@ -148,7 +157,7 @@ const PlayerMeditacao: FC<IProps> = ({ id }) => {
     )
   }
 
-  if (isLoading) {
+  if (isEmpty) {
     return <EmptyPlayer />
   }
 
@@ -158,43 +167,53 @@ const PlayerMeditacao: FC<IProps> = ({ id }) => {
       <Box className={classes.titulo}>
         <Titulo>{meditacao.nome}</Titulo>
       </Box>
-      <Box mt={3} className={classes.player}>
-        <Image
-          src="/icons/icon-512x512.png"
-          width="200px"
-          height="200px"
-          className={imageClasses}
+      {meditacao && (
+        <audio
+          src={meditacao.url}
+          ref={audioRef}
+          onPlay={onPlay}
+          onPause={() => setIsPlaying(false)}
+          onLoadedMetadata={setupProgressListener}
+          onEnded={handleFimDoAudio}
+          onCanPlay={handleCanPlay}
+          onCanPlayThrough={handleCanPlayThrough}
         />
-        <Container className={classes.controles} maxWidth="xs">
-          <IconButton className={classes.botaoPlay} onClick={handlePlayPause}>
-            <IconePlayPause style={{ fontSize: 90 }} />
-          </IconButton>
-          {meditacao && (
-            <audio
-              src={meditacao.url}
-              ref={audioRef}
-              onPlay={onPlay}
-              onPause={() => setIsPlaying(false)}
-              onLoadedMetadata={setupProgressListener}
-              onEnded={handleFimDoAudio}
-            />
-          )}
-          <Slider
-            valueLabelDisplay="off"
-            value={progress}
-            max={duracao}
-            onChange={handleInteracaoSlider}
-            step={1}
+      )}
+
+      <Box mt={3} className={classes.player}>
+        {isMeditacaoCarregada ? (
+          <Image
+            src="/icons/icon-512x512.png"
+            width="200px"
+            height="200px"
+            className={imageClasses}
           />
-          <Box className={classes.tempos} mb={2}>
-            <Typography variant="subtitle2">
-              {converteDuracaoEmTimeString(progress)}
-            </Typography>
-            <Typography variant="subtitle2">
-              {converteDuracaoEmTimeString(duracao)}
-            </Typography>
-          </Box>
-        </Container>
+        ) : (
+          <Loading />
+        )}
+        {podeComecar && (
+          <Container className={classes.controles} maxWidth="xs">
+            <IconButton className={classes.botaoPlay} onClick={handlePlayPause}>
+              <IconePlayPause style={{ fontSize: 90 }} />
+            </IconButton>
+
+            <Slider
+              valueLabelDisplay="off"
+              value={progress}
+              max={duracao}
+              onChange={handleInteracaoSlider}
+              step={1}
+            />
+            <Box className={classes.tempos} mb={2}>
+              <Typography variant="subtitle2">
+                {converteDuracaoEmTimeString(progress)}
+              </Typography>
+              <Typography variant="subtitle2">
+                {converteDuracaoEmTimeString(duracao)}
+              </Typography>
+            </Box>
+          </Container>
+        )}
       </Box>
     </Container>
   )

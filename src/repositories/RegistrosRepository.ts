@@ -101,18 +101,18 @@ export default class RegistrosRepository implements IRegistrosRepository {
       querySnapshot.forEach(RegistroSnapshot => {
         const registrosData = RegistroSnapshot.data()
 
-        const gruposDeHabitosDoRegistro = (
-          registrosData.gruposDeHabitos || []
-        ).map(grupoDehabito => {
+        const gruposDeHabitosDoRegistro = []
+        registrosData.gruposDeHabitos?.forEach(grupoRegistro => {
           const grupoDeHabitoDoUsuario = gruposdeHabitosTemplate.find(
             grupoDehabitoDoTemplate =>
               grupoDehabitoDoTemplate.nome.toLowerCase() ===
-                grupoDehabito.nome.toLowerCase() ||
-              grupoDehabitoDoTemplate.id === grupoDehabito.id
+                grupoRegistro.nome.toLowerCase() ||
+              grupoDehabitoDoTemplate.id === grupoRegistro.id
           )
-          const habitos =
-            grupoDehabito.habitos?.map(habito => {
-              return (
+          if (grupoDeHabitoDoUsuario) {
+            const habitos = []
+            grupoRegistro.habitos?.forEach(habito => {
+              const habitoDoUsuario =
                 grupoDeHabitoDoUsuario.habitos.find(
                   habitoDoUsuario =>
                     habitoDoUsuario.id === habito ||
@@ -121,24 +121,30 @@ export default class RegistrosRepository implements IRegistrosRepository {
                 habitosPersonalizadosDoUsuario.find(
                   habitoPersonalizado => habitoPersonalizado.id === habito
                 )
-              )
-            }) || []
-          return new GrupoDeHabitos({
-            id: grupoDeHabitoDoUsuario.id || '',
-            nome: grupoDehabito.nome,
-            habitos: habitos
-          })
+              if (habitoDoUsuario) {
+                habitos.push(habitoDoUsuario)
+              }
+            })
+
+            gruposDeHabitosDoRegistro.push(
+              new GrupoDeHabitos({
+                id: grupoDeHabitoDoUsuario.id || '',
+                nome: grupoRegistro.nome,
+                habitos: habitos
+              })
+            )
+          }
         })
 
-        const sentimentosDoRegistro = (registrosData.sentimentos || []).map(
-          sentimento => {
+        const sentimentosDoRegistro = (registrosData.sentimentos || [])
+          .map(sentimento => {
             const sentimentoDoUsuario = sentimentosTemplate.find(
               template =>
                 template.nome === sentimento || template.id === sentimento
             )
             return sentimentoDoUsuario
-          }
-        )
+          })
+          .filter(sentimento => !!sentimento)
 
         const registros = new Registro({
           id: RegistroSnapshot.id,
