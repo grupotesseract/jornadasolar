@@ -13,6 +13,7 @@ export const notificaNovaMeditacao = functions.firestore
     // divide os tokens em lotes porque o serviço do expo limita o envio a 100 mensagens por vez
     const tokens = await getTokens(idCanal)
     const lotesDeToken = chunk(tokens, 100)
+    functions.logger.info(`${tokens.length} tokens receberão notificações em ${lotesDeToken.length} lotes de 100`)
     const notificacao = {
       title: "Nova meditação",
       body: `Adicionamos uma nova meditação guiada: ${nome}`,
@@ -35,7 +36,6 @@ function enviaNotificacao(para: string | string[], notificacao: any) {
     url: "https://exp.host/--/api/v2/push/send",
     body: JSON.stringify(notificacao)
   })
-  functions.logger.info("notificação", { notificacao })
   return notificacao
 }
 
@@ -47,7 +47,7 @@ const getIdCanal = async (nome: string): Promise<string> => {
     .limit(1)
     .get()
   if (snap.empty) {
-    functions.logger.warn(`canal de notificação ${nome} n]ao encontrado`)
+    functions.logger.warn(`canal de notificação ${nome} não encontrado`)
     return ""
   }
 
@@ -69,13 +69,18 @@ const getTokens = async (canal: string): Promise<string[]> => {
 
   snap.forEach(user => {
     const dados = user.data()
-    tokens.push(...dados.tokens)
+    if(dados) {
+      const tokensUser = dados.tokens
+      if (tokensUser) {
+        tokens.push(...tokensUser)
+      }
+    }
   })
 
   return tokens
 }
 
-function chunk(array: Array<any>, tamanho: number) {
+function chunk(array: Array<string>, tamanho: number) {
   const chunks = []
   let i = 0
   const tamanhoArray = array.length
