@@ -116,7 +116,8 @@ const Diario: FC<IDiarioProps> = ({ user, userId, userName }) => {
   const signo = getSigno(new Date())
   const faseDaLua = getFaseDaLua(new Date())
 
-  const podePedirNotificacao = Notification.permission === 'default'
+  const podePedirNotificacao =
+    'Notification' in window && Notification.permission === 'default'
   const pedeNotificacao = <NovidadeNotificacao />
   const mostraNovidades = <Novidade path="diario" user={user} />
 
