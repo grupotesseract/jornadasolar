@@ -1,4 +1,3 @@
-/* eslint-disable quotes */
 import { createGruposDeHabitosModelos } from "./createGruposDeHabitosModelos"
 import { createSentimentosModelos } from "./createSentimentosModelos"
 import { createGruposDeHabitosModelosTraduzidos } from "./createGruposDeHabitosModelosTraduzidos"
@@ -8,6 +7,8 @@ import { preencheSentimentosUsuarios } from "./preencheSentimentosUsuarios"
 import { migrarHabitosPersonalizados } from "./migrarHabitosPersonalizados"
 import { migrarRegistrosHabitos } from "./migrarRegistrosHabitos"
 import { migrarRegistrosSentimentos } from "./migrarRegistrosSentimentos"
+import { createCanaisNotificacao } from "./createCanaisNotificacao"
+import { notificaNovaMeditacao } from "./notificaNovaMeditacao"
 import * as admin from "firebase-admin"
 
 admin.initializeApp()
@@ -21,5 +22,7 @@ export {
   preencheSentimentosUsuarios,
   migrarHabitosPersonalizados,
   migrarRegistrosHabitos,
-  migrarRegistrosSentimentos
+  migrarRegistrosSentimentos,
+  createCanaisNotificacao,
+  notificaNovaMeditacao
 }
