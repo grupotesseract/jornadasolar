@@ -16,13 +16,13 @@ export const createGruposDeHabitosModelosTraduzidos = functions.https.onRequest(
       functions.logger.info("grupos de hábitos antigos copiados")
     }
 
-    gruposDeHabitosTemplate.forEach(async element => {
-      const { idioma, grupos } = element
+    for(const gruposDeHabitos of gruposDeHabitosTemplate) {
+      const { idioma, grupos } = gruposDeHabitos
 
       const idIdioma = await getIdIdiomaModelo(idioma)
       await insereGrupoDeHabitosIdioma(grupos, idIdioma)
       functions.logger.info(`grupos de hábitos criados no idioma ${idioma}`)
-    })
+    }
 
     functions.logger.info("createGruposDeHabitosModelos", {
       structuredData: true,
@@ -31,16 +31,16 @@ export const createGruposDeHabitosModelosTraduzidos = functions.https.onRequest(
   }
 )
 
-const insereGrupoDeHabitosIdioma = (
-  gruposDeHabitosTemplate: GrupoDeHabitos[],
+const insereGrupoDeHabitosIdioma = async (
+  gruposDeHabitos: GrupoDeHabitos[],
   idIdioma: string
 ) => {
   const refCollectionGrupo = admin
     .firestore()
     .collection(`modelos/${idIdioma}/gruposDeHabitosModelos`)
 
-  gruposDeHabitosTemplate.forEach(async (element: GrupoDeHabitos) => {
-    const { nome, posicao, habitos, id } = element
+  for(const grupo of gruposDeHabitos) {
+    const { nome, posicao, habitos, id } = grupo
     let grupoId: string | null = null
     if (id) {
       grupoId = id
@@ -75,48 +75,50 @@ const insereGrupoDeHabitosIdioma = (
       }
     }
 
-    habitos?.forEach(async (habito: Habito) => {
-      const refCollectionHabitos = admin
-        .firestore()
-        .collection(
-          `modelos/${idIdioma}/gruposDeHabitosModelos/${grupoId}/habitosModelos`
-        )
+    if(habitos) {
+      for (const habito of habitos) {
+        const refCollectionHabitos = admin
+          .firestore()
+          .collection(
+            `modelos/${idIdioma}/gruposDeHabitosModelos/${grupoId}/habitosModelos`
+          )
 
-      const { nome, emojiUnicode, posicao, id } = habito
-      if (id) {
-        refCollectionHabitos.doc(id).set(
-          {
-            nome,
-            emojiUnicode,
-            posicao,
-          },
-          { merge: true }
-        )
-      } else {
-        const habitoQuerySnapshot = await refCollectionHabitos
-          .where("nome", "==", habito.nome)
-          .limit(1)
-          .get()
-
-        if (habitoQuerySnapshot.empty) {
-          refCollectionHabitos.add({
-            nome,
-            emojiUnicode,
-            posicao,
-          })
-        } else {
-          refCollectionHabitos.doc(habitoQuerySnapshot.docs[0].id).set(
+        const { nome, emojiUnicode, posicao, id } = habito
+        if (id) {
+          refCollectionHabitos.doc(id).set(
             {
               nome,
               emojiUnicode,
-              posicao,
+              posicao
             },
             { merge: true }
           )
+        } else {
+          const habitoQuerySnapshot = await refCollectionHabitos
+            .where("nome", "==", habito.nome)
+            .limit(1)
+            .get()
+
+          if (habitoQuerySnapshot.empty) {
+            refCollectionHabitos.add({
+              nome,
+              emojiUnicode,
+              posicao
+            })
+          } else {
+            refCollectionHabitos.doc(habitoQuerySnapshot.docs[0].id).set(
+              {
+                nome,
+                emojiUnicode,
+                posicao
+              },
+              { merge: true }
+            )
+          }
         }
       }
-    })
-  })
+    }
+  }
 }
 
 const getGruposAntigosPT = async (): Promise<GrupoDeHabitos[]> => {
