@@ -9,6 +9,7 @@ import { migrarRegistrosHabitos } from "./migrarRegistrosHabitos"
 import { migrarRegistrosSentimentos } from "./migrarRegistrosSentimentos"
 import { createCanaisNotificacao } from "./createCanaisNotificacao"
 import { notificaNovaMeditacao } from "./notificaNovaMeditacao"
+import { queryUsers } from "./queryUsers"
 import * as admin from "firebase-admin"
 
 admin.initializeApp()
@@ -24,5 +25,6 @@ export {
   migrarRegistrosHabitos,
   migrarRegistrosSentimentos,
   createCanaisNotificacao,
-  notificaNovaMeditacao
+  notificaNovaMeditacao,
+  queryUsers
 }

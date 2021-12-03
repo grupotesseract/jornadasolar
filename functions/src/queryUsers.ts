@@ -4,7 +4,7 @@ import * as admin from "firebase-admin"
 export const queryUsers = functions.https.onRequest(
   async (request, response) => {
     const db = admin.firestore()
-    const users = await db.collection("users").get()
+    const users = await db.collection("user").get() 
     const userList = users.docs.map(doc => doc.data())
     functions.logger.info(
       `Iniciando processamento de ${userList.length} usuários`
@@ -30,7 +30,7 @@ export const queryUsers = functions.https.onRequest(
         return
       }
       if (user.countAccess) {
-        totalAcessos += user.acessos.length
+        totalAcessos += user.countAccess
         countUsersWithAcessos++
       }
       if (user.token?.length) {
