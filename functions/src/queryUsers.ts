@@ -33,7 +33,7 @@ export const queryUsers = functions.https.onRequest(
         totalAcessos += user.countAccess
         countUsersWithAcessos++
       }
-      if (user.token?.length) {
+      if (user.tokens?.length) {
         countUsersComTokenAtivo++
       }
       if (user.objetivos) {
@@ -48,6 +48,7 @@ export const queryUsers = functions.https.onRequest(
               countObjetivos.monitorarHabitos++
               break
             case "Monitorar Emoções":
+            case "Monitorar emoções":
             case "emocoes":
               countObjetivos.monitorarEmocoes++
               break
