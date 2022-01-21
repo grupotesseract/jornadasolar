@@ -14,12 +14,12 @@ export const createSentimentosModelosTraduzidos = functions.https.onRequest(
       await insereSentimentosModelo(sentimentosPT, idIdioma)
     }
 
-    sentimentosTemplate.forEach(async element => {
-      const { idioma, sentimentos } = element
+    for(const sentimentosTemplate of sentimentosTemplates) {
+      const { idioma, sentimentos } = sentimentosTemplate
       const idIdioma = await getIdIdiomaModelo(idioma)
       await insereSentimentosModelo(sentimentos, idIdioma)
       functions.logger.info(`sentimentos criados no idioma ${idioma}`)
-    })
+    }
 
     functions.logger.info("createSentimentosModelos", { structuredData: true })
     response.send("sentimentos modelos criados")
@@ -34,8 +34,8 @@ const insereSentimentosModelo = async (
     .firestore()
     .collection(`modelos/${idIdioma}/sentimentosModelos`)
 
-  sentimentosTemplate.forEach(async (element: Sentimento) => {
-    const { nome, emojiUnicode, id } = element
+  for(const sentimento of sentimentosTemplate) {
+    const { nome, emojiUnicode, id } = sentimento
 
     // se tiver o id aqui, significa que são os dados da collection sentimentosModelo antiga,
     // portanto, manter os ids para não perder a referência nos usuários
@@ -57,7 +57,7 @@ const insereSentimentosModelo = async (
           .set({ emojiUnicode, nome }, { merge: true })
       }
     }
-  })
+  }
 }
 
 const getSentimentosAntigosPT = async () => {
@@ -77,7 +77,7 @@ const getSentimentosAntigosPT = async () => {
   }
 }
 
-const sentimentosTemplate = [
+const sentimentosTemplates = [
   {
     idioma: "pt",
     sentimentos: [
