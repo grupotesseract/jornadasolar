@@ -57,7 +57,7 @@ const gruposDeHabitosTemplate = [
     posicao: 3,
     habitos: [
       {emojiUnicode: ["2708", "FE0F"], nome: "Viagem", posicao: 1},
-      {emojiUnicode: ["1F3A5"], nome: "Fimes/séries", posicao: 2},
+      {emojiUnicode: ["1F3A5"], nome: "Filmes/séries", posicao: 2},
       {emojiUnicode: ["1F4DA"], nome: "Leitura", posicao: 3},
       {emojiUnicode: ["1F3AE"], nome: "Jogos", posicao: 4},
       {emojiUnicode: ["2600", "FE0F"], nome: "Ar livre", posicao: 5},

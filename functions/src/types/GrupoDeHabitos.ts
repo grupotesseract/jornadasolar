@@ -4,6 +4,6 @@ export type GrupoDeHabitos = {
   id?: string;
   nome: string;
   posicao?: number;
-  habitos?: Array<Habito> | Array<string>
-  habitosModelo?: Array<Habito>
-}
+  habitos?: Array<Habito>;
+  habitosModelo?: Array<Habito>;
+};
