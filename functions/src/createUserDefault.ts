@@ -19,7 +19,11 @@ export const createUserDefault = functions.https.onRequest(
         canaisDeNotificacao.push(canal.id)
       })
     } catch (error) {
-      console.log("canais error", error)
+      functions.logger.info("Erro ao buscar canais de notificação", error)
+      response.send({
+        message: "Erro ao buscar canais de notificação",
+      })
+      return;
     }
     try {
       const userAuth = await admin.auth().getUserByEmail(userEmail)
@@ -45,7 +49,11 @@ export const createUserDefault = functions.https.onRequest(
       }
       await admin.firestore().collection("user").doc(userId).set(userData)
     } catch (error) {
-      console.log("Error fetching user data:", error)
+      functions.logger.info("Error fetching user data:", error)
+      response.send({
+        message: "Error fetching user data:",
+      })
+      return;
     }
 
     // Popula hábitos
@@ -57,7 +65,6 @@ export const createUserDefault = functions.https.onRequest(
 
       const querySnapshot = await habitosCollection.get()
 
-      console.log("querySnapshot", querySnapshot)
       const gruposDeHabitosModelos: any[] = []
 
       querySnapshot.forEach(grupoDeHabitoModelo => {
@@ -72,7 +79,6 @@ export const createUserDefault = functions.https.onRequest(
 
         gruposDeHabitosModelos.push(grupoDeHabitosModelo)
       })
-      console.log("gruposDeHabitosModelos", gruposDeHabitosModelos)
 
       for (let index = 0; index < gruposDeHabitosModelos.length; index++) {
         const grupoDeHabitosModelo = gruposDeHabitosModelos[index]
@@ -101,7 +107,11 @@ export const createUserDefault = functions.https.onRequest(
         })
       })
     } catch (error) {
-      console.log("Error fetching habitos data:", error)
+      functions.logger.info("Error fetching habitos data:", error)
+      response.send({
+        message: "Error fetching habitos data"
+      })
+      return;
     }
 
     // Cria subcollection de sentimentos na collection user
@@ -184,7 +194,8 @@ const createUserGrupoDeHabitos = async ({
       )
     }
   } catch (error) {
-    console.log("Error creating user grupo de habitos:", error)
+    functions.logger.info("Error creating user grupo de habitos:", error)
+    throw error
   }
 }
 
