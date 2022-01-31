@@ -9,11 +9,13 @@ import { migrarRegistrosHabitos } from "./migrarRegistrosHabitos"
 import { migrarRegistrosSentimentos } from "./migrarRegistrosSentimentos"
 import { createCanaisNotificacao } from "./createCanaisNotificacao"
 import { notificaNovaMeditacao } from "./notificaNovaMeditacao"
+import { createUserDefault } from "./createUserDefault"
 import * as admin from "firebase-admin"
 
 admin.initializeApp()
 
 export {
+  createUserDefault,
   createGruposDeHabitosModelos,
   createSentimentosModelos,
   createGruposDeHabitosModelosTraduzidos,
