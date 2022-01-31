@@ -16,7 +16,7 @@ export const createUserDefault = functions.https.onRequest(
       const canaisSnapshot = await collectionCanais.get()
 
       canaisSnapshot.forEach(canal => {
-        canaisDeNotificacao.push(canal.data().nome)
+        canaisDeNotificacao.push(canal.id)
       })
     } catch (error) {
       console.log("canais error", error)
